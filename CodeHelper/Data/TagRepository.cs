@@ -10,7 +10,6 @@ namespace CodeHelper.Data
         public TagRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
-            _dbContext.Tags.Include(i => i.Question);
         }
     }
 }

@@ -63,6 +63,7 @@ namespace CodeHelper.Data.Repository
         public void Update(T entity)
         {
             _dbContext.Update(entity);
+            _dbContext.SaveChanges();
         }
     }
 }

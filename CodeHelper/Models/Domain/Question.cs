@@ -4,7 +4,7 @@ namespace CodeHelper.Models.Domain
 {
     public class Question
     {
-        public required int Id { get; set; }
+        public int Id { get; set; }
         public required string Title { get; set; }
         public required string Content { get; set; }
         public int ViewsCount { get; set; }
@@ -13,6 +13,6 @@ namespace CodeHelper.Models.Domain
         public int UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public User Author { get; set; }
+        public required User Author { get; set; }
     }
 }

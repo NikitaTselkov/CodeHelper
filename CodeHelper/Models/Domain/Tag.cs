@@ -2,10 +2,9 @@
 {
     public class Tag
     {
-        public required int Id { get; set; }
+        public int Id { get; set; }
         public required string Name { get; set; }
         public required string DisplayName { get; set; }
-        public int QuestionId { get; set; }
-        public Question Question { get; set; }
+        public ICollection<Question> Questions { get; set; }
     }
 }

@@ -12,6 +12,20 @@ namespace CodeHelper.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -73,22 +87,25 @@ namespace CodeHelper.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tags",
+                name: "QuestionTag",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QuestionId = table.Column<int>(type: "int", nullable: false)
+                    QuestionsId = table.Column<int>(type: "int", nullable: false),
+                    TagsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.PrimaryKey("PK_QuestionTag", x => new { x.QuestionsId, x.TagsId });
                     table.ForeignKey(
-                        name: "FK_Tags_Questions_QuestionId",
-                        column: x => x.QuestionId,
+                        name: "FK_QuestionTag_Questions_QuestionsId",
+                        column: x => x.QuestionsId,
                         principalTable: "Questions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QuestionTag_Tags_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -104,9 +121,9 @@ namespace CodeHelper.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tags_QuestionId",
-                table: "Tags",
-                column: "QuestionId");
+                name: "IX_QuestionTag_TagsId",
+                table: "QuestionTag",
+                column: "TagsId");
         }
 
         /// <inheritdoc />
@@ -116,10 +133,13 @@ namespace CodeHelper.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "QuestionTag");
 
             migrationBuilder.DropTable(
                 name: "Questions");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Users");

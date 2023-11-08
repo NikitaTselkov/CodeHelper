@@ -102,12 +102,7 @@ namespace CodeHelper.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
 
                     b.ToTable("Tags");
                 });
@@ -137,6 +132,21 @@ namespace CodeHelper.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("QuestionTag", b =>
+                {
+                    b.Property<int>("QuestionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("QuestionsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("QuestionTag");
+                });
+
             modelBuilder.Entity("CodeHelper.Models.Domain.Answer", b =>
                 {
                     b.HasOne("CodeHelper.Models.Domain.User", "User")
@@ -159,20 +169,19 @@ namespace CodeHelper.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("CodeHelper.Models.Domain.Tag", b =>
+            modelBuilder.Entity("QuestionTag", b =>
                 {
-                    b.HasOne("CodeHelper.Models.Domain.Question", "Question")
-                        .WithMany("Tags")
-                        .HasForeignKey("QuestionId")
+                    b.HasOne("CodeHelper.Models.Domain.Question", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("CodeHelper.Models.Domain.Question", b =>
-                {
-                    b.Navigation("Tags");
+                    b.HasOne("CodeHelper.Models.Domain.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CodeHelper.Models.Domain.User", b =>
