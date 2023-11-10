@@ -1,0 +1,106 @@
+﻿using CodeHelper.Models;
+using CodeHelper.Models.Domain;
+using CodeHelper.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CodeHelper.Controllers
+{
+    public class AutorizationController : Controller
+    {
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
+        public AutorizationController(UserManager<User> userManager, SignInManager<User> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            ViewData["CurrentPage"] = "Autorization";
+
+            var response = new LoginViewModel();
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            ViewData["CurrentPage"] = "Autorization";
+
+            if(!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user != null)
+            {
+                var passwordCheck = await _userManager.CheckPasswordAsync(user, model.Password);
+
+                if (passwordCheck)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+
+                    if (result.Succeeded) return RedirectToAction("All", "Questions");
+                }
+            }
+
+            ModelState.AddModelError(nameof(model.Password), "Password is invalid");
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult SignUp()
+        {
+            ViewData["CurrentPage"] = "Autorization";
+
+            var response = new SignUpViewModel();
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignUp(SignUpViewModel model)
+        {
+            ViewData["CurrentPage"] = "Autorization";
+
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                user = new User(model);
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+
+                    return RedirectToAction("All", "Questions");
+                }
+
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError("", item.Description);
+                }
+            }
+
+            ModelState.AddModelError(nameof(model.Email), "Email is already in use");
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            Response.Cookies.Delete(GlobalConstants.AuthCookieName);
+
+            return RedirectToAction("All", "Questions");
+        }
+    }
+}

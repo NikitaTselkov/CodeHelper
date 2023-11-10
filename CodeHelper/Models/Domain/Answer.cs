@@ -7,7 +7,7 @@
         public required string Content { get; set; }
         public int LikesCount { get; set; }
         public required DateTime PublisedDate { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
     }
 }
