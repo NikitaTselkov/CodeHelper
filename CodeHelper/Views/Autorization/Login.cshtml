@@ -10,14 +10,14 @@
                         <form class="mb-3 mt-md-4 needs-validation" novalidate>
                             <h2 class="fw-bold mb-2 text-uppercase ">@ViewData["Title"]</h2>
                             <p class=" mb-5">Please enter your email and password!</p>
-                            <div class="mb-3">
-                                <label asp-for="Email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" asp-for="Email" placeholder="name@example.com">
+                            <div class="mb-3 form-floating">
+                                <input type="email" class="form-control" id="floatingEmailInput" asp-for="Email" placeholder="name@example.com">
+                                <label asp-for="Email" for="floatingEmailInput" class="form-label">Email address</label>
                                 <span class="text-danger" asp-validation-for="Email"></span>
                             </div>
-                            <div class="mb-3">
-                                <label asp-for="Password" class="form-label">Password</label>
-                                <input type="password" class="form-control" asp-for="Password" placeholder="*******">
+                            <div class="mb-3 form-floating">
+                                <input type="password" class="form-control" id="floatingPasswordInput" asp-for="Password" placeholder="*******">
+                                <label asp-for="Password" for="floatingPasswordInput" class="form-label">Password</label>
                                 <span class="text-danger" asp-validation-for="Password"></span>
                             </div>
                             <p class="small"><a class="text-dark" asp-controller="Autorization" asp-action="ForgetPassword">Forgot password?</a></p>

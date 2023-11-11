@@ -20,3 +20,23 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.custom-checkbox .custom-control-input:checked {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+.custom-checkbox .custom-control-input:checked:focus {
+    box-shadow: 0 0 0 1px #6c757d;
+    border-color: #6c757d !important;
+}
+
+.custom-checkbox .custom-control-input:focus {
+    box-shadow: 0 0 0 1px #6c757d;
+    border-color: #6c757d !important;
+}
+
+.custom-checkbox .custom-control-input:active {
+    background-color: #6c757d;
+    border-color: #6c757d !important;
+}
