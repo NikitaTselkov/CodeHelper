@@ -102,5 +102,13 @@ namespace CodeHelper.Controllers
 
             return RedirectToAction("All", "Questions");
         }
+
+        [HttpGet]
+        public IActionResult ForgetPassword(ForgetPasswordViewModel model)
+        {
+            ViewData["CurrentPage"] = "Autorization";
+
+            return View(model);
+        }
     }
 }
