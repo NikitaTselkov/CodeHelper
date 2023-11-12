@@ -1,4 +1,4 @@
-﻿@model ICollection<Question>
+﻿@model QuestionsViewModel
 @{
     ViewData["Title"] = "All Questions";
 }
@@ -14,11 +14,11 @@
             <ul class="list-group rounded-0 rounded-start">
                 <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Tags</li>
                 <li class="list-group-item h-100" style="min-width: 200px;">
-                    <select class="form-select w-100" data-max-options="3" data-badge-style="secondary" id="validationTags" name="tags[]" multiple>
-                        <option value="1">Apple</option>
-                        <option value="2">Banana</option>
-                        <option value="3">Orange</option>
-                        <option value="4">google-chrome-extension</option>
+                    <select class="form-select w-100" data-badge-style="secondary" data-allow-clear="true" id="validationTags" name="tags[]" multiple>
+                        @for (int i = 0; i < Model.Tags.Count; i++)
+                        {
+                            <option value="@i">@Model.Tags[i].DisplayName</option>
+                        }
                     </select>
                     <div class="invalid-feedback">Please select a valid tag.</div>
                 </li>
@@ -56,7 +56,7 @@
     </div>
 </div>
 
-@foreach (var question in Model)
+@foreach (var question in Model.Questions)
 {
     <div class="card mt-2">
         <div class="card-header d-flex justify-content-between flex-wrap">

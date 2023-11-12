@@ -159,7 +159,7 @@ const DEFAULTS = {
   selected: [],
   regex: "",
   separator: [],
-  max: 0,
+  max: 5,
   clearLabel: "Clear",
   searchLabel: "Type a value",
   showDropIcon: true,
@@ -171,7 +171,7 @@ const DEFAULTS = {
   showDisabled: false,
   hideNativeValidation: false,
   suggestionsThreshold: -1,
-  maximumItems: 0,
+  maximumItems: 6,
   autoselectFirst: true,
   updateOnSelect: false,
   highlightTyped: false,
@@ -1716,7 +1716,7 @@ class Tags {
         if (!firstItem && this._isItemEnabled(item) && selectFirst) {
           firstItem = item;
         }
-        if (this._config.maximumItems > 0 && count > this._config.maximumItems) {
+          if (this._config.maximumItems > 0 && count > this._config["maximumItems"]) {
           hideItem(item);
         }
       } else {

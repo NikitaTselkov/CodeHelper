@@ -1,5 +1,6 @@
 ﻿using CodeHelper.Data;
 using CodeHelper.Models.Domain;
+using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeHelper.Controllers
@@ -7,10 +8,12 @@ namespace CodeHelper.Controllers
     public class QuestionsController : Controller
     {
         private readonly QuestionsRepository _questionsRepository;
+        private readonly TagRepository _tagRepository;
 
-        public QuestionsController(QuestionsRepository questionsRepository)
+        public QuestionsController(QuestionsRepository questionsRepository, TagRepository tagRepository)
         {
             _questionsRepository = questionsRepository;
+            _tagRepository = tagRepository;
         }
 
         public IActionResult All()
@@ -34,7 +37,13 @@ namespace CodeHelper.Controllers
             questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
             questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
 
-            return View(questions);
+            var questionsViewModel = new QuestionsViewModel
+            {
+                Questions = questions,
+                Tags = _tagRepository.GetAll().ToList()
+            };
+
+            return View(questionsViewModel);
         }
 
         public IActionResult Question()
