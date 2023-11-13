@@ -67,6 +67,12 @@ namespace CodeHelper.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("HasAcceptedAnswer")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("HasAnswers")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("PublisedDate")
                         .HasColumnType("datetime2");
 

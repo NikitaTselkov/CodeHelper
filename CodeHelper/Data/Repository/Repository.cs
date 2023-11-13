@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Routing.Matching;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace CodeHelper.Data.Repository
@@ -19,32 +21,27 @@ namespace CodeHelper.Data.Repository
             dbSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public IQueryable<T> Get(Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
-            query = query.Where(filter);
 
-            if (!string.IsNullOrEmpty(includeProperties))
+            foreach (var includeExpression in includeProperties)
             {
-                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProp);
-                }
+                query = query.Include(includeExpression);
             }
 
-            return query.FirstOrDefault();
+            if (filter != null)
+                query = query.Where(filter);
+            return query;
         }
 
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+        public IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
 
-            if (!string.IsNullOrEmpty(includeProperties))
+            foreach (var includeExpression in includeProperties)
             {
-                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProp);
-                }
+                query = query.Include(includeExpression);
             }
 
             return query.ToList();

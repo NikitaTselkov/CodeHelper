@@ -1,6 +1,5 @@
 ﻿using CodeHelper.Data.Repository;
 using CodeHelper.Models.Domain;
-using Microsoft.EntityFrameworkCore;
 
 namespace CodeHelper.Data
 {
@@ -10,7 +9,6 @@ namespace CodeHelper.Data
         public AnswerRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
-            _dbContext.Answers.Include(i => i.User);
         }
     }
 }

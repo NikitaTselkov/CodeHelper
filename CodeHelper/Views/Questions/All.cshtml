@@ -6,18 +6,21 @@
 <div class="card text-center m-3 ms-0 me-0">
     <div class="card-header d-flex justify-content-between">
         <h3>@ViewData["Title"]</h3>
-        <button class="btn btn-outline-dark shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">Filters</button>
+        <span>
+            <button class="btn btn-outline-dark shadow-none" type="button">Ask Question</button>
+            <button class="btn btn-outline-dark shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">Filters</button>
+        </span>
     </div>
 
-    <div class="card collapse" id="collapseFilter">
+    <form method="post" class="card collapse" id="collapseFilter">
         <div class="card-body d-flex justify-content-center">
             <ul class="list-group rounded-0 rounded-start">
                 <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Tags</li>
                 <li class="list-group-item h-100" style="min-width: 200px;">
-                    <select class="form-select w-100" data-badge-style="secondary" data-allow-clear="true" id="validationTags" name="tags[]" multiple>
-                        @for (int i = 0; i < Model.Tags.Count; i++)
+                    <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" data-allow-clear="true" id="validationTags" multiple>
+                        @for (int i = 0; i < Model.AllTags.Count; i++)
                         {
-                            <option value="@i">@Model.Tags[i].DisplayName</option>
+                            <option value="@Model.AllTags[i].Name">@Model.AllTags[i].DisplayName</option>
                         }
                     </select>
                     <div class="invalid-feedback">Please select a valid tag.</div>
@@ -27,33 +30,35 @@
             <ul class="list-group rounded-0">
                 <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Filter By</li>
                 <li class="list-group-item custom-checkbox">
-                    <input class="form-check-input custom-control-input me-1" type="checkbox" id="firstCheckbox">
+                    <input asp-for="NoAnswers" class="form-check-input custom-control-input me-1" type="checkbox" id="firstCheckbox">
                     <label class="form-check-label" for="firstCheckbox">No Answers</label>
                 </li>
                 <li class="list-group-item custom-checkbox">
-                    <input class="form-check-input custom-control-input me-1" type="checkbox" id="secondCheckbox">
+                    <input asp-for="NoAcceptedAnswer" class="form-check-input custom-control-input me-1" type="checkbox" id="secondCheckbox">
                     <label class="form-check-label" for="secondCheckbox">No Accepted Answer</label>
                 </li>
             </ul> 
 
             <ul class="list-group rounded-0 rounded-end">
                 <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Sorted By</li>
-                <li class="list-group-item custom-checkbox">
-                    <input class="form-check-input custom-control-input me-1" type="radio" name="listGroupRadio" id="firstRadio" checked>
-                    <label class="form-check-label" for="firstRadio">Newest</label>
-                </li>
-                <li class="list-group-item custom-checkbox">
-                    <input class="form-check-input custom-control-input me-1" type="radio" name="listGroupRadio" id="secondRadio">
-                    <label class="form-check-label" for="secondRadio">Most Frequent</label>
-                </li>
+
+                @foreach (var sortFilter in Enum.GetValues(typeof(SortFilters)))
+                {
+                    <li class="list-group-item custom-checkbox">
+                        <label class="form-check-label">
+                            @(Html.RadioButtonFor<SortFilters>(s => s.Sort, (SortFilters)sortFilter, new { @class = "form-check-input custom-control-input me-1" }))
+                            @sortFilter
+                        </label>
+                    </li>
+                } 
             </ul>
         </div>
 
         <div class="card-footer d-flex justify-content-end">
-            <button type="button" class="btn btn-dark shadow-none me-2">Apply</button>
-            <button type="button" class="btn btn-outline-dark shadow-none">Cancel</button>
+            <button formmethod="post" type="submit" class="btn btn-dark shadow-none me-2">Apply</button>
+            <button type="button" class="btn btn-outline-dark shadow-none" data-bs-toggle="collapse" data-bs-target="#collapseFilter">Cancel</button>
         </div>
-    </div>
+    </form>
 </div>
 
 @foreach (var question in Model.Questions)

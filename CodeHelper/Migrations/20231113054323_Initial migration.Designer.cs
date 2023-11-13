@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeHelper.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231110075949_Initial migration")]
+    [Migration("20231113054323_Initial migration")]
     partial class Initialmigration
     {
         /// <inheritdoc />
@@ -69,6 +69,12 @@ namespace CodeHelper.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("HasAcceptedAnswer")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("HasAnswers")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("PublisedDate")
                         .HasColumnType("datetime2");

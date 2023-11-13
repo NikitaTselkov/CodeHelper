@@ -1,7 +1,12 @@
-﻿using CodeHelper.Data;
+﻿using CodeHelper.Core;
+using CodeHelper.Data;
 using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace CodeHelper.Controllers
 {
@@ -18,32 +23,42 @@ namespace CodeHelper.Controllers
 
         public IActionResult All()
         {
-            var questions = _questionsRepository.GetAll("Tags").ToList();
-
-            questions.Add(new Question() { ViewsCount = 5345, Author = new User() {UserName = "Nikita" }, Content = "Content WWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWContent WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { ViewsCount = 1235, Tags = new List<Tag>() { new Tag() { Name = "", DisplayName = "google-chrome-extension" }, new Tag() { Name = "", DisplayName = "google-chrome-extension" }, new Tag() {Name = "", DisplayName = "google-chrome-extension" }, new Tag() { Name = "C_Sharp", DisplayName = "C#" }, new Tag() { Name = "asp_net_core", DisplayName = "ASP-Net Core" } }, Author = new User() { UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Metal is premultiplying texture alpha between fragment attachment & fragment shader arg— why?" });
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
-            questions.Add(new Question() { Author = new User() {UserName = "Nikita" }, Content = "Content", PublisedDate = DateTime.Now, Title = "Title"});
+            var questions = _questionsRepository.GetAll(g => g.Author, g => g.Tags).ToList();
+            var tags = _tagRepository.GetAll().ToList();
 
             var questionsViewModel = new QuestionsViewModel
             {
                 Questions = questions,
-                Tags = _tagRepository.GetAll().ToList()
+                AllTags = _tagRepository.GetAll().ToList(),
+                NoAcceptedAnswer = false,
+                NoAnswers = false
             };
 
             return View(questionsViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult All(QuestionsViewModel model)
+        {
+            var tags = model.SelectedTags;
+            Expression<Func<Question, bool>>? expression = null;
+            Func<Question, bool>? resultFunc = null;
+
+            if (tags != null)
+                resultFunc = resultFunc.AndAlso(e => e.Tags.Any(a => tags.Contains(a.Name)));
+
+            if (model.NoAnswers)
+                resultFunc = resultFunc.AndAlso(e => e.HasAnswers.Equals(model.NoAnswers));
+
+            if (model.NoAcceptedAnswer)
+                resultFunc = resultFunc.AndAlso(e => e.HasAcceptedAnswer.Equals(model.NoAcceptedAnswer));
+
+            expression = PredicateExtemtions.FuncToExpression(resultFunc);
+
+            model.Questions = _questionsRepository.Get(expression, g => g.Author, g => g.Tags).ToList();
+            model.AllTags = _tagRepository.GetAll().ToList();
+
+            return View(model);
         }
 
         public IActionResult Question()
