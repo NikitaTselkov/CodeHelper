@@ -3,10 +3,7 @@ using CodeHelper.Data;
 using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using System;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace CodeHelper.Controllers
 {
@@ -58,6 +55,19 @@ namespace CodeHelper.Controllers
             model.Questions = _questionsRepository.Get(expression, g => g.Author, g => g.Tags).ToList();
             model.AllTags = _tagRepository.GetAll().ToList();
 
+            return View(model);
+        }
+
+        public IActionResult AskQuestion()
+        {
+            var model = new QuestionViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult AskQuestion(QuestionViewModel model)
+        {
             return View(model);
         }
 

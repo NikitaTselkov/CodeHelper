@@ -7,7 +7,7 @@
     <div class="card-header d-flex justify-content-between">
         <h3>@ViewData["Title"]</h3>
         <span>
-            <button class="btn btn-outline-dark shadow-none" type="button">Ask Question</button>
+            <a asp-controller="Questions" asp-action="AskQuestion" class="btn btn-outline-dark shadow-none" type="button">Ask Question</a>
             <button class="btn btn-outline-dark shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">Filters</button>
         </span>
     </div>
