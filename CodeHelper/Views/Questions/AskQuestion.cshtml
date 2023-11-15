@@ -1,31 +1,33 @@
 ﻿@model QuestionViewModel
 
 <form class="vh-100 row justify-content-center align-items-center m-3">
-    <div class="card p-2 col-auto">
+    <ul class="list-group rounded-0 rounded-start">
+        <li class="list-group-item border-0">
+            <div class="card p-2 col-auto">
+                <h3>Title</h3>
+                <div class="mb-3 form-floating">
+                    <input type="text" class="form-control" id="floatingTitleInput" asp-for="Question.Title" placeholder="title">
+                    <label asp-for="Question.Title" for="floatingTitleInput" class="form-label">Title</label>
+                    <span class="text-danger" asp-validation-for="Question.Title"></span>
+                </div>
 
-        <h3>Title</h3>
-        <div class="mb-3 form-floating">
-            <input type="text" class="form-control" id="floatingTitleInput" asp-for="Question.Title" placeholder="title">
-            <label asp-for="Question.Title" for="floatingTitleInput" class="form-label">Title</label>
-            <span class="text-danger" asp-validation-for="Question.Title"></span>
-        </div>
+                <h3>Content</h3>
+                <textarea asp-for="Question.Content" id="editor" class="mb-3">
 
-        <h3>Content</h3>
-        <textarea asp-for="Question.Content" id="editor">
+                </textarea>
 
-        </textarea>
-
-        <h3>Tags</h3>
-        <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" data-allow-clear="true" id="validationTags" multiple>
-            @if (Model.AllTags != null)
-                @for (int i = 0; i < Model.AllTags.Count; i++)
-                {
-                    <option value="@Model.AllTags[i].Name">@Model.AllTags[i].DisplayName</option>
-                }
-        </select>
-    </div>
-
-    <div class="mb-5">
-        <button class="btn btn-outline-dark m-5">Apply question</button>
-    </div>
+                <h3>Tags</h3>
+                <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" data-allow-clear="true" id="validationTags" multiple>
+                    @if (Model.AllTags != null)
+                        @for (int i = 0; i < Model.AllTags.Count; i++)
+                        {
+                            <option value="@Model.AllTags[i].Name">@Model.AllTags[i].DisplayName</option>
+                        }
+                </select>
+            </div>
+        </li>
+        <li class="list-group-item h-100 my-3 border-0">
+            <button formmethod="post" type="submit" class="btn btn-outline-dark">Apply question</button>
+        </li>
+    </ul>
 </form>

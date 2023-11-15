@@ -2,6 +2,7 @@
 using CodeHelper.Data;
 using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
@@ -11,11 +12,13 @@ namespace CodeHelper.Controllers
     {
         private readonly QuestionsRepository _questionsRepository;
         private readonly TagRepository _tagRepository;
+        private readonly UserManager<User> _userManager;
 
-        public QuestionsController(QuestionsRepository questionsRepository, TagRepository tagRepository)
+        public QuestionsController(QuestionsRepository questionsRepository, TagRepository tagRepository, UserManager<User> userManager)
         {
             _questionsRepository = questionsRepository;
             _tagRepository = tagRepository;
+            _userManager = userManager;
         }
 
         public IActionResult All()
@@ -38,21 +41,39 @@ namespace CodeHelper.Controllers
         public IActionResult All(QuestionsViewModel model)
         {
             var tags = model.SelectedTags;
-            Expression<Func<Question, bool>>? expression = null;
-            Func<Question, bool>? resultFunc = null;
+            var filterPredicate = PredicateBuilder.True<Question>();
+            var sortPredicate = PredicateBuilder.True<Question>();
+
+            #region Filters
 
             if (tags != null)
-                resultFunc = resultFunc.AndAlso(e => e.Tags.Any(a => tags.Contains(a.Name)));
+                filterPredicate = filterPredicate.And(e => e.Tags.Any(a => tags.Contains(a.Name)));
 
             if (model.NoAnswers)
-                resultFunc = resultFunc.AndAlso(e => e.HasAnswers.Equals(model.NoAnswers));
+                filterPredicate = filterPredicate.And(e => e.HasAnswers == false);
 
             if (model.NoAcceptedAnswer)
-                resultFunc = resultFunc.AndAlso(e => e.HasAcceptedAnswer.Equals(model.NoAcceptedAnswer));
+                filterPredicate = filterPredicate.And(e => e.HasAcceptedAnswer == false);
 
-            expression = PredicateExtemtions.FuncToExpression(resultFunc);
+            #endregion
 
-            model.Questions = _questionsRepository.Get(expression, g => g.Author, g => g.Tags).ToList();
+            #region Sorts
+
+            var questions = _questionsRepository.Get(filterPredicate, g => g.Author, g => g.Tags);
+
+            switch (model.Sort)
+            {
+                case Models.SortFilters.Newest:
+                    questions = questions.OrderBy(o => o.PublisedDate);
+                    break;
+                case Models.SortFilters.MostFrequent:
+                    questions = questions.OrderByDescending(o => o.ViewsCount);
+                    break;
+            }
+
+            #endregion
+
+            model.Questions = questions.ToList();
             model.AllTags = _tagRepository.GetAll().ToList();
 
             return View(model);
@@ -60,15 +81,36 @@ namespace CodeHelper.Controllers
 
         public IActionResult AskQuestion()
         {
+            var tags = _tagRepository.GetAll().ToList();
             var model = new QuestionViewModel();
+
+            model.AllTags = tags;
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult AskQuestion(QuestionViewModel model)
+        public async Task<IActionResult> AskQuestion(QuestionViewModel model)
         {
-            return View(model);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var tags = _tagRepository.GetAll().ToList();
+
+            if (user == null) return View(model);
+
+            model.Question.PublisedDate = DateTime.UtcNow;
+            model.Question.Author = user;
+            model.Question.Tags = new List<Tag>();
+
+            foreach (var tag in tags)
+            {
+                if (model.SelectedTags.Any(a => a == tag.Name))
+                    model.Question.Tags.Add(tag);
+            }
+
+            _questionsRepository.Add(model.Question);
+            _questionsRepository.Save();
+
+            return RedirectToAction("Question", "Questions");
         }
 
         public IActionResult Question()
