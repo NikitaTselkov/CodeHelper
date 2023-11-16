@@ -4,7 +4,6 @@ using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace CodeHelper.Controllers
 {
@@ -82,7 +81,7 @@ namespace CodeHelper.Controllers
         public IActionResult AskQuestion()
         {
             var tags = _tagRepository.GetAll().ToList();
-            var model = new QuestionViewModel();
+            var model = new AskQuestionViewModel();
 
             model.AllTags = tags;
 
@@ -90,7 +89,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AskQuestion(QuestionViewModel model)
+        public async Task<IActionResult> AskQuestion(AskQuestionViewModel model)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var tags = _tagRepository.GetAll().ToList();
@@ -101,21 +100,51 @@ namespace CodeHelper.Controllers
             model.Question.Author = user;
             model.Question.Tags = new List<Tag>();
 
-            foreach (var tag in tags)
-            {
-                if (model.SelectedTags.Any(a => a == tag.Name))
-                    model.Question.Tags.Add(tag);
-            }
+            if (model.SelectedTags != null)
+                foreach (var tag in tags)
+                {
+                    if (model.SelectedTags.Any(a => a == tag.Name))
+                        model.Question.Tags.Add(tag);
+                }
 
             _questionsRepository.Add(model.Question);
             _questionsRepository.Save();
 
-            return RedirectToAction("Question", "Questions");
+            var questionId = _questionsRepository.Get(g => g == model.Question).FirstOrDefault()?.Id;
+
+            return RedirectToAction("Question", "Questions", new { questionId = questionId });
         }
 
-        public IActionResult Question()
+        [HttpGet("{questionId}")]
+        public IActionResult Question(int questionId)
         {
-            return View();
+            var model = new QuestionViewModel();
+
+            model.Question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PushAnswer(int questionId, Answer answer)
+        {
+            var model = new QuestionViewModel();
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            answer.PublisedDate = DateTime.UtcNow;
+            answer.User = user;
+
+            model.Question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
+
+            if (model.Question == null) return View(model);
+            if (model.Question.Answers == null)
+                model.Question.Answers = new List<Answer>();
+
+            model.Question.Answers.Add(answer);
+
+            _questionsRepository.Update(model.Question);
+
+            return RedirectToAction("Question", "Questions", new { questionId = model.Question.Id });
         }
     }
 }

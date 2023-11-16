@@ -62,6 +62,7 @@
     </form>
 </div>
 
+
 @foreach (var question in Model.Questions)
 {
     <div class="card mt-2">
@@ -69,7 +70,7 @@
             <div class="me-2">
                 <span>@question.ViewsCount</span>
                 <span class="me-1">views</span>
-                <a class="link-dark fw-bold text-decoration-none" asp-controller="Questions" asp-action="Question">@question.Title</a>
+                <a class="link-dark fw-bold text-decoration-none" asp-controller="Questions" asp-action="Question" asp-route-questionId="@question.Id">@question.Title</a>
             </div>
 
             <div>

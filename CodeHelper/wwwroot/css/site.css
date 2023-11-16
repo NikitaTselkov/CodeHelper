@@ -43,7 +43,7 @@ body {
 
 .ck-source-editing-area,
 .ck-editor__editable {
-    min-height: 300px;
+    min-height: 200px;
 }
 
 .ck .ck-sticky-panel .ck-sticky-panel__content_sticky {

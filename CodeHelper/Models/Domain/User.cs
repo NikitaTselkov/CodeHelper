@@ -10,12 +10,12 @@ namespace CodeHelper.Models.Domain
 
         public User()
         {
-            
+
         }
 
         public User(SignUpViewModel model)
         {
-            UserName = model.UserName; 
+            UserName = model.UserName;
             Email = model.Email;
             Questions = new List<Question>();
             Answers = new List<Answer>();

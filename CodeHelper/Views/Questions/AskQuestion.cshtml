@@ -1,4 +1,4 @@
-﻿@model QuestionViewModel
+﻿@model AskQuestionViewModel
 
 <form class="vh-100 row justify-content-center align-items-center m-3">
     <ul class="list-group rounded-0 rounded-start">
@@ -12,9 +12,7 @@
                 </div>
 
                 <h3>Content</h3>
-                <textarea asp-for="Question.Content" id="editor" class="mb-3">
-
-                </textarea>
+                <textarea asp-for="Question.Content" id="editor" class="mb-3"></textarea>
 
                 <h3>Tags</h3>
                 <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" data-allow-clear="true" id="validationTags" multiple>

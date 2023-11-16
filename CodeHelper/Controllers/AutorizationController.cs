@@ -4,6 +4,7 @@ using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace CodeHelper.Controllers
 {
@@ -19,20 +20,21 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
+            ViewData["ReturnUrl"] = returnUrl;
 
             var response = new LoginViewModel();
             return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
 
-            if(!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return View(model);
 
             var user = await _userManager.FindByEmailAsync(model.Email);
 
@@ -44,7 +46,13 @@ namespace CodeHelper.Controllers
                 {
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
 
-                    if (result.Succeeded) return RedirectToAction("All", "Questions");
+                    if (result.Succeeded)
+                    {
+                        if (Url.IsLocalUrl(returnUrl))
+                            return Redirect(returnUrl);
+                        else
+                            return RedirectToAction("All", "Questions");
+                    }
                 }
             }
 
@@ -53,16 +61,17 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
-        public IActionResult SignUp()
+        public IActionResult SignUp(string returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
+            ViewData["ReturnUrl"] = returnUrl;
 
             var response = new SignUpViewModel();
             return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(SignUpViewModel model)
+        public async Task<IActionResult> SignUp(SignUpViewModel model, string returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
 
@@ -79,7 +88,13 @@ namespace CodeHelper.Controllers
                 {
                     await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
 
-                    return RedirectToAction("All", "Questions");
+                    if (result.Succeeded)
+                    {
+                        if (Url.IsLocalUrl(returnUrl))
+                            return Redirect(returnUrl);
+                        else
+                            return RedirectToAction("All", "Questions");
+                    }
                 }
 
                 foreach (var item in result.Errors)

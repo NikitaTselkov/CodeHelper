@@ -1,1 +1,60 @@
-﻿
+﻿@model QuestionViewModel
+@inject SignInManager<User> signInManager;
+
+<form method="post">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-lg modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h4 class="modal-title text-white" id="staticBackdropLabel">To answer a question, you must sign up for an account</h4>
+                    <button type="button" class="btn-close btn-light btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" asp-controller="Autorization" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary shadow-none">Log In</a>
+                    <a type="button" asp-controller="Autorization" asp-action="SignUp" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-secondary shadow-none">Sing Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul class="list-group rounded-0 m-3">
+        <li class="list-group-item border-0">
+            <h1>@Model.Question.Title</h1>
+            <div class="d-flex">
+                <div class="text-secondary me-2">Views <span>@Model.Question.ViewsCount</span></div>
+                <div class="text-secondary me-2">Asked <span>@Model.PublishedDate</span></div>
+                <div>
+                    @if (Model.Question.Tags != null)
+                        @foreach (var tag in Model.Question.Tags)
+                        {
+                            <span class="m-1 mb-0 bg-secondary text-white badge">@tag.DisplayName</span>
+                        }
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item border-0">
+            <div class="card p-3">
+                <textarea asp-for="Question.Content" id="readOnlyEditor" class="mb-3"></textarea>
+            </div>
+        </li>
+        <li class="list-group-item border-0">
+            @if (Model.Question.Answers != null)
+                @foreach (var answer in Model.Question.Answers)
+                {
+                    <div>@answer.Content</div>
+                }
+        </li>
+        <li class="list-group-item border-0">
+            <h4>Add your solution here</h4>
+            <textarea asp-for="Answer.Content" id="editor" class="mb-3"></textarea>
+            @if (signInManager.IsSignedIn(User))
+            {
+                <button type="submit" asp-controller="Questions" asp-action="PushAnswer" asp-route-questionId="@Model.Question.Id" class="btn btn-outline-dark my-3 shadow-none">Post Answer</button>
+            }
+            else
+            {
+                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-outline-dark my-3 shadow-none">Post Answer</button>
+            }
+        </li>
+    </ul>
+</form>

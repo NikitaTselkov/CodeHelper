@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeHelper.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231113054323_Initial migration")]
+    [Migration("20231116092827_Initial migration")]
     partial class Initialmigration
     {
         /// <inheritdoc />
@@ -43,15 +43,15 @@ namespace CodeHelper.Migrations
                     b.Property<DateTime>("PublisedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
 
                     b.HasIndex("UserId");
 
@@ -333,11 +333,17 @@ namespace CodeHelper.Migrations
 
             modelBuilder.Entity("CodeHelper.Models.Domain.Answer", b =>
                 {
-                    b.HasOne("CodeHelper.Models.Domain.User", "User")
+                    b.HasOne("CodeHelper.Models.Domain.Question", "Question")
                         .WithMany("Answers")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("CodeHelper.Models.Domain.User", "User")
+                        .WithMany("Answers")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Question");
 
                     b.Navigation("User");
                 });
@@ -417,6 +423,11 @@ namespace CodeHelper.Migrations
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CodeHelper.Models.Domain.Question", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("CodeHelper.Models.Domain.User", b =>
