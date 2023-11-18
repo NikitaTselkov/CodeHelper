@@ -2,8 +2,10 @@
 import Tags from "./tags.js";
 Tags.init();
 
-ClassicEditor
-    .create(document.querySelector('#readOnlyEditor'), {
+var allEditors = document.querySelectorAll('#readOnlyEditor');
+
+for (var i = 0; i < allEditors.length; ++i) {
+    ClassicEditor.create(allEditors[i], {
         licenseKey: '',
         ui: {
             poweredBy: {
@@ -13,18 +15,19 @@ ClassicEditor
             }
         }
     })
-    .then(editor => {
-        window.editor = editor;
-        editor.enableReadOnlyMode('readOnlyEditor');
-        editor.ui.view.toolbar.element.style.display = 'none';
-        editor.editing.view.change(writer => {
-            const viewEditableRoot = editor.editing.view.document.getRoot();
-            writer.removeClass('ck-editor__editable_inline', viewEditableRoot);
+        .then(editor => {
+            window.editor = editor;
+            editor.enableReadOnlyMode('readOnlyEditor');
+            editor.ui.view.toolbar.element.style.display = 'none';
+            editor.editing.view.change(writer => {
+                const viewEditableRoot = editor.editing.view.document.getRoot();
+                writer.removeClass('ck-editor__editable_inline', viewEditableRoot);
+            });
+        })
+        .catch(error => {
+            console.log(error);
         });
-    })
-    .catch(error => {
-        console.log(error);
-    });
+}
 
 ClassicEditor.create(document.querySelector('#editor'), {
     licenseKey: '',

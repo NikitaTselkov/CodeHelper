@@ -21,6 +21,18 @@ body {
     margin-bottom: 60px;
 }
 
+.btn-like {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.answer-card:hover .btn-like {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.6s, visibility 0.6s;
+}
+
 .custom-checkbox .custom-control-input:checked {
     background-color: #6c757d !important;
     border-color: #6c757d !important;
@@ -43,7 +55,7 @@ body {
 
 .ck-source-editing-area,
 .ck-editor__editable {
-    min-height: 200px;
+    height: auto;
 }
 
 .ck .ck-sticky-panel .ck-sticky-panel__content_sticky {

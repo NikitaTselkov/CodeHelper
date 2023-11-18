@@ -94,7 +94,9 @@ namespace CodeHelper.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var tags = _tagRepository.GetAll().ToList();
 
-            if (user == null) return View(model);
+            model.AllTags = tags;
+
+            if (user == null || model.Question.Content == null) return View(model);
 
             model.Question.PublisedDate = DateTime.UtcNow;
             model.Question.Author = user;
@@ -120,27 +122,37 @@ namespace CodeHelper.Controllers
         {
             var model = new QuestionViewModel();
 
-            model.Question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
+            model.Question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PushAnswer(int questionId, Answer answer)
+        public async Task<IActionResult> PushAnswer(int questionId, string answerContent)
         {
+            if (string.IsNullOrEmpty(answerContent))
+            {
+                ModelState.AddModelError("", "Answer is empty");
+                return RedirectToAction("Question", "Questions", new { questionId = questionId });
+            }
+
             var model = new QuestionViewModel();
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            var answer = new Answer()
+            {
+                Content = answerContent,
+                PublisedDate = DateTime.UtcNow,
+                User = user
+            };
 
-            answer.PublisedDate = DateTime.UtcNow;
-            answer.User = user;
-
-            model.Question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
+            model.Question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
 
             if (model.Question == null) return View(model);
             if (model.Question.Answers == null)
                 model.Question.Answers = new List<Answer>();
 
             model.Question.Answers.Add(answer);
+            model.Question.HasAnswers = true;
 
             _questionsRepository.Update(model.Question);
 

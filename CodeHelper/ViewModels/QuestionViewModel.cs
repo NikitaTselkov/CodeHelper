@@ -5,7 +5,7 @@ namespace CodeHelper.ViewModels
     public class QuestionViewModel
     {
         public Question Question { get; set; }
-        public Answer Answer { get; set; }
+        public string AnswerContent { get; set; }
 
         public string PublishedDate
         {
