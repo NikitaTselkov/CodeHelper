@@ -141,10 +141,7 @@ namespace CodeHelper.Controllers
                 answer.IsLikedAnswer = false;
 
                 if (user != null)
-                    foreach (var likedAnswers in user.LikedAnswers)
-                    {
-                        answer.IsLikedAnswer = likedAnswers.AnswerId == answer.Id;
-                    }
+                    answer.IsLikedAnswer = user.LikedAnswers.Any(a => a.AnswerId == answer.Id);
             }
 
             return View(model);
@@ -186,47 +183,50 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
+        public async Task<ContentResult> SetAcceptedAnswer(int answerId)
+        {
+            var answer = _answerRepository.Get(g => g.Id == answerId).SingleOrDefault();
+
+            answer.IsAcceptedAnswer = !answer.IsAcceptedAnswer;
+
+            _answerRepository.Update(answer);
+
+            return Content("");
+        }
+
+        [HttpPost]
         public async Task<ContentResult> SetLikeAnswer(int answerId, bool isLikedAnswer)
         {
-            try
+            var user = _usersRepository.Get(g => g.UserName == HttpContext.User.Identity.Name, g => g.LikedAnswers).FirstOrDefault();
+            var answer = _answerRepository.Get(g => g.Id == answerId).SingleOrDefault();
+
+            if (user == null) return Content(answer.LikesCount.ToString());
+            if (user.LikedAnswers == null)
+                user.LikedAnswers = new List<Like>();
+
+            if (isLikedAnswer)
             {
-                var user = _usersRepository.Get(g => g.UserName == HttpContext.User.Identity.Name, g => g.LikedAnswers).FirstOrDefault();
-                var answer = _answerRepository.Get(g => g.Id == answerId).SingleOrDefault();
-
-                if (user == null) return Content(answer.LikesCount.ToString());
-                if (user.LikedAnswers == null)
-                    user.LikedAnswers = new List<Like>();
-
-                if (isLikedAnswer)
-                {
-                    answer.LikesCount += 1;
-                    answer.IsLikedAnswer = true;
-                    user.LikedAnswers.Add(new Like(answer.Id));
-                }
-                else
-                {
-                    answer.LikesCount -= answer.LikesCount > 0 ? 1 : 0;
-                    answer.IsLikedAnswer = false;
-
-                    var like = user.LikedAnswers.First(f => f.AnswerId == answer.Id);
-
-                    user.LikedAnswers.Remove(like);
-
-                    _likesRepository.Remove(like);
-                    _likesRepository.Save();
-                }
-
-                _answerRepository.Update(answer);
-                await _userManager.UpdateAsync(user);
-
-                return Content(answer.LikesCount.ToString());
-
+                answer.LikesCount += 1;
+                answer.IsLikedAnswer = true;
+                user.LikedAnswers.Add(new Like(answer.Id));
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
-                throw;
+                answer.LikesCount -= answer.LikesCount > 0 ? 1 : 0;
+                answer.IsLikedAnswer = false;
+
+                var like = user.LikedAnswers.First(f => f.AnswerId == answer.Id);
+
+                user.LikedAnswers.Remove(like);
+
+                _likesRepository.Remove(like);
+                _likesRepository.Save();
             }
+
+            _answerRepository.Update(answer);
+            await _userManager.UpdateAsync(user);
+
+            return Content(answer.LikesCount.ToString());
         }
     }
 }
