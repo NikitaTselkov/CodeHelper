@@ -21,13 +21,13 @@ body {
     margin-bottom: 60px;
 }
 
-.btn-like {
+.btn-visibility {
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s, visibility 0.3s;
 }
 
-.answer-card:hover .btn-like {
+.answer-card:hover .btn-visibility {
     visibility: visible;
     opacity: 1;
     transition: opacity 0.6s, visibility 0.6s;

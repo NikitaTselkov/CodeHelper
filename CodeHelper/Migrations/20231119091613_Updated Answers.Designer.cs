@@ -4,6 +4,7 @@ using CodeHelper.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeHelper.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231119091613_Updated Answers")]
+    partial class UpdatedAnswers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,34 +55,18 @@ namespace CodeHelper.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("UserId1");
+
                     b.ToTable("Answers");
-                });
-
-            modelBuilder.Entity("CodeHelper.Models.Domain.Like", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnswerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Like");
                 });
 
             modelBuilder.Entity("CodeHelper.Models.Domain.Question", b =>
@@ -363,20 +350,15 @@ namespace CodeHelper.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CodeHelper.Models.Domain.User", "User")
+                    b.HasOne("CodeHelper.Models.Domain.User", null)
                         .WithMany("Answers")
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Question");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CodeHelper.Models.Domain.Like", b =>
-                {
                     b.HasOne("CodeHelper.Models.Domain.User", null)
                         .WithMany("LikedAnswers")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("CodeHelper.Models.Domain.Question", b =>

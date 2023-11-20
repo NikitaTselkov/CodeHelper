@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace CodeHelper.Models.Domain
+﻿namespace CodeHelper.Models.Domain
 {
     public class Tag
     {

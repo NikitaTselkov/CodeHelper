@@ -14,6 +14,7 @@ builder.Services.AddScoped<UsersRepository, UsersRepository>();
 builder.Services.AddScoped<AnswerRepository, AnswerRepository>();
 builder.Services.AddScoped<QuestionsRepository, QuestionsRepository>();
 builder.Services.AddScoped<TagRepository, TagRepository>();
+builder.Services.AddScoped<LikesRepository, LikesRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {

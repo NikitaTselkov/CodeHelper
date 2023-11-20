@@ -4,6 +4,7 @@ using CodeHelper.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeHelper.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231120051153_Updated LikedAnswersId")]
+    partial class UpdatedLikedAnswersId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,6 +79,8 @@ namespace CodeHelper.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AnswerId");
 
                     b.HasIndex("UserId");
 
@@ -374,9 +379,17 @@ namespace CodeHelper.Migrations
 
             modelBuilder.Entity("CodeHelper.Models.Domain.Like", b =>
                 {
+                    b.HasOne("CodeHelper.Models.Domain.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CodeHelper.Models.Domain.User", null)
                         .WithMany("LikedAnswers")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Answer");
                 });
 
             modelBuilder.Entity("CodeHelper.Models.Domain.Question", b =>

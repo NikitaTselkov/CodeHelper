@@ -7,11 +7,9 @@ namespace CodeHelper.Models.Domain
     {
         public ICollection<Question> Questions { get; set; }
         public ICollection<Answer> Answers { get; set; }
+        public ICollection<Like> LikedAnswers { get; set; }
 
-        public User()
-        {
-
-        }
+        public User() { }
 
         public User(SignUpViewModel model)
         {
