@@ -11,7 +11,7 @@ namespace CodeHelper.Data
             Database.EnsureCreated();
         }
 
-        public DbSet<User> Users { get; set; }
+        public override DbSet<User> Users { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }

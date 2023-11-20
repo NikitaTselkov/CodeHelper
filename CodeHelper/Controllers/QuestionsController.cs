@@ -132,16 +132,29 @@ namespace CodeHelper.Controllers
         public IActionResult Question(int questionId)
         {
             var model = new QuestionViewModel();
-            var user = _usersRepository.Get(g => g.UserName == HttpContext.User.Identity.Name, g => g.LikedAnswers).FirstOrDefault();
+            var userName = HttpContext.User.Identity?.Name;
+            var user = _usersRepository.Get(g => g.UserName == userName, g => g.LikedAnswers).FirstOrDefault();
+            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
 
-            model.Question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
-
-            foreach (var answer in model.Question.Answers)
+            if (question != null)
             {
-                answer.IsLikedAnswer = false;
+                model.Question = question;
+
+                if (user != model.Question.Author)
+                {
+                    model.Question.ViewsCount += 1;
+                    _questionsRepository.Update(model.Question);
+                    _questionsRepository.Save();
+                }
 
                 if (user != null)
-                    answer.IsLikedAnswer = user.LikedAnswers.Any(a => a.AnswerId == answer.Id);
+                {
+                    foreach (var answer in model.Question.Answers)
+                    {
+                        answer.IsLikedAnswer = false;
+                        answer.IsLikedAnswer = user.LikedAnswers.Any(a => a.AnswerId == answer.Id);
+                    }
+                }
             }
 
             return View(model);
@@ -158,6 +171,7 @@ namespace CodeHelper.Controllers
 
             var model = new QuestionViewModel();
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
             var answer = new Answer()
             {
                 Content = answerContent,
@@ -168,12 +182,11 @@ namespace CodeHelper.Controllers
                 User = user
             };
 
-            model.Question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
-
-            if (model.Question == null) return View(model);
+            if (question == null) return View(model);
             if (model.Question.Answers == null)
                 model.Question.Answers = new List<Answer>();
 
+            model.Question = question;
             model.Question.Answers.Add(answer);
             model.Question.HasAnswers = true;
 
@@ -183,13 +196,15 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
-        public async Task<ContentResult> SetAcceptedAnswer(int answerId)
+        public ContentResult SetAcceptedAnswer(int answerId)
         {
-            var answer = _answerRepository.Get(g => g.Id == answerId).SingleOrDefault();
+            var answer = _answerRepository.Get(g => g.Id == answerId).FirstOrDefault();
 
-            answer.IsAcceptedAnswer = !answer.IsAcceptedAnswer;
-
-            _answerRepository.Update(answer);
+            if (answer != null)
+            {
+                answer.IsAcceptedAnswer = !answer.IsAcceptedAnswer;
+                _answerRepository.Update(answer);
+            }
 
             return Content("");
         }
@@ -197,9 +212,11 @@ namespace CodeHelper.Controllers
         [HttpPost]
         public async Task<ContentResult> SetLikeAnswer(int answerId, bool isLikedAnswer)
         {
-            var user = _usersRepository.Get(g => g.UserName == HttpContext.User.Identity.Name, g => g.LikedAnswers).FirstOrDefault();
+            var userName = HttpContext.User.Identity?.Name;
+            var user = _usersRepository.Get(g => g.UserName == userName, g => g.LikedAnswers).FirstOrDefault();
             var answer = _answerRepository.Get(g => g.Id == answerId).SingleOrDefault();
 
+            if (answer == null) return Content(string.Empty);
             if (user == null) return Content(answer.LikesCount.ToString());
             if (user.LikedAnswers == null)
                 user.LikedAnswers = new List<Like>();

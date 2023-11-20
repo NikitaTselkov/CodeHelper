@@ -20,7 +20,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
             ViewData["ReturnUrl"] = returnUrl;
@@ -30,7 +30,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
 
@@ -61,7 +61,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
-        public IActionResult SignUp(string returnUrl = null)
+        public IActionResult SignUp(string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
             ViewData["ReturnUrl"] = returnUrl;
@@ -71,7 +71,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(SignUpViewModel model, string returnUrl = null)
+        public async Task<IActionResult> SignUp(SignUpViewModel model, string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
 
@@ -110,7 +110,7 @@ namespace CodeHelper.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> SignOut()
+        public new async Task<IActionResult> SignOut()
         {
             await _signInManager.SignOutAsync();
             Response.Cookies.Delete(GlobalConstants.AuthCookieName);
