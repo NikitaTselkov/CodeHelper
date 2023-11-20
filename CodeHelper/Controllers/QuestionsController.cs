@@ -1,5 +1,6 @@
 ﻿using CodeHelper.Core;
 using CodeHelper.Data;
+using CodeHelper.Models;
 using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -31,17 +32,25 @@ namespace CodeHelper.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public IActionResult All()
         {
-            var questions = _questionsRepository.GetAll(g => g.Author, g => g.Tags).ToList();
+            if (TempData["QuestionsViewModel"] is string value)
+            {
+                var model = value.FromJson<QuestionsViewModel>();
+                return View(model);
+            }
+
             var tags = _tagRepository.GetAll().ToList();
+            var questions = _questionsRepository.GetAll(g => g.Author, g => g.Tags).ToList();
 
             var questionsViewModel = new QuestionsViewModel
             {
                 Questions = questions,
-                AllTags = _tagRepository.GetAll().ToList(),
+                AllTags = tags,
                 NoAcceptedAnswer = false,
-                NoAnswers = false
+                NoAnswers = false,
+                Sort = SortFilters.Newest
             };
 
             return View(questionsViewModel);
@@ -67,9 +76,9 @@ namespace CodeHelper.Controllers
 
             #endregion
 
-            #region Sorts
-
             var questions = _questionsRepository.Get(filterPredicate, g => g.Author, g => g.Tags);
+
+            #region Sorts
 
             switch (model.Sort)
             {
@@ -86,9 +95,12 @@ namespace CodeHelper.Controllers
             model.Questions = questions.ToList();
             model.AllTags = _tagRepository.GetAll().ToList();
 
-            return View(model);
+            TempData["QuestionsViewModel"] = model.ToJson();
+
+            return RedirectToAction(nameof(All));
         }
 
+        [HttpGet]
         public IActionResult AskQuestion()
         {
             var tags = _tagRepository.GetAll().ToList();
@@ -183,8 +195,8 @@ namespace CodeHelper.Controllers
             };
 
             if (question == null) return View(model);
-            if (model.Question.Answers == null)
-                model.Question.Answers = new List<Answer>();
+            if (question.Answers == null)
+                question.Answers = new List<Answer>();
 
             model.Question = question;
             model.Question.Answers.Add(answer);
@@ -196,7 +208,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
-        public ContentResult SetAcceptedAnswer(int answerId)
+        public ContentResult SetAcceptedAnswer(int answerId, int questionId)
         {
             var answer = _answerRepository.Get(g => g.Id == answerId).FirstOrDefault();
 
@@ -204,6 +216,14 @@ namespace CodeHelper.Controllers
             {
                 answer.IsAcceptedAnswer = !answer.IsAcceptedAnswer;
                 _answerRepository.Update(answer);
+
+                var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Answers).FirstOrDefault();
+
+                if (question != null)
+                {
+                    question.HasAcceptedAnswer = question.Answers.Any(a => a.IsAcceptedAnswer);
+                    _questionsRepository.Update(question);
+                }
             }
 
             return Content("");
