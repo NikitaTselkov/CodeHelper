@@ -7,5 +7,10 @@ namespace CodeHelper.ViewModels
         public Question Question { get; set; }
         public IList<Tag> AllTags { get; set; }
         public ICollection<string> SelectedTags { get; set; }
+
+        public AskQuestionViewModel()
+        {
+            SelectedTags = new List<string>();
+        }
     }
 }

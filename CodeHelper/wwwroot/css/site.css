@@ -27,7 +27,7 @@ body {
     transition: opacity 0.3s, visibility 0.3s;
 }
 
-.answer-card:hover .btn-visibility {
+.hover-card:hover .btn-visibility {
     visibility: visible;
     opacity: 1;
     transition: opacity 0.6s, visibility 0.6s;

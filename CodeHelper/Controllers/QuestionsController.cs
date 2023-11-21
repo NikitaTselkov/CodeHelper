@@ -100,13 +100,30 @@ namespace CodeHelper.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [HttpPost]
+        public IActionResult EditQuestion(int questionId)
+        {
+            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
+
+            TempData["EditQuestion"] = question.ToJson();
+
+            return RedirectToAction(nameof(AskQuestion));
+        }
+
         [HttpGet]
         public IActionResult AskQuestion()
         {
-            var tags = _tagRepository.GetAll().ToList();
             var model = new AskQuestionViewModel();
 
-            model.AllTags = tags;
+            if (TempData["EditQuestion"] is string value)
+            {
+                model.Question = value.FromJson<Question>();
+                model.SelectedTags = model.Question.Tags.Select(s => s.Name).ToList();
+
+                TempData["EditQuestionId"] = model.Question.Id.ToJson();
+            }
+
+            model.AllTags = _tagRepository.GetAll().ToList();
 
             return View(model);
         }
@@ -114,16 +131,47 @@ namespace CodeHelper.Controllers
         [HttpPost]
         public async Task<IActionResult> AskQuestion(AskQuestionViewModel model)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
             var tags = _tagRepository.GetAll().ToList();
+
+            if (TempData["EditQuestionId"] is string value)
+            {
+                var editQuestionId = value.FromJson<int>();
+                var question = _questionsRepository.Get(g => g.Id == editQuestionId, g => g.Tags, g => g.Answers, g => g.Author).FirstOrDefault();
+
+                if (question != null)
+                {
+                    question.Title = model.Question.Title;
+                    question.Content = model.Question.Content;
+                    question.PublisedDate = DateTime.UtcNow;
+
+                    if (model.SelectedTags != null)
+                    {
+                        question.Tags = new List<Tag>();
+
+                        foreach (var tag in tags)
+                        {
+                            if (model.SelectedTags.Any(a => a == tag.Name))
+                                question.Tags.Add(tag);
+                        }
+                    }
+
+                    _questionsRepository.Update(question);
+
+                    TempData.Remove("EditQuestionId");
+
+                    return RedirectToAction("Question", "Questions", new { questionId = question.Id });
+                }
+            }
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
 
             model.AllTags = tags;
 
             if (user == null || model.Question.Content == null) return View(model);
 
             model.Question.PublisedDate = DateTime.UtcNow;
-            model.Question.Author = user;
             model.Question.Tags = new List<Tag>();
+            model.Question.Author = user;
 
             if (model.SelectedTags != null)
                 foreach (var tag in tags)
