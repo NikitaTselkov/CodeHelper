@@ -21,7 +21,7 @@
         <li class="list-group-item border-0">
             <h1>@Model.Question.Title</h1>
             <div class="d-flex">
-                <div class="text-secondary me-2">Views <span>@Model.Question.ViewsCount</span></div>
+                <div class="text-secondary me-2">Views <span>@CodeHelper.Core.Extensions.CalculateNumber(Model.Question.ViewsCount)</span></div>
                 <div class="text-secondary me-2">Asked <span>@Model.PublishedDate</span></div>
                 <div>
                     @if (Model.Question.Tags != null)
