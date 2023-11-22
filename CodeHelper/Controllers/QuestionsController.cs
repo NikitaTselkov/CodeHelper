@@ -5,6 +5,7 @@ using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CodeHelper.Controllers
 {
@@ -98,6 +99,16 @@ namespace CodeHelper.Controllers
             TempData["QuestionsViewModel"] = model.ToJson();
 
             return RedirectToAction(nameof(All));
+        }
+
+        [HttpPost]
+        public IActionResult EditAnswer(int answerId)
+        {
+            var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User).FirstOrDefault();
+
+            TempData["EditAnswer"] = answer.ToJson();
+
+            return NoContent();
         }
 
         [HttpPost]
@@ -199,6 +210,12 @@ namespace CodeHelper.Controllers
             if (question != null)
             {
                 model.Question = question;
+                model.AnswersContent = new List<Item>();
+
+                foreach (var answer in question.Answers)
+                {
+                    model.AnswersContent.Add(new Item { Id = answer.Id, Value = answer.Content });
+                }
 
                 if (user != model.Question.Author)
                 {
@@ -218,6 +235,23 @@ namespace CodeHelper.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult SaveAnswer(int answerId, List<Item> answersContent)
+        {
+            var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User, g => g.Question).FirstOrDefault();
+
+            if (answer != null && answersContent != null)
+            {
+                answer.Content = answersContent.FirstOrDefault(f => f.Id == answerId).Value;
+                answer.PublisedDate = DateTime.UtcNow;
+                _answerRepository.Update(answer);
+
+                return RedirectToAction("Question", "Questions", new { questionId = answer.Question.Id });
+            }
+
+            return NoContent();
         }
 
         [HttpPost]

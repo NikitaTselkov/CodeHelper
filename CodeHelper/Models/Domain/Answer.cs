@@ -1,4 +1,6 @@
-﻿namespace CodeHelper.Models.Domain
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace CodeHelper.Models.Domain
 {
     public class Answer
     {

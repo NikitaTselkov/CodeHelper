@@ -12,7 +12,7 @@ namespace CodeHelper.Models.Domain
         public bool HasAcceptedAnswer { get; set; }
         public required DateTime PublisedDate { get; set; }
         public ICollection<Tag> Tags { get; set; }
-        public ICollection<Answer> Answers { get; set; }
+        public List<Answer> Answers { get; set; }
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
