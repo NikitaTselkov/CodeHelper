@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing.Matching;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CodeHelper.Data.Repository
 {
@@ -22,6 +19,13 @@ namespace CodeHelper.Data.Repository
             dbSet.Add(entity);
         }
 
+        public int GetRowsCount()
+        {
+            IQueryable<T> query = dbSet;
+
+            return query.Count();
+        }
+
         public IQueryable<T> Get(Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
@@ -36,7 +40,7 @@ namespace CodeHelper.Data.Repository
             return query;
         }
 
-        public IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includeProperties)
+        public IEnumerable<T> GetAll(int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
 
@@ -45,7 +49,10 @@ namespace CodeHelper.Data.Repository
                 query = query.Include(includeExpression);
             }
 
-            return query.ToList();
+            if (rowsCount > 0)
+                return query.Skip(pageOffset).Take(rowsCount).ToList();
+            else
+                return query.Skip(pageOffset).ToList();
         }
 
         public void Remove(T entity)

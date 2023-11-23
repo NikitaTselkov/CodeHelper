@@ -1,4 +1,4 @@
-﻿using CodeHelper.Models;
+﻿using CodeHelper.Core;
 using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Authorization;

@@ -5,7 +5,6 @@ using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CodeHelper.Controllers
 {
@@ -34,7 +33,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
-        public IActionResult All()
+        public IActionResult All(int page = 1)
         {
             if (TempData["QuestionsViewModel"] is string value)
             {
@@ -42,8 +41,11 @@ namespace CodeHelper.Controllers
                 return View(model);
             }
 
+            var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
+
             var tags = _tagRepository.GetAll().ToList();
-            var questions = _questionsRepository.GetAll(g => g.Author, g => g.Tags).ToList();
+            var questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToList();
+            var pagesCount = (int)Math.Ceiling(_questionsRepository.GetRowsCount() / GlobalConstants.QuestionsCountIntPage);
 
             var questionsViewModel = new QuestionsViewModel
             {
@@ -51,7 +53,11 @@ namespace CodeHelper.Controllers
                 AllTags = tags,
                 NoAcceptedAnswer = false,
                 NoAnswers = false,
-                Sort = SortFilters.Newest
+                Sort = SortFilters.Newest,
+                CurrentPage = page,
+                StartPage = page - 2 < 2 ? 2 : page - 2,
+                EndPage = page + 4 >= pagesCount ? pagesCount : page + 4,
+                PageCount = pagesCount
             };
 
             return View(questionsViewModel);

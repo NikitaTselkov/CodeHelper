@@ -1,5 +1,5 @@
+using CodeHelper.Core;
 using CodeHelper.Data;
-using CodeHelper.Models;
 using CodeHelper.Models.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
