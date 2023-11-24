@@ -45,7 +45,7 @@ namespace CodeHelper.Controllers
 
             var tags = _tagRepository.GetAll().ToList();
             var questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToList();
-            var pagesCount = (int)Math.Ceiling(_questionsRepository.GetRowsCount() / GlobalConstants.QuestionsCountIntPage);
+            var pagesCount = (int)Math.Ceiling(_questionsRepository.GetAll().Count() / GlobalConstants.QuestionsCountIntPage);
 
             var questionsViewModel = new QuestionsViewModel
             {
@@ -54,10 +54,13 @@ namespace CodeHelper.Controllers
                 NoAcceptedAnswer = false,
                 NoAnswers = false,
                 Sort = SortFilters.Newest,
-                CurrentPage = page,
-                StartPage = page - 2 < 2 ? 2 : page - 2,
-                EndPage = page + 4 >= pagesCount ? pagesCount : page + 4,
-                PageCount = pagesCount
+                Pagination = new Pagination
+                {
+                    CurrentPage = page,
+                    StartPage = page - 2 < 2 ? 2 : page - 2,
+                    EndPage = page + 4 >= pagesCount ? pagesCount : page + 4,
+                    PageCount = pagesCount
+                }
             };
 
             return View(questionsViewModel);
@@ -206,17 +209,31 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet("{questionId}")]
-        public IActionResult Question(int questionId)
+        public IActionResult Question(int questionId, int page = 1)
         {
             var model = new QuestionViewModel();
             var userName = HttpContext.User.Identity?.Name;
             var user = _usersRepository.Get(g => g.UserName == userName, g => g.LikedAnswers).FirstOrDefault();
-            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
+            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
 
             if (question != null)
             {
+                var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
+                var answers = _answerRepository.Get(g => g.Question.Id == questionId, pageOffset, (int)GlobalConstants.AnswersCountIntPage, g => g.Question).ToList();
+                var answersCount = _answerRepository.Get(g => g.Question.Id == questionId, g => g.Question).Count();
+                var pagesCount = (int)Math.Ceiling(answersCount / GlobalConstants.AnswersCountIntPage);
+
+                question.Answers = answers;
                 model.Question = question;
+                model.AnswersCount = answersCount;
                 model.AnswersContent = new List<Item>();
+                model.Pagination = new Pagination
+                {
+                    CurrentPage = page,
+                    StartPage = page - 2 < 2 ? 2 : page - 2,
+                    EndPage = page + 4 >= pagesCount ? pagesCount : page + 4,
+                    PageCount = pagesCount
+                };
 
                 foreach (var answer in question.Answers)
                 {

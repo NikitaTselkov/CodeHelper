@@ -1,5 +1,6 @@
 ﻿using CodeHelper.Models.Domain;
 using CodeHelper.Core;
+using CodeHelper.Models;
 
 namespace CodeHelper.ViewModels
 {
@@ -12,8 +13,10 @@ namespace CodeHelper.ViewModels
     public class QuestionViewModel
     {
         public Question Question { get; set; }
+        public Pagination Pagination { get; set; }
         public string AnswerContent { get; set; }
         public List<Item> AnswersContent { get; set; }
+        public int AnswersCount { get; set; }
 
         public string PublishedDate
         {

@@ -19,13 +19,6 @@ namespace CodeHelper.Data.Repository
             dbSet.Add(entity);
         }
 
-        public int GetRowsCount()
-        {
-            IQueryable<T> query = dbSet;
-
-            return query.Count();
-        }
-
         public IQueryable<T> Get(Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
@@ -37,7 +30,26 @@ namespace CodeHelper.Data.Repository
 
             if (filter != null)
                 query = query.Where(filter);
+
             return query;
+        }
+
+        public IQueryable<T> Get(Expression<Func<T, bool>>? filter, int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = dbSet;
+
+            foreach (var includeExpression in includeProperties)
+            {
+                query = query.Include(includeExpression);
+            }
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            if (rowsCount > 0)
+                return query.Skip(pageOffset).Take(rowsCount);
+            else
+                return query.Skip(pageOffset);
         }
 
         public IEnumerable<T> GetAll(int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
@@ -50,9 +62,9 @@ namespace CodeHelper.Data.Repository
             }
 
             if (rowsCount > 0)
-                return query.Skip(pageOffset).Take(rowsCount).ToList();
+                return query.Skip(pageOffset).Take(rowsCount);
             else
-                return query.Skip(pageOffset).ToList();
+                return query.Skip(pageOffset);
         }
 
         public void Remove(T entity)
