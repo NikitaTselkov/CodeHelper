@@ -5,6 +5,7 @@ using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace CodeHelper.Controllers
 {
@@ -35,32 +36,69 @@ namespace CodeHelper.Controllers
         [HttpGet]
         public IActionResult All(int page = 1)
         {
+            var tags = _tagRepository.GetAll().ToList();
+            var pagesCount = 0;
+            var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
+
             if (TempData["QuestionsViewModel"] is string value)
             {
                 var model = value.FromJson<QuestionsViewModel>();
+                var filterPredicate = PredicateBuilder.True<Question>();
+                var sortPredicate = PredicateBuilder.True<Question>();
+
+                #region Filters
+
+                var selectedTags = model.SelectedTags;
+
+                if (selectedTags != null)
+                    filterPredicate = filterPredicate.And(e => e.Tags.Any(a => selectedTags.Contains(a.Name)));
+
+                if (model.NoAnswers)
+                    filterPredicate = filterPredicate.And(e => e.HasAnswers == false);
+
+                if (model.NoAcceptedAnswer)
+                    filterPredicate = filterPredicate.And(e => e.HasAcceptedAnswer == false);
+
+                #endregion
+
+                var questions = _questionsRepository.Get(filterPredicate, g => g.Author, g => g.Tags);
+
+                #region Sorts
+
+                switch (model.Sort)
+                {
+                    case SortFilters.Newest:
+                        questions = questions.OrderBy(o => o.PublisedDate);
+                        break;
+                    case SortFilters.MostFrequent:
+                        questions = questions.OrderByDescending(o => o.ViewsCount);
+                        break;
+                }
+
+                #endregion
+
+                pagesCount = (int)Math.Ceiling(questions.Count() / GlobalConstants.QuestionsCountIntPage);
+                questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage);
+
+                TempData["QuestionsViewModel"] = model.ToJson();
+
+                model.AllTags = tags;
+                model.Questions = questions.ToList();
+                model.Pagination = new Pagination(page, pagesCount);
+
                 return View(model);
             }
 
-            var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
-
-            var tags = _tagRepository.GetAll().ToList();
-            var questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToList();
-            var pagesCount = (int)Math.Ceiling(_questionsRepository.GetAll().Count() / GlobalConstants.QuestionsCountIntPage);
+            pagesCount = (int)Math.Ceiling(_questionsRepository.GetAll().Count() / GlobalConstants.QuestionsCountIntPage);
 
             var questionsViewModel = new QuestionsViewModel
             {
-                Questions = questions,
+                Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToList(),
                 AllTags = tags,
                 NoAcceptedAnswer = false,
                 NoAnswers = false,
                 Sort = SortFilters.Newest,
-                Pagination = new Pagination
-                {
-                    CurrentPage = page,
-                    StartPage = page - 2 < 2 ? 2 : page - 2,
-                    EndPage = page + 4 >= pagesCount ? pagesCount : page + 4,
-                    PageCount = pagesCount
-                }
+                Pagination = new Pagination(page, pagesCount)
             };
 
             return View(questionsViewModel);
@@ -69,42 +107,6 @@ namespace CodeHelper.Controllers
         [HttpPost]
         public IActionResult All(QuestionsViewModel model)
         {
-            var tags = model.SelectedTags;
-            var filterPredicate = PredicateBuilder.True<Question>();
-            var sortPredicate = PredicateBuilder.True<Question>();
-
-            #region Filters
-
-            if (tags != null)
-                filterPredicate = filterPredicate.And(e => e.Tags.Any(a => tags.Contains(a.Name)));
-
-            if (model.NoAnswers)
-                filterPredicate = filterPredicate.And(e => e.HasAnswers == false);
-
-            if (model.NoAcceptedAnswer)
-                filterPredicate = filterPredicate.And(e => e.HasAcceptedAnswer == false);
-
-            #endregion
-
-            var questions = _questionsRepository.Get(filterPredicate, g => g.Author, g => g.Tags);
-
-            #region Sorts
-
-            switch (model.Sort)
-            {
-                case Models.SortFilters.Newest:
-                    questions = questions.OrderBy(o => o.PublisedDate);
-                    break;
-                case Models.SortFilters.MostFrequent:
-                    questions = questions.OrderByDescending(o => o.ViewsCount);
-                    break;
-            }
-
-            #endregion
-
-            model.Questions = questions.ToList();
-            model.AllTags = _tagRepository.GetAll().ToList();
-
             TempData["QuestionsViewModel"] = model.ToJson();
 
             return RedirectToAction(nameof(All));
@@ -227,13 +229,7 @@ namespace CodeHelper.Controllers
                 model.Question = question;
                 model.AnswersCount = answersCount;
                 model.AnswersContent = new List<Item>();
-                model.Pagination = new Pagination
-                {
-                    CurrentPage = page,
-                    StartPage = page - 2 < 2 ? 2 : page - 2,
-                    EndPage = page + 4 >= pagesCount ? pagesCount : page + 4,
-                    PageCount = pagesCount
-                };
+                model.Pagination = new Pagination(page, pagesCount);
 
                 foreach (var answer in question.Answers)
                 {

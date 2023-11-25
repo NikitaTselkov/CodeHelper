@@ -1,6 +1,4 @@
-﻿@using CodeHelper.Core
-@using Microsoft.Extensions.Primitives
-@model QuestionsViewModel
+﻿@model QuestionsViewModel
 @{
     ViewData["Title"] = "All Questions";
 }
@@ -119,7 +117,9 @@
 
             @for (int i = Model.Pagination.StartPage; i < Model.Pagination.EndPage; i++)
             {
-                <li class="page-item @(Model.Pagination.CurrentPage == i ? "active" : "")"><a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="@i">@i</a></li>
+                <li class="page-item @(Model.Pagination.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="@i">@i</a>
+                </li>
             }
 
             @if (Model.Pagination.EndPage < Model.Pagination.PageCount)

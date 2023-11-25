@@ -35,8 +35,7 @@
         <li class="list-group-item border-0">
             <div class="card hover-card p-3">
                 <textarea asp-for="Question.Content" class="mb-3 readOnlyEditor"></textarea>
-
-                @if (Model.Question.Author.UserName == User?.Identity?.Name)
+                @if (Model.Question.Author?.UserName == User?.Identity?.Name)
                 {
                     <span class="d-flex justify-content-end">
                         <button asp-controller="Questions" asp-action="EditQuestion" asp-route-questionId="@Model.Question.Id" class="btn btn-outline-secondary btn-visibility p-0 pb-1 px-1 me-2 my-auto shadow-none" type="submit">
@@ -122,11 +121,11 @@
                         <blockquote class="blockquote mb-0">
                             <footer class="blockquote-footer fs-6">
                                 <span>@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
-                                <cite class="ms-2">@Model.Question.Answers[i].User.UserName</cite>
+                                <cite class="ms-2">@Model.Question.Answers[i].User?.UserName</cite>
                             </footer>
                         </blockquote>
 
-                        @if (Model.Question.Answers[i].User.UserName == User?.Identity?.Name)
+                        @if (Model.Question.Answers[i].User?.UserName == User?.Identity?.Name)
                         {
                             <span id="editAnswerButton+@Model.Question.Answers[i].Id" class="d-flex justify-content-end">
                                 <button class="btn btn-outline-secondary btn-visibility p-0 pb-1 px-1 me-2 my-auto shadow-none" type="button" onclick="EditAnswer(@Model.Question.Answers[i].Id)">
