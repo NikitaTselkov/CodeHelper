@@ -88,8 +88,8 @@
             </div>
         </div>
         <div class="card-body">
-            <blockquote class="blockquote mb-0">
-                <p style="font-size: medium; height: 45px; overflow: hidden;">@question.Content</p>
+            <textarea asp-for="@question.Content" class="readOnlyEditor"></textarea>
+            <blockquote class="blockquote mb-0 mt-1" style="position: relative;">
                 <footer class="blockquote-footer fs-6 d-flex">
                     <span>@question.PublisedDate.ToShortDateString()</span>
                     <cite class="ms-2">@question.Author.UserName</cite>
@@ -136,4 +136,3 @@
         </ul>
     </nav>
 }
-

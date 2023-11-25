@@ -7,13 +7,14 @@ var allReadOnlyEditors = document.querySelectorAll('.readOnlyEditor');
 for (var i = 0; i < allReadOnlyEditors.length; ++i) {
     ClassicEditor.create(allReadOnlyEditors[i], {
         licenseKey: '',
+        toolbar: [],
         ui: {
             poweredBy: {
                 position: 'inside',
                 side: 'right',
                 label: 'This is'
             }
-        }
+        },
     })
         .then(editor => {
             window.editor = editor;
@@ -22,6 +23,8 @@ for (var i = 0; i < allReadOnlyEditors.length; ++i) {
             editor.editing.view.change(writer => {
                 const viewEditableRoot = editor.editing.view.document.getRoot();
                 writer.removeClass('ck-editor__editable_inline', viewEditableRoot);
+                writer.setStyle('max-height', '80px', viewEditableRoot);
+                writer.setStyle('overflow', 'hidden', viewEditableRoot);
             });
         })
         .catch(error => {

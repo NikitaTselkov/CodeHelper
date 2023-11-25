@@ -118,7 +118,7 @@
                             <textarea asp-for="@Model.AnswersContent[i].Value" class="editor"></textarea>
                         </div>
                         
-                        <blockquote class="blockquote mb-0">
+                        <blockquote class="blockquote mb-0 mt-2" style="position: relative;">
                             <footer class="blockquote-footer fs-6">
                                 <span>@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
                                 <cite class="ms-2">@Model.Question.Answers[i].User?.UserName</cite>
@@ -209,7 +209,6 @@
         </li>
     </ul>
 </form>
-
 <script type="text/javascript">
     function SaveAnswer(answerId, answerContent) {
         var data = 

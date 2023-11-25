@@ -21,6 +21,14 @@ body {
     margin-bottom: 60px;
 }
 
+.editor {
+    display: none !important;
+}
+
+.readOnlyEditor {
+    display: none !important;
+}
+
 .pagination .page-item .page-link {
     background-color: #6c757d !important;
     color: #fff !important;
