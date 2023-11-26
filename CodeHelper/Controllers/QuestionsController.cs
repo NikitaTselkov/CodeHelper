@@ -16,13 +16,15 @@ namespace CodeHelper.Controllers
         private readonly LikesRepository _likesRepository;
         private readonly UsersRepository _usersRepository;
         private readonly UserManager<User> _userManager;
+        private readonly ImageManager _imageManager;
 
         public QuestionsController(QuestionsRepository questionsRepository,
             TagRepository tagRepository,
             AnswerRepository answerRepository,
             UsersRepository usersRepository,
             LikesRepository likesRepository,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            ImageManager imageManager)
         {
             _questionsRepository = questionsRepository;
             _tagRepository = tagRepository;
@@ -30,6 +32,7 @@ namespace CodeHelper.Controllers
             _usersRepository = usersRepository;
             _likesRepository = likesRepository;
             _userManager = userManager;
+            _imageManager = imageManager;
         }
 
         [HttpGet]
@@ -112,6 +115,19 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
+        public IActionResult UploadImage(List<IFormFile> files)
+        {
+            var filePath = string.Empty;
+
+            foreach (var image in files)
+            {
+                filePath = _imageManager.SaveImage(image);
+            }
+
+            return Json(new { url = filePath });
+        }
+
+        [HttpPost]
         public IActionResult EditAnswer(int answerId)
         {
             var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User).FirstOrDefault();
@@ -161,6 +177,8 @@ namespace CodeHelper.Controllers
 
                 if (question != null)
                 {
+                    _imageManager.RemoveImages(question.Content, model.Question.Content);
+
                     question.Title = model.Question.Title;
                     question.Content = model.Question.Content;
                     question.PublisedDate = DateTime.UtcNow;
@@ -262,7 +280,11 @@ namespace CodeHelper.Controllers
 
             if (answer != null && answersContent != null)
             {
-                answer.Content = answersContent.FirstOrDefault(f => f.Id == answerId).Value;
+                var answerContent = answersContent.FirstOrDefault(f => f.Id == answerId).Value;
+
+                _imageManager.RemoveImages(answer.Content, answerContent);
+
+                answer.Content = answerContent;
                 answer.PublisedDate = DateTime.UtcNow;
                 _answerRepository.Update(answer);
 

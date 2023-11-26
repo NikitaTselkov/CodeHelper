@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using CodeHelper.Models.Domain;
+using CodeHelper.ViewModels;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace CodeHelper.Core
 {
