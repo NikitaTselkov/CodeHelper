@@ -2,6 +2,35 @@
 import Tags from "./tags.js";
 Tags.init();
 
+var allreadOnlyNoFormatEditors = document.querySelectorAll('.readOnlyNoFormatEditor');
+
+for (var i = 0; i < allreadOnlyNoFormatEditors.length; ++i) {
+    ClassicEditor.create(allreadOnlyNoFormatEditors[i], {
+        licenseKey: '',
+        ui: {
+            poweredBy: {
+                position: 'inside',
+                side: 'right',
+                label: 'This is'
+            }
+        },
+    })
+        .then(editor => {
+            editor.execute('removeFormat');
+            editor.enableReadOnlyMode('readOnlyNoFormatEditor');
+            editor.ui.view.toolbar.element.style.display = 'none';
+            editor.editing.view.change(writer => {
+                const viewEditableRoot = editor.editing.view.document.getRoot();
+                writer.removeClass('ck-editor__editable_inline', viewEditableRoot);
+                writer.setStyle('max-height', '70px', viewEditableRoot);
+                writer.setStyle('overflow', 'hidden', viewEditableRoot);
+            });
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
 var allReadOnlyEditors = document.querySelectorAll('.readOnlyEditor');
 
 for (var i = 0; i < allReadOnlyEditors.length; ++i) {
@@ -23,8 +52,6 @@ for (var i = 0; i < allReadOnlyEditors.length; ++i) {
             editor.editing.view.change(writer => {
                 const viewEditableRoot = editor.editing.view.document.getRoot();
                 writer.removeClass('ck-editor__editable_inline', viewEditableRoot);
-                writer.setStyle('max-height', '80px', viewEditableRoot);
-                writer.setStyle('overflow', 'hidden', viewEditableRoot);
             });
         })
         .catch(error => {

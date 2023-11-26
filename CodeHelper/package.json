@@ -3,6 +3,7 @@
     "@ckeditor/ckeditor5-build-classic": "^40.0.0",
     "@ckeditor/ckeditor5-core": "^40.0.0",
     "@ckeditor/ckeditor5-engine": "^40.0.0",
+    "@ckeditor/ckeditor5-remove-format": "^40.1.0",
     "@ckeditor/ckeditor5-ui": "^40.0.0",
     "bootstrap5-tags": "^1.6.11"
   }

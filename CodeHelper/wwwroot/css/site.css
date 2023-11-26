@@ -25,6 +25,10 @@ body {
     display: none !important;
 }
 
+.readOnlyNoFormatEditor {
+    display: none !important;
+}
+
 .readOnlyEditor {
     display: none !important;
 }

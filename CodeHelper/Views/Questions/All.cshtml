@@ -88,8 +88,8 @@
             </div>
         </div>
         <div class="card-body">
-            <textarea asp-for="@question.Content" class="readOnlyEditor"></textarea>
-            <blockquote class="blockquote mb-0 mt-1" style="position: relative;">
+            <textarea asp-for="@question.Content" class="readOnlyNoFormatEditor"></textarea>
+            <blockquote class="blockquote mb-0 mt-2" style="position: relative;">
                 <footer class="blockquote-footer fs-6 d-flex">
                     <span>@question.PublisedDate.ToShortDateString()</span>
                     <cite class="ms-2">@question.Author.UserName</cite>
@@ -136,3 +136,5 @@
         </ul>
     </nav>
 }
+
+<script src="~/js/ckeditor_remove_format.js"></script>
