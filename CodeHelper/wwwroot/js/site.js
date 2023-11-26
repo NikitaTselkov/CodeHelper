@@ -24,6 +24,7 @@ for (var i = 0; i < allreadOnlyNoFormatEditors.length; ++i) {
                 writer.removeClass('ck-editor__editable_inline', viewEditableRoot);
                 writer.setStyle('max-height', '70px', viewEditableRoot);
                 writer.setStyle('overflow', 'hidden', viewEditableRoot);
+                writer.setStyle('word-wrap', 'normal', viewEditableRoot);
             });
         })
         .catch(error => {
