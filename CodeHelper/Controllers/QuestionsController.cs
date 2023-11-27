@@ -70,7 +70,7 @@ namespace CodeHelper.Controllers
                 switch (model.Sort)
                 {
                     case SortFilters.Newest:
-                        questions = questions.OrderBy(o => o.PublisedDate);
+                        questions = questions.OrderByDescending(o => o.PublisedDate);
                         break;
                     case SortFilters.MostFrequent:
                         questions = questions.OrderByDescending(o => o.ViewsCount);
