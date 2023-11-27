@@ -63,7 +63,19 @@ namespace CodeHelper.Controllers
 
                 #endregion
 
-                var questions = _questionsRepository.Get(filterPredicate, g => g.Author, g => g.Tags);
+                #region Search
+
+                var searchQuery = string.Empty;
+
+                if (TempData["SearchQuery"] is string sQuery)
+                {
+                    searchQuery = sQuery.FromJson<string>();
+                    TempData["SearchQuery"] = sQuery;
+                }
+
+                #endregion
+
+                var questions = _questionsRepository.SearchByText(searchQuery, filterPredicate, 0, 0, g => g.Answers, g => g.Author);
 
                 #region Sorts
 
@@ -91,6 +103,28 @@ namespace CodeHelper.Controllers
                 return View(model);
             }
 
+            if (TempData["SearchQuery"] is string query)
+            {
+                var questions = _questionsRepository.SearchByText(query.FromJson<string>(), null, 0, 0, g => g.Answers, g => g.Author);
+
+                pagesCount = (int)Math.Ceiling(questions.Count() / GlobalConstants.QuestionsCountIntPage);
+                questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage);
+
+                var model = new QuestionsViewModel
+                {
+                    Questions = questions.ToList(),
+                    AllTags = tags,
+                    NoAcceptedAnswer = false,
+                    NoAnswers = false,
+                    Sort = SortFilters.Newest,
+                    Pagination = new Pagination(page, pagesCount)
+                };
+
+                TempData["SearchQuery"] = query;
+
+                return View(model);
+            }
+
             pagesCount = (int)Math.Ceiling(_questionsRepository.GetAll().Count() / GlobalConstants.QuestionsCountIntPage);
 
             var questionsViewModel = new QuestionsViewModel
@@ -110,6 +144,14 @@ namespace CodeHelper.Controllers
         public IActionResult All(QuestionsViewModel model)
         {
             TempData["QuestionsViewModel"] = model.ToJson();
+
+            return RedirectToAction(nameof(All));
+        }
+
+        [HttpPost]
+        public IActionResult Search(string query)
+        {
+            TempData["SearchQuery"] = query.ToJson();
 
             return RedirectToAction(nameof(All));
         }

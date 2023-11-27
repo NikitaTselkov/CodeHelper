@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Korzh.EasyQuery.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace CodeHelper.Data.Repository
@@ -17,6 +18,27 @@ namespace CodeHelper.Data.Repository
         public void Add(T entity)
         {
             dbSet.Add(entity);
+        }
+
+        public IQueryable<T> SearchByText(string text, Expression<Func<T, bool>>? filter = null, int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = dbSet;
+
+            if (!string.IsNullOrEmpty(text))
+                query = query.FullTextSearchQuery(text);
+
+            foreach (var includeExpression in includeProperties)
+            {
+                query = query.Include(includeExpression);
+            }
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            if (rowsCount > 0)
+                return query.Skip(pageOffset).Take(rowsCount);
+            else
+                return query.Skip(pageOffset);
         }
 
         public IQueryable<T> Get(Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includeProperties)

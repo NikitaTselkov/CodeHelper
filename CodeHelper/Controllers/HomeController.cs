@@ -15,7 +15,9 @@ namespace CodeHelper.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            TempData.Clear();
+
+            return RedirectToAction("All", "Questions");
         }
 
         public IActionResult Privacy()
