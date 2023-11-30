@@ -1,6 +1,5 @@
 ﻿using CodeHelper.Data.Repository;
 using CodeHelper.Models.Domain;
-using Microsoft.EntityFrameworkCore;
 
 namespace CodeHelper.Data
 {

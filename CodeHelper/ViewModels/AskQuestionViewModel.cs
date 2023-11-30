@@ -5,12 +5,6 @@ namespace CodeHelper.ViewModels
     public class AskQuestionViewModel
     {
         public Question Question { get; set; }
-        public IList<Tag> AllTags { get; set; }
-        public ICollection<string> SelectedTags { get; set; }
-
-        public AskQuestionViewModel()
-        {
-            SelectedTags = new List<string>();
-        }
+        public ICollection<int> SelectedTags { get; set; }
     }
 }

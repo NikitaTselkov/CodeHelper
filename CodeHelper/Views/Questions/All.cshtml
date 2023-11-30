@@ -17,12 +17,15 @@
             <ul class="list-group rounded-0 rounded-start">
                 <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Tags</li>
                 <li class="list-group-item h-100" style="min-width: 200px;">
-                    <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" data-allow-clear="true" id="validationTags" multiple>
+                    <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" id="validationTags"
+                            data-allow-clear="true"
+                            data-allow-new="false"
+                            data-server="Questions/Tags"
+                            data-live-server="1"
+                            data-selected=""
+                            multiple>
+
                         <option disabled hidden value="">Choose a tag...</option>
-                        @for (int i = 0; i < Model.AllTags.Count; i++)
-                        {
-                            <option value="@Model.AllTags[i].Name">@Model.AllTags[i].DisplayName</option>
-                        }
                     </select>
                     <div class="invalid-feedback">Please select a valid tag.</div>
                 </li>
@@ -83,7 +86,7 @@
                 @if (question.Tags != null)
                     @foreach (var tag in question.Tags)
                     {
-                        <span class="m-1 mb-0 bg-secondary text-white badge">@tag.DisplayName</span>
+                        <span class="m-1 mb-0 bg-secondary text-white badge">@tag.Name</span>
                     }
             </div>
         </div>

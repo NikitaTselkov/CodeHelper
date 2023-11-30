@@ -8,7 +8,7 @@ namespace CodeHelper.Data
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         public override DbSet<User> Users { get; set; }

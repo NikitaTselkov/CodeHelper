@@ -3,8 +3,10 @@ using CodeHelper.Data;
 using CodeHelper.Models;
 using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CodeHelper.Controllers
 {
@@ -38,7 +40,6 @@ namespace CodeHelper.Controllers
         [HttpGet]
         public IActionResult All(int page = 1)
         {
-            var tags = _tagRepository.GetAll().ToList();
             var pagesCount = 0;
             var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
 
@@ -53,7 +54,7 @@ namespace CodeHelper.Controllers
                 var selectedTags = model.SelectedTags;
 
                 if (selectedTags != null)
-                    filterPredicate = filterPredicate.And(e => e.Tags.Any(a => selectedTags.Contains(a.Name)));
+                    filterPredicate = filterPredicate.And(e => e.Tags.Any(a => selectedTags.Contains(a.Id)));
 
                 if (model.NoAnswers)
                     filterPredicate = filterPredicate.And(e => e.HasAnswers == false);
@@ -75,7 +76,7 @@ namespace CodeHelper.Controllers
 
                 #endregion
 
-                var questions = _questionsRepository.SearchByText(searchQuery, filterPredicate, 0, 0, g => g.Answers, g => g.Author);
+                var questions = _questionsRepository.SearchByText(searchQuery, filterPredicate, 0, 0, g => g.Author, g => g.Tags);
 
                 #region Sorts
 
@@ -96,7 +97,6 @@ namespace CodeHelper.Controllers
 
                 TempData["QuestionsViewModel"] = model.ToJson();
 
-                model.AllTags = tags;
                 model.Questions = questions.ToList();
                 model.Pagination = new Pagination(page, pagesCount);
 
@@ -105,7 +105,7 @@ namespace CodeHelper.Controllers
 
             if (TempData["SearchQuery"] is string query)
             {
-                var questions = _questionsRepository.SearchByText(query.FromJson<string>(), null, 0, 0, g => g.Answers, g => g.Author);
+                var questions = _questionsRepository.SearchByText(query.FromJson<string>(), null, 0, 0, g => g.Author, g => g.Tags);
 
                 pagesCount = (int)Math.Ceiling(questions.Count() / GlobalConstants.QuestionsCountIntPage);
                 questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage);
@@ -113,7 +113,6 @@ namespace CodeHelper.Controllers
                 var model = new QuestionsViewModel
                 {
                     Questions = questions.ToList(),
-                    AllTags = tags,
                     NoAcceptedAnswer = false,
                     NoAnswers = false,
                     Sort = SortFilters.Newest,
@@ -130,7 +129,6 @@ namespace CodeHelper.Controllers
             var questionsViewModel = new QuestionsViewModel
             {
                 Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToList(),
-                AllTags = tags,
                 NoAcceptedAnswer = false,
                 NoAnswers = false,
                 Sort = SortFilters.Newest,
@@ -154,6 +152,16 @@ namespace CodeHelper.Controllers
             TempData["SearchQuery"] = query.ToJson();
 
             return RedirectToAction(nameof(All));
+        }
+
+        [HttpGet]
+        public IActionResult Tags([FromQuery] string query)
+        {
+            var tags = _tagRepository.SearchByText(query, null, 0, 5).ToList();
+
+            var result = tags.Select(s => new { value = s.Id, label = s.Name });
+
+            return Json(result);
         }
 
         [HttpPost]
@@ -197,12 +205,10 @@ namespace CodeHelper.Controllers
             if (TempData["EditQuestion"] is string value)
             {
                 model.Question = value.FromJson<Question>();
-                model.SelectedTags = model.Question.Tags.Select(s => s.Name).ToList();
+                model.SelectedTags = model.Question.Tags.Select(s => s.Id).ToList();
 
                 TempData["EditQuestionId"] = model.Question.Id.ToJson();
             }
-
-            model.AllTags = _tagRepository.GetAll().ToList();
 
             return View(model);
         }
@@ -210,8 +216,6 @@ namespace CodeHelper.Controllers
         [HttpPost]
         public async Task<IActionResult> AskQuestion(AskQuestionViewModel model)
         {
-            var tags = _tagRepository.GetAll().ToList();
-
             if (TempData["EditQuestionId"] is string value)
             {
                 var editQuestionId = value.FromJson<int>();
@@ -224,17 +228,7 @@ namespace CodeHelper.Controllers
                     question.Title = model.Question.Title;
                     question.Content = model.Question.Content;
                     question.PublisedDate = DateTime.UtcNow;
-
-                    if (model.SelectedTags != null)
-                    {
-                        question.Tags = new List<Tag>();
-
-                        foreach (var tag in tags)
-                        {
-                            if (model.SelectedTags.Any(a => a == tag.Name))
-                                question.Tags.Add(tag);
-                        }
-                    }
+                    question.Tags = _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id)).ToList();
 
                     _questionsRepository.Update(question);
 
@@ -246,20 +240,13 @@ namespace CodeHelper.Controllers
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            model.AllTags = tags;
-
             if (user == null || model.Question.Content == null) return View(model);
 
             model.Question.PublisedDate = DateTime.UtcNow;
             model.Question.Tags = new List<Tag>();
             model.Question.Author = user;
 
-            if (model.SelectedTags != null)
-                foreach (var tag in tags)
-                {
-                    if (model.SelectedTags.Any(a => a == tag.Name))
-                        model.Question.Tags.Add(tag);
-                }
+            model.Question.Tags = _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id)).ToList();
 
             _questionsRepository.Add(model.Question);
             _questionsRepository.Save();

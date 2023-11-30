@@ -15,15 +15,14 @@
                 <textarea asp-for="Question.Content" class="mb-3 editor"></textarea>
 
                 <h3>Tags</h3>
-                <select asp-for="@Model.SelectedTags" class="form-select w-100" data-badge-style="secondary" data-allow-clear="true" id="validationTags" multiple>
-                    @if (Model.AllTags != null)
-                    {
-                        <option disabled hidden value="">Choose a tag...</option>
-                        @for (int i = 0; i < Model.AllTags.Count; i++)
-                        {
-                            <option value="@Model.AllTags[i].Name">@Model.AllTags[i].DisplayName</option>
-                        }
-                    }
+                <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" id="validationTags"
+                        data-allow-clear="true"
+                        data-allow-new="false"
+                        data-server="Tags"
+                        data-live-server="1"
+                        multiple>
+
+                    <option disabled hidden value="">Choose a tag...</option>
                 </select>
             </div>
         </li>
