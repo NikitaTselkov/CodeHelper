@@ -22,10 +22,16 @@
                             data-allow-new="false"
                             data-server="Questions/Tags"
                             data-live-server="1"
-                            data-selected=""
                             multiple>
 
                         <option disabled hidden value="">Choose a tag...</option>
+
+                        @if (Model.Tags != null)
+                            @foreach (var item in Model.Tags)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+
                     </select>
                     <div class="invalid-feedback">Please select a valid tag.</div>
                 </li>

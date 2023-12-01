@@ -7,6 +7,7 @@ namespace CodeHelper.ViewModels
     {
         public ICollection<Question> Questions { get; set; }
         public ICollection<int> SelectedTags { get; set; }
+        public ICollection<Tag> Tags { get; set; }
         public Pagination Pagination { get; set; }
         public bool NoAnswers { get; set; }
         public bool NoAcceptedAnswer { get; set; }

@@ -23,6 +23,12 @@
                         multiple>
 
                     <option disabled hidden value="">Choose a tag...</option>
+
+                    @if (Model.Question?.Tags != null)
+                        @foreach (var item in Model.Question.Tags)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
                 </select>
             </div>
         </li>

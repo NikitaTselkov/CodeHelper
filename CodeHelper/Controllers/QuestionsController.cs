@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CodeHelper.Controllers
 {
@@ -99,6 +100,18 @@ namespace CodeHelper.Controllers
 
                 model.Questions = questions.ToList();
                 model.Pagination = new Pagination(page, pagesCount);
+
+                var tags = new List<Tag>();
+
+                foreach (var tag in model.SelectedTags)
+                {
+                    var t = _tagRepository.Get(g => g.Id == tag).FirstOrDefault();
+
+                    if (t != null)
+                        tags.Add(t);
+                }
+
+                model.Tags = tags;
 
                 return View(model);
             }
