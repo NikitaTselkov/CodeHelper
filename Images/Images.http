@@ -1,0 +1,11 @@
+@Images_HostAddress = https://localhost:5290
+
+GET {{Images_HostAddress}}/images/
+Accept: application/json
+
+###
+
+GET {{Images_HostAddress}}/images/1
+Accept: application/json
+
+###

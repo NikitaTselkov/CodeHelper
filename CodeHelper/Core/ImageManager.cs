@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace CodeHelper.Core
 {
@@ -10,21 +11,37 @@ namespace CodeHelper.Core
         public ImageManager(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _domen = configuration["domen"];
-            _serverImagesPath = environment.WebRootPath;
+            _serverImagesPath = GetServerImagesPath(environment.WebRootPath);
+        }
+
+        private string GetServerImagesPath(string path)
+        {
+            var parent = Directory.GetParent(path)?.FullName;
+
+            if (Directory.GetParent(parent)?.Name == "CodeHelper")
+            {
+                var p = Directory.GetParent(parent);
+
+                return Path.Combine(p.FullName, "Images", "Data");
+            }
+
+            GetServerImagesPath(parent);
+
+            return string.Empty;
         }
 
         public string SaveImage(IFormFile image)
         {
             string filePath;
             var imageId = Guid.NewGuid().ToString().Replace("-", "_");
-            var serverImagesPath = Path.Combine(_serverImagesPath, "Images", imageId + image.FileName);
+            var serverImagesPath = Path.Combine(_serverImagesPath, imageId + image.FileName);
 
             using (var s = new FileStream(serverImagesPath, FileMode.Create))
             {
                 image.CopyTo(s);
             }
 
-            filePath = Path.Combine(_domen, "Images", imageId + image.FileName);
+            filePath = Path.Combine(_domen, "Images/", imageId + image.FileName);
             return filePath;
         }
 

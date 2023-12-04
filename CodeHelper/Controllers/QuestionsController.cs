@@ -218,6 +218,7 @@ namespace CodeHelper.Controllers
                 model.SelectedTags = model.Question.Tags.Select(s => s.Id).ToList();
 
                 TempData["EditQuestionId"] = model.Question.Id.ToJson();
+                TempData["EditQuestion"] = value;
             }
 
             return View(model);
@@ -233,6 +234,9 @@ namespace CodeHelper.Controllers
 
                 if (question != null)
                 {
+                    if (question.Author.Id != _userManager.GetUserId(HttpContext.User))
+                        RedirectToAction("Question", "Questions", new { questionId = question.Id });
+
                     _imageManager.RemoveImages(question.Content, model.Question.Content);
 
                     question.Title = model.Question.Title;
@@ -247,6 +251,7 @@ namespace CodeHelper.Controllers
                     _questionsRepository.Update(question);
 
                     TempData.Remove("EditQuestionId");
+                    TempData.Remove("EditQuestion");
 
                     return RedirectToAction("Question", "Questions", new { questionId = question.Id });
                 }
@@ -281,7 +286,7 @@ namespace CodeHelper.Controllers
             if (question != null)
             {
                 var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
-                var answers = _answerRepository.Get(g => g.Question.Id == questionId, pageOffset, (int)GlobalConstants.AnswersCountIntPage, g => g.Question).ToList();
+                var answers = _answerRepository.Get(g => g.Question.Id == questionId, pageOffset, (int)GlobalConstants.AnswersCountIntPage, g => g.Question).OrderByDescending(b => b.IsAcceptedAnswer).ToList();
                 var answersCount = _answerRepository.Get(g => g.Question.Id == questionId, g => g.Question).Count();
                 var pagesCount = (int)Math.Ceiling(answersCount / GlobalConstants.AnswersCountIntPage);
 
@@ -375,10 +380,12 @@ namespace CodeHelper.Controllers
         [HttpPost]
         public ContentResult SetAcceptedAnswer(int answerId, int questionId)
         {
-            var answer = _answerRepository.Get(g => g.Id == answerId).FirstOrDefault();
+            var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User).FirstOrDefault();
 
             if (answer != null)
             {
+                if (answer.User.Id != _userManager.GetUserId(HttpContext.User)) return Content("");
+
                 answer.IsAcceptedAnswer = !answer.IsAcceptedAnswer;
                 _answerRepository.Update(answer);
 

@@ -99,8 +99,15 @@ body {
     box-shadow: none !important;
 }
 
+.ck-content code {
+    color: black !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
 .ck-content pre {
     padding: 1em;
+    padding-bottom: 0px !important;
     color: black;
     background-color: hsla(0, 0%, 78%, 0.3);
     border: 0 !important;
@@ -108,15 +115,17 @@ body {
     text-align: left;
     direction: ltr;
     tab-size: 4;
-    white-space: pre-wrap !important;
     font-style: normal;
     min-width: 200px;
-    overflow-x: auto !important;
+    max-height: 700px !important;
+    white-space: pre !important;
+    overflow-wrap: normal !important;
+    overflow: auto !important;
 }
 
     .ck-content pre code {
         background-color: transparent !important;
-        padding: 0;
+        padding: 0 !important;
         border-radius: 0;
     }
 
