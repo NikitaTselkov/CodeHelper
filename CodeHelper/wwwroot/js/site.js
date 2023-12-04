@@ -77,8 +77,7 @@ for (var i = 0; i < allEditors.length; ++i) {
             shouldNotGroupWhenFull: true
         },
         codeBlock: {
-            languages: [{ language: "plaintext", label: "Code" }],
-            indentSequence: "    "
+            languages: [{ language: "plaintext", label: "Code" }]
         }
     })
         .catch(error => {

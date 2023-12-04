@@ -92,3 +92,35 @@ body {
 .ck .ck-sticky-panel .ck-sticky-panel__content_sticky {
     position: static !important;
 }
+
+.ck-focused {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.ck-content pre {
+    padding: 1em;
+    color: black;
+    background-color: hsla(0, 0%, 78%, 0.3);
+    border: 0 !important;
+    border-radius: 2px;
+    text-align: left;
+    direction: ltr;
+    tab-size: 4;
+    white-space: pre-wrap !important;
+    font-style: normal;
+    min-width: 200px;
+    overflow-x: auto !important;
+}
+
+    .ck-content pre code {
+        background-color: transparent !important;
+        padding: 0;
+        border-radius: 0;
+    }
+
+    .ck-content pre::after {
+        background: none !important;
+        color: transparent !important;
+    }

@@ -3,11 +3,8 @@ using CodeHelper.Data;
 using CodeHelper.Models;
 using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CodeHelper.Controllers
 {
@@ -241,7 +238,11 @@ namespace CodeHelper.Controllers
                     question.Title = model.Question.Title;
                     question.Content = model.Question.Content;
                     question.PublisedDate = DateTime.UtcNow;
-                    question.Tags = _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id)).ToList();
+
+                    if (model.SelectedTags == null)
+                        question.Tags = new List<Tag>();
+                    else
+                        question.Tags = _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id)).ToList();
 
                     _questionsRepository.Update(question);
 
