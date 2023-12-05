@@ -28,14 +28,10 @@
                     @if (signInManager.IsSignedIn(User))
                     {
                         <div class="dropdown text-end">
-                            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                            <a href="#" class="d-block link-secondary text-light text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <label>@User.Identity?.Name</label>
                             </a>
                             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser" data-popper-placement="bottom-start">
-                                <li><a class="dropdown-item" href="#">New project...</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="Autorization" asp-action="SignOut">Sign out</a></li>
                             </ul>
                         </div>

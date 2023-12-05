@@ -1,4 +1,7 @@
+using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -16,27 +19,49 @@ app.UseHttpsRedirection();
 var todosApi = app.MapGroup("/images");
 
 todosApi.MapGet("/", () => GetImages());
-todosApi.MapGet("/{name}", (string name) => GetImages().FirstOrDefault(a => Path.GetFileName(a.path) == name) is { } img
-        ? Results.File(File.ReadAllBytes(img.path))
+todosApi.MapGet("/{name}", (string name) => GetImageByName(name) is Image img
+        ? Results.Bytes(File.ReadAllBytes(img.path))
         : Results.NotFound());
 app.Run();
 
-List<Image> GetImages()
-{
-    var images = new List<Image>();
-    var path = Path.Combine(Environment.CurrentDirectory, "Data");
 
-    foreach (var image in Directory.GetFiles(path))
+
+ConcurrentBag<Image> GetImages()
+{
+    var path = Path.Combine(Environment.CurrentDirectory, "Data");
+    var images = new ConcurrentBag<Image>();
+
+    var result = Parallel.ForEach(Directory.GetFiles(path), (image) =>
     {
-        images.Add(new(image));
-    }
+        var img = new Image(image);
+        images.Add(img);
+    });
 
     return images;
 }
 
+Image GetImageByName(string name)
+{
+    var path = Path.Combine(Environment.CurrentDirectory, "Data");
+    var results = new ConcurrentBag<Image>();
+
+    var result = Parallel.ForEach(Directory.GetFiles(path), (image, ParallelLoopState) =>
+    {
+        var img = new Image(image);
+
+        if (Path.GetFileName(image) == name)
+        {
+            results.Add(img);
+            ParallelLoopState.Break();
+        }
+    });
+
+    return results.FirstOrDefault();
+}
+
 public record Image(string path);
 
-[JsonSerializable(typeof(List<Image>))]
+[JsonSerializable(typeof(ConcurrentBag<Image>))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 
