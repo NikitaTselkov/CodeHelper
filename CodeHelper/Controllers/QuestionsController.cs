@@ -100,13 +100,14 @@ namespace CodeHelper.Controllers
 
                 var tags = new List<Tag>();
 
-                foreach (var tag in model.SelectedTags)
-                {
-                    var t = _tagRepository.Get(g => g.Id == tag).FirstOrDefault();
+                if (model.SelectedTags != null)
+                    foreach (var tag in model.SelectedTags)
+                    {
+                        var t = _tagRepository.Get(g => g.Id == tag).FirstOrDefault();
 
-                    if (t != null)
-                        tags.Add(t);
-                }
+                        if (t != null)
+                            tags.Add(t);
+                    }
 
                 model.Tags = tags;
 
@@ -286,7 +287,13 @@ namespace CodeHelper.Controllers
             if (question != null)
             {
                 var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
-                var answers = _answerRepository.Get(g => g.Question.Id == questionId, pageOffset, (int)GlobalConstants.AnswersCountIntPage, g => g.Question).OrderByDescending(b => b.IsAcceptedAnswer).ToList();
+                var answers = _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question)
+                    .OrderByDescending(o => o.LikesCount)
+                    .ThenByDescending(o => o.IsAcceptedAnswer)
+                    .Skip(pageOffset)
+                    .Take((int)GlobalConstants.AnswersCountIntPage)
+                    .ToList();
+
                 var answersCount = _answerRepository.Get(g => g.Question.Id == questionId, g => g.Question).Count();
                 var pagesCount = (int)Math.Ceiling(answersCount / GlobalConstants.AnswersCountIntPage);
 

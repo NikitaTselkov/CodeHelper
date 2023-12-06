@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString")), ServiceLifetime.Transient);
 
 builder.Services.AddScoped<UsersRepository, UsersRepository>();
 builder.Services.AddScoped<AnswerRepository, AnswerRepository>();

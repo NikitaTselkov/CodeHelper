@@ -1,7 +1,5 @@
 using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
