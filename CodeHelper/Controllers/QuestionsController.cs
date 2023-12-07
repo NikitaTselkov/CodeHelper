@@ -3,6 +3,7 @@ using CodeHelper.Data;
 using CodeHelper.Models;
 using CodeHelper.Models.Domain;
 using CodeHelper.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult All(int page = 1)
         {
             var pagesCount = 0;
@@ -95,7 +97,7 @@ namespace CodeHelper.Controllers
 
                 TempData["QuestionsViewModel"] = model.ToJson();
 
-                model.Questions = questions.ToList();
+                model.Questions = questions.ToArray();
                 model.Pagination = new Pagination(page, pagesCount);
 
                 var tags = new List<Tag>();
@@ -123,7 +125,7 @@ namespace CodeHelper.Controllers
 
                 var model = new QuestionsViewModel
                 {
-                    Questions = questions.ToList(),
+                    Questions = questions.ToArray(),
                     NoAcceptedAnswer = false,
                     NoAnswers = false,
                     Sort = SortFilters.Newest,
@@ -139,7 +141,7 @@ namespace CodeHelper.Controllers
 
             var questionsViewModel = new QuestionsViewModel
             {
-                Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToList(),
+                Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToArray(),
                 NoAcceptedAnswer = false,
                 NoAnswers = false,
                 Sort = SortFilters.Newest,
@@ -287,7 +289,7 @@ namespace CodeHelper.Controllers
             if (question != null)
             {
                 var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
-                var answers = _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question)
+                var answers = _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question, g => g.User)
                     .OrderByDescending(o => o.LikesCount)
                     .ThenByDescending(o => o.IsAcceptedAnswer)
                     .Skip(pageOffset)
@@ -425,6 +427,8 @@ namespace CodeHelper.Controllers
                 answer.LikesCount += 1;
                 answer.IsLikedAnswer = true;
                 user.LikedAnswers.Add(new Like(answer.Id));
+
+                _usersRepository.Update(user);
             }
             else
             {
@@ -435,12 +439,13 @@ namespace CodeHelper.Controllers
 
                 user.LikedAnswers.Remove(like);
 
+                _usersRepository.Update(user);
+
                 _likesRepository.Remove(like);
                 _likesRepository.Save();
             }
 
             _answerRepository.Update(answer);
-            await _userManager.UpdateAsync(user);
 
             return Content(answer.LikesCount.ToString());
         }

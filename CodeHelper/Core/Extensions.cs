@@ -1,7 +1,7 @@
-﻿using CodeHelper.Models.Domain;
-using CodeHelper.ViewModels;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace CodeHelper.Core
 {
@@ -36,6 +36,118 @@ namespace CodeHelper.Core
             {
                 return num.ToString();
             }
+        }
+
+        public static T[] QuickSort<T, P>(this T[] array, Expression<Func<T, P>> property, int leftIndex, int rightIndex) where P : IComparable<P>
+        {
+            var i = leftIndex;
+            var j = rightIndex;
+            T pivot = array[leftIndex];
+
+            while (i <= j)
+            {
+                var propI = (P)GetPropertyInfo(array[i], property)?.GetValue(array[i]);
+                var propJ = (P)GetPropertyInfo(array[j], property)?.GetValue(array[j]);
+                var propPivot = (P)GetPropertyInfo(pivot, property)?.GetValue(pivot);
+
+                while (propI.CompareTo(propPivot) < 0)
+                {
+                    i++;
+                    propI = (P)GetPropertyInfo(array[i], property)?.GetValue(array[i]);
+                }
+
+                while (propJ.CompareTo(propPivot) > 0)
+                {
+                    j--;
+                    propJ = (P)GetPropertyInfo(array[j], property)?.GetValue(array[j]);
+                }
+
+                if (i <= j)
+                {
+                    T temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                    i++;
+                    j--;
+                }
+            }
+
+            if (leftIndex < j)
+                array.QuickSort(property, leftIndex, j);
+            if (i < rightIndex)
+                array.QuickSort(property, i, rightIndex);
+
+            return array;
+        }
+
+        public static T[] QuickSortDescending<T, P>(this T[] array, Expression<Func<T, P>> property, int leftIndex, int rightIndex) where P : IComparable<P>
+        {
+            var i = leftIndex;
+            var j = rightIndex;
+            T pivot = array[leftIndex];
+
+            while (i <= j)
+            {
+                var propI = (P)GetPropertyInfo(array[i], property)?.GetValue(array[i]);
+                var propJ = (P)GetPropertyInfo(array[j], property)?.GetValue(array[j]);
+                var propPivot = (P)GetPropertyInfo(pivot, property)?.GetValue(pivot);
+
+                while (propI.CompareTo(propPivot) > 0)
+                {
+                    i++;
+                    propI = (P)GetPropertyInfo(array[i], property)?.GetValue(array[i]);
+                }
+
+                while (propJ.CompareTo(propPivot) < 0)
+                {
+                    j--;
+                    propJ = (P)GetPropertyInfo(array[j], property)?.GetValue(array[j]);
+                }
+
+                if (i <= j)
+                {
+                    T temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                    i++;
+                    j--;
+                }
+            }
+
+            if (leftIndex < j)
+                array.QuickSortDescending(property, leftIndex, j);
+            if (i < rightIndex)
+                array.QuickSortDescending(property, i, rightIndex);
+
+            return array;
+        }
+
+        public static PropertyInfo GetPropertyInfo<TSource, TProperty>(TSource source, Expression<Func<TSource, TProperty>> propertyLambda)
+        {
+            if (propertyLambda.Body is not MemberExpression member)
+            {
+                throw new ArgumentException(string.Format(
+                    "Expression '{0}' refers to a method, not a property.",
+                    propertyLambda.ToString()));
+            }
+
+            if (member.Member is not PropertyInfo propInfo)
+            {
+                throw new ArgumentException(string.Format(
+                    "Expression '{0}' refers to a field, not a property.",
+                    propertyLambda.ToString()));
+            }
+
+            Type type = typeof(TSource);
+            if (propInfo.ReflectedType != null && type != propInfo.ReflectedType && !type.IsSubclassOf(propInfo.ReflectedType))
+            {
+                throw new ArgumentException(string.Format(
+                    "Expression '{0}' refers to a property that is not from type {1}.",
+                    propertyLambda.ToString(),
+                    type));
+            }
+
+            return propInfo;
         }
 
         public static string CalculateTimeElapsed(DateTime inputDate, DateTime currentDate)

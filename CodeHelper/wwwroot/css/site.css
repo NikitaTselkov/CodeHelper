@@ -93,6 +93,14 @@ body {
     position: static !important;
 }
 
+.ck .ck-blurred {
+    border: none !important;
+}
+
+.ck .ck-toolbar {
+    border: none !important;
+}
+
 .ck-focused {
     outline: none !important;
     border: none !important;

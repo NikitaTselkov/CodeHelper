@@ -12,7 +12,10 @@
                 </div>
 
                 <h3>Content</h3>
-                <textarea asp-for="Question.Content" class="mb-3 editor"></textarea>
+
+                <div class="card p-3 my-1 hover-card">
+                    <textarea asp-for="Question.Content" class="mb-3 editor"></textarea>
+                </div>
 
                 <h3>Tags</h3>
                 <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" id="validationTags"

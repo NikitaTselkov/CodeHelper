@@ -1,10 +1,10 @@
 ﻿using CodeHelper.Core;
 using CodeHelper.Models.Domain;
+using CodeHelper.Services;
 using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 
 namespace CodeHelper.Controllers
 {
@@ -12,14 +12,17 @@ namespace CodeHelper.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly EmailService _emailService;
 
-        public AutorizationController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AutorizationController(UserManager<User> userManager, SignInManager<User> signInManager, EmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
@@ -30,6 +33,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
@@ -61,6 +65,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult SignUp(string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
@@ -71,6 +76,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> SignUp(SignUpViewModel model, string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
@@ -119,11 +125,21 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult ForgetPassword(ForgetPasswordViewModel model)
         {
             ViewData["CurrentPage"] = "Autorization";
 
             return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ForgetPasswordViewModel model)
+        {
+            await _emailService.Send(model.Email, "Content !!!!");
+
+            return View(new ResetPasswordViewModel());
         }
     }
 }

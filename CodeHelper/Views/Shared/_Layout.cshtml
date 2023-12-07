@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
+    <link rel="icon" type="image/x-icon" href="~/images/codehelperlogo.svg">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CodeHelper.styles.css" asp-append-version="true" />
@@ -18,7 +19,12 @@
             <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <ul class="nav col-lg-auto mb-2 me-lg-auto justify-content-center mb-md-0">
-                        <li><a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">CodeHelper</a></li>
+                        <li>
+                            <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="~/images/codehelperlogo.svg" height="50px" width="50px" />
+                                CodeHelper
+                            </a>
+                        </li>
                     </ul>
 
                     <form method="post" asp-controller="Questions" asp-action="Search" class="me-lg-auto col-12 col-lg-5 mb-3 mb-lg-0">

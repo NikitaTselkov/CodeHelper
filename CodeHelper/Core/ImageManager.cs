@@ -46,7 +46,7 @@ namespace CodeHelper.Core
 
         public void RemoveImages(string oldContent, string newContent)
         {
-            var regex = new Regex($"<img(.*?) src=\"{_domen}(.*?)\"");
+            var regex = new Regex($"<img(.*?) src=\"{_domen + "Images/"}(.*?)\"");
 
             var images = regex.Matches(oldContent);
             var newImages = regex.Matches(newContent);
