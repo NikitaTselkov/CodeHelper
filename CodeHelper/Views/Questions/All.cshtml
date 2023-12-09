@@ -7,7 +7,7 @@
     <div class="card-header d-flex justify-content-between">
         <h1 class="fs-3">All Questions</h1>
         <span>
-            <a asp-controller="Questions" asp-action="AskQuestion" class="btn btn-outline-dark shadow-none" type="button">Ask Question</a>
+            <a rel="nofollow" asp-controller="Questions" asp-action="AskQuestion" class="btn btn-outline-dark shadow-none" type="button">Ask Question</a>
             <button class="btn btn-outline-dark shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">Filters</button>
         </span>
     </div>
@@ -99,8 +99,8 @@
         <div class="card-body">
             <textarea asp-for="@question.Content" class="readOnlyNoFormatEditor"></textarea>
         </div>
-        <blockquote class="blockquote my-2 card-footer" style="height:30px; background-color: transparent !important;">
-            <footer class="blockquote-footer fs-6 d-flex" style="margin-top: 0 !important;">
+        <blockquote class="blockquote card-footer" style="height:30px; background-color: transparent !important;">
+            <footer class="blockquote-footer my-auto fs-6 d-flex" style="margin-top: 2px !important;">
                 <span>@question.PublisedDate.ToShortDateString()</span>
                 <cite class="ms-2">@question.Author.UserName</cite>
             </footer>
@@ -113,7 +113,7 @@
     <nav aria-label="Page navigation example" class="mt-3">
         <ul class="pagination border-secondary">
             <li class="page-item @(Model.Pagination.CurrentPage - 1 <= 0 ? "disabled" : "")">
-                <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage - 1)">Previous</a>
+                <a class="page-link" rel="prev" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage - 1)">Previous</a>
             </li>
             <li class="page-item @(Model.Pagination.CurrentPage == 1 ? "active" : "")">
                 <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="1">1</a>
@@ -140,7 +140,7 @@
                 <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="@Model.Pagination.PageCount">@Model.Pagination.PageCount</a>
             </li>
             <li class="page-item @(Model.Pagination.CurrentPage + 1 > Model.Pagination.PageCount ? "disabled" : "")">
-                <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage + 1)">Next</a>
+                <a class="page-link" rel="next" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage + 1)">Next</a>
             </li>
         </ul>
     </nav>
