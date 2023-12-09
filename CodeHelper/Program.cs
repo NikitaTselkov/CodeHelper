@@ -2,7 +2,6 @@ using CodeHelper.Core;
 using CodeHelper.Data;
 using CodeHelper.Models.Domain;
 using CodeHelper.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,22 +11,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString")), ServiceLifetime.Scoped);
 
-builder.Services
-    .AddFluentEmail("codehelperemail@gmail.com")
-    .AddSmtpSender(new System.Net.Mail.SmtpClient("localhost")
-    {
-        EnableSsl = false,
-        DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network,
-        Port = 25
-    });
-
 builder.Services.AddScoped<UsersRepository, UsersRepository>();
 builder.Services.AddScoped<AnswerRepository, AnswerRepository>();
 builder.Services.AddScoped<QuestionsRepository, QuestionsRepository>();
 builder.Services.AddScoped<TagRepository, TagRepository>();
 builder.Services.AddScoped<LikesRepository, LikesRepository>();
 builder.Services.AddScoped<ImageManager, ImageManager>();
-builder.Services.AddScoped<EmailService, EmailService>();
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -48,12 +37,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
     options.Cookie.Name = GlobalConstants.AuthCookieName;
 });
-
-//builder.Services.AddAuthentication().AddOAuth(googleOptions =>
-//{
-//    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-//    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-//});
 
 var app = builder.Build();
 

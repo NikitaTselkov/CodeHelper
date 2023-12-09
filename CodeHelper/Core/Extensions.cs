@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using CodeHelper.Models.Domain;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using System.Linq.Expressions;
 using System.Reflection;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CodeHelper.Core
 {
@@ -22,20 +24,43 @@ namespace CodeHelper.Core
             return JsonConvert.DeserializeObject<T>(value, _settings);
         }
 
-        public static string CalculateNumber(int num)
+        public static string CalculateNumber(int? num)
         {
+            if (num == null) return string.Empty;
+
             if (num >= 1000000)
             {
-                return (num / 1000000d).ToString("0.#") + "m";
+                return ((int)num / 1000000d).ToString("0.#") + "m";
             }
             else if (num >= 1000)
             {
-                return (num / 1000d).ToString("0.#") + "k";
+                return ((int)num / 1000d).ToString("0.#") + "k";
             }
             else
             {
-                return num.ToString();
+                return num?.ToString();
             }
+        }
+
+        public static string TitleToUrl(string title)
+        {
+            var reservedCharacters = "!*'();:@&=+$,./?%#[]";
+
+            if (string.IsNullOrWhiteSpace(title))
+                return string.Empty;
+
+            foreach (var item in reservedCharacters)
+            {
+                title = title.Replace(item.ToString(), "");
+            }
+
+            if (title.Length > 55)
+                title = string.Join("", title.Take(55));
+
+            title = title.Replace(" ", "-");
+            title = title.ToLower();
+
+            return title;
         }
 
         public static T[] QuickSort<T, P>(this T[] array, Expression<Func<T, P>> property, int leftIndex, int rightIndex) where P : IComparable<P>

@@ -1,23 +1,25 @@
 ﻿@model AskQuestionViewModel
+@{
+    ViewData["Title"] = "Ask Question | Code Helper";
+}
 
 <form class="vh-100 row justify-content-center align-items-center m-3">
     <ul class="list-group rounded-0 rounded-start">
         <li class="list-group-item border-0">
             <div class="card p-2 col-auto">
-                <h3>Title</h3>
+                <h2 class="fs-3">Title</h2>
                 <div class="mb-3 form-floating">
                     <input type="text" class="form-control" id="floatingTitleInput" asp-for="Question.Title" placeholder="title">
                     <label asp-for="Question.Title" for="floatingTitleInput" class="form-label">Title</label>
                     <span class="text-danger" asp-validation-for="Question.Title"></span>
                 </div>
 
-                <h3>Content</h3>
-
+                <h2 class="fs-3">Content</h2>
                 <div class="card p-3 my-1 hover-card">
                     <textarea asp-for="Question.Content" class="mb-3 editor"></textarea>
                 </div>
 
-                <h3>Tags</h3>
+                <h2 class="fs-3">Tags</h2>
                 <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" id="validationTags"
                         data-allow-clear="true"
                         data-allow-new="false"

@@ -238,7 +238,7 @@ namespace CodeHelper.Controllers
                 if (question != null)
                 {
                     if (question.Author.Id != _userManager.GetUserId(HttpContext.User))
-                        RedirectToAction("Question", "Questions", new { questionId = question.Id });
+                        return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = question.Id });
 
                     _imageManager.RemoveImages(question.Content, model.Question.Content);
 
@@ -256,7 +256,7 @@ namespace CodeHelper.Controllers
                     TempData.Remove("EditQuestionId");
                     TempData.Remove("EditQuestion");
 
-                    return RedirectToAction("Question", "Questions", new { questionId = question.Id });
+                    return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = question.Id });
                 }
             }
 
@@ -268,18 +268,19 @@ namespace CodeHelper.Controllers
             model.Question.Tags = new List<Tag>();
             model.Question.Author = user;
 
-            model.Question.Tags = _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id)).ToList();
+            if (model.SelectedTags != null && model.SelectedTags.Count > 0)
+                model.Question.Tags = _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id)).ToList();
 
             _questionsRepository.Add(model.Question);
             _questionsRepository.Save();
 
-            var questionId = _questionsRepository.Get(g => g == model.Question).FirstOrDefault()?.Id;
+            var quest = _questionsRepository.Get(g => g == model.Question).FirstOrDefault();
 
-            return RedirectToAction("Question", "Questions", new { questionId = questionId });
+            return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(quest.Title), questionId = quest.Id });
         }
 
-        [HttpGet("{questionId}")]
-        public IActionResult Question(int questionId, int page = 1)
+        [HttpGet("questions/{title}/{questionId}")]
+        public IActionResult Question(string title, int questionId, int page = 1)
         {
             var model = new QuestionViewModel();
             var userName = HttpContext.User.Identity?.Name;
@@ -345,7 +346,7 @@ namespace CodeHelper.Controllers
                 answer.PublisedDate = DateTime.UtcNow;
                 _answerRepository.Update(answer);
 
-                return RedirectToAction("Question", "Questions", new { questionId = answer.Question.Id });
+                return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(answer.Question.Title), questionId = answer.Question.Id });
             }
 
             return NoContent();
@@ -383,7 +384,7 @@ namespace CodeHelper.Controllers
 
             _questionsRepository.Update(model.Question);
 
-            return RedirectToAction("Question", "Questions", new { questionId = model.Question.Id });
+            return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(model.Question.Title), questionId = model.Question.Id });
         }
 
         [HttpPost]

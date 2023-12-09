@@ -44,10 +44,10 @@
                     }
                     else
                     {
-                        <div class="text-end">
-                            <button onclick="location.href='@Url.Action("Login", "Autorization")'" type="button" class="btn btn-outline-light me-2">Login</button>
-                            <button onclick="location.href='@Url.Action("SignUp", "Autorization")'" type="button" class="btn btn-warning">Sign-up</button>
-                        </div>
+                        <form method="get" class="text-end">
+                            <button type="submit" asp-controller="Autorization" asp-action="Login" class="btn btn-outline-light me-2">Login</button>
+                            <button type="submit" asp-controller="Autorization" asp-action="SignUp" class="btn btn-warning">Sign-up</button>
+                        </form>
                     }
                 </div>
             </div>

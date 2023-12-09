@@ -1,4 +1,7 @@
 ﻿@model LoginViewModel
+@{
+    ViewBag.Title = "Log In | Code Helper";
+}
 
 <section class="vh-100 d-flex justify-content-center align-items-center">
     <div class="container">
@@ -20,7 +23,7 @@
                                 <label asp-for="Password" for="floatingPasswordInput" class="form-label">Password</label>
                                 <span class="text-danger" asp-validation-for="Password"></span>
                             </div>
-                            <p class="small"><a class="text-dark" asp-controller="Autorization" asp-action="ForgetPassword">Forgot password?</a></p>
+                            @* <p class="small"><a class="text-dark" asp-controller="Autorization" asp-action="ForgetPassword">Forgot password?</a></p> *@
                             <div class="d-grid">
                                 <button formmethod="post" class="btn btn-outline-dark" type="submit">Login</button>
                             </div>

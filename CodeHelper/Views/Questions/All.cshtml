@@ -1,11 +1,11 @@
 ﻿@model QuestionsViewModel
 @{
-    ViewData["Title"] = "All Questions";
+    ViewData["Title"] = "All Questions | Code Helper";
 }
 
 <div class="card text-center m-3 ms-0 me-0">
     <div class="card-header d-flex justify-content-between">
-        <h3>@ViewData["Title"]</h3>
+        <h1 class="fs-3">All Questions</h1>
         <span>
             <a asp-controller="Questions" asp-action="AskQuestion" class="btn btn-outline-dark shadow-none" type="button">Ask Question</a>
             <button class="btn btn-outline-dark shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">Filters</button>
@@ -85,7 +85,7 @@
                     </svg>
                     Has Accepted Answer
                 </span>
-                <a class="link-dark fw-bold text-decoration-none" asp-controller="Questions" asp-action="Question" asp-route-questionId="@question.Id">@question.Title</a>
+                <a class="link-dark fw-bold text-decoration-none" asp-controller="Questions" asp-action="Question" asp-route-title="@Extensions.TitleToUrl(question.Title)" asp-route-questionId="@question.Id">@question.Title</a>
             </div>
 
             <div>
@@ -98,13 +98,13 @@
         </div>
         <div class="card-body">
             <textarea asp-for="@question.Content" class="readOnlyNoFormatEditor"></textarea>
-            <blockquote class="blockquote mb-0 mt-2" style="position: relative;">
-                <footer class="blockquote-footer fs-6 d-flex">
-                    <span>@question.PublisedDate.ToShortDateString()</span>
-                    <cite class="ms-2">@question.Author.UserName</cite>
-                </footer>
-            </blockquote>
         </div>
+        <blockquote class="blockquote my-2 card-footer" style="height:30px; background-color: transparent !important;">
+            <footer class="blockquote-footer fs-6 d-flex" style="margin-top: 0 !important;">
+                <span>@question.PublisedDate.ToShortDateString()</span>
+                <cite class="ms-2">@question.Author.UserName</cite>
+            </footer>
+        </blockquote>
     </div>
 }
 
