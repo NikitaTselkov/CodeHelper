@@ -6,6 +6,7 @@ using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace CodeHelper.Controllers
 {
@@ -18,6 +19,7 @@ namespace CodeHelper.Controllers
         private readonly UsersRepository _usersRepository;
         private readonly UserManager<User> _userManager;
         private readonly ImageManager _imageManager;
+        private readonly IConfiguration _configuration;
 
         public QuestionsController(QuestionsRepository questionsRepository,
             TagRepository tagRepository,
@@ -25,7 +27,8 @@ namespace CodeHelper.Controllers
             UsersRepository usersRepository,
             LikesRepository likesRepository,
             UserManager<User> userManager,
-            ImageManager imageManager)
+            ImageManager imageManager,
+            IConfiguration configuration)
         {
             _questionsRepository = questionsRepository;
             _tagRepository = tagRepository;
@@ -34,6 +37,7 @@ namespace CodeHelper.Controllers
             _likesRepository = likesRepository;
             _userManager = userManager;
             _imageManager = imageManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -77,13 +81,14 @@ namespace CodeHelper.Controllers
                 #endregion
 
                 var questions = _questionsRepository.SearchByText(searchQuery, filterPredicate, 0, 0, g => g.Author, g => g.Tags);
+                pagesCount = (int)Math.Ceiling(questions.Count() / GlobalConstants.QuestionsCountIntPage);
 
                 #region Sorts
 
                 switch (model.Sort)
                 {
                     case SortFilters.Newest:
-                        questions = questions.OrderByDescending(o => o.PublisedDate);
+                        questions.OrderByDescending(o => o.PublisedDate);
                         break;
                     case SortFilters.MostFrequent:
                         questions = questions.OrderByDescending(o => o.ViewsCount);
@@ -92,12 +97,9 @@ namespace CodeHelper.Controllers
 
                 #endregion
 
-                pagesCount = (int)Math.Ceiling(questions.Count() / GlobalConstants.QuestionsCountIntPage);
-                questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage);
-
                 TempData["QuestionsViewModel"] = model.ToJson();
 
-                model.Questions = questions.ToArray();
+                model.Questions = questions.AsParallel().Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage).ToArray();
                 model.Pagination = new Pagination(page, pagesCount);
 
                 var tags = new List<Tag>();
@@ -141,7 +143,7 @@ namespace CodeHelper.Controllers
 
             var questionsViewModel = new QuestionsViewModel
             {
-                Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToArray(),
+                Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).AsParallel().ToArray(),
                 NoAcceptedAnswer = false,
                 NoAnswers = false,
                 Sort = SortFilters.Newest,
@@ -304,6 +306,7 @@ namespace CodeHelper.Controllers
                 model.Question = question;
                 model.AnswersCount = answersCount;
                 model.AnswersContent = new List<Item>();
+                model.Links = new List<Link>();
                 model.Pagination = new Pagination(page, pagesCount);
 
                 foreach (var answer in question.Answers)
@@ -326,6 +329,22 @@ namespace CodeHelper.Controllers
                         answer.IsLikedAnswer = user.LikedAnswers.Any(a => a.AnswerId == answer.Id);
                     }
                 }
+
+                if (question.Tags.Count > 0)
+                {
+                    var links = _questionsRepository.Get(g => g.Tags.Contains(question.Tags.First()) && g.Title != question.Title)
+                        ?.Take(5)
+                        ?.Select(s =>
+                            new Link()
+                            {
+                                Title = s.Title,
+                                URl = $"{_configuration["Domen"]}questions/{Extensions.TitleToUrl(s.Title)}/{s.Id}",
+                                ViewsCount = s.ViewsCount
+                            }).ToList();
+
+                    model.Links = links;
+                }
+
             }
 
             return View(model);

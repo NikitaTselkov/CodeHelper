@@ -62,7 +62,7 @@
 
                 @for (int i = 0; i < Model.Question.Answers.Count; i++)
                 {
-                    <div id="answerCard" class="card p-3 mt-2 hover-card">
+                    <div id="answerCard" class="card p-3 pb-0 mt-2 hover-card">
                         <div class="justify-content-start mb-1 d-flex">
                             <span class="badge  @(Model.Question.Answers[i].IsAcceptedAnswer ? "" : "collapse") rounded-pill bg-success me-2 my-auto shadow-none" style="font-size: 13px;" id="accepted_badge+@Model.Question.Answers[i].Id">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
@@ -124,7 +124,7 @@
                             <textarea asp-for="@Model.AnswersContent[i].Value" class="editor"></textarea>
                         </div>
 
-                        <blockquote class="blockquote card-footer" style="height:30px; background-color: transparent !important;">
+                        <blockquote class="blockquote card-footer" style="height:25px; background-color: transparent !important;">
                             <footer class="blockquote-footer fs-6" style="margin-top: 0 !important;">
                                 <span>@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
                                 <cite class="ms-2">@Model.Question.Answers[i].User?.UserName</cite>
@@ -135,7 +135,7 @@
                         {
                             @if (Model.Question.Answers[i].User?.UserName == User?.Identity?.Name)
                             {
-                                <span id="editAnswerButton+@Model.Question.Answers[i].Id" class="d-flex justify-content-end">
+                                <span id="editAnswerButton+@Model.Question.Answers[i].Id" class="d-flex justify-content-end pb-3">
                                     <button class="btn btn-outline-secondary btn-visibility p-0 pb-1 px-1 me-2 my-auto shadow-none" type="button" onclick="EditAnswer(@Model.Question.Answers[i].Id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code" viewBox="0 0 16 16">
                                             <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
@@ -145,7 +145,7 @@
                                     </button>
                                 </span>
 
-                                <span id="editAnswerButtons+@Model.Question.Answers[i].Id" class="d-flex justify-content-end d-none">
+                                <span id="editAnswerButtons+@Model.Question.Answers[i].Id" class="d-flex justify-content-end d-none pb-3">
                                     <button asp-controller="Questions" asp-action="SaveAnswer" asp-route-answerId="@Model.Question.Answers[i].Id" class="btn btn-outline-secondary p-0 pb-1 px-1 me-2 my-auto shadow-none" type="submit">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
                                             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
@@ -205,7 +205,7 @@
             }
         </li>
         <li class="list-group-item border-0">
-            <h4>Add your solution here</h4>
+            <h2 class="fs-4">Add your solution here</h2>
 
             <div class="card p-3 mt-1 hover-card">
                 <textarea asp-for="AnswerContent" class="mb-3 editor"></textarea>
@@ -219,6 +219,20 @@
             {
                 <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-outline-dark my-3 shadow-none">Post Answer</button>
             }
+        </li>
+        <li class="list-group-item border-0">
+            <h2 class="fs-4">Other questions</h2>
+
+            <ul class="list-group">
+                @if (Model?.Links != null)
+                    @foreach (var link in Model.Links)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a class="text-black" href="@link.URl">@link.Title</a>
+                            <span class="badge bg-secondary rounded-pill">Views: @CodeHelper.Core.Extensions.CalculateNumber(link.ViewsCount)</span>
+                        </li>
+                    }
+            </ul>
         </li>
     </ul>
 </form>

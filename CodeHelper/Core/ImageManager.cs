@@ -9,7 +9,7 @@ namespace CodeHelper.Core
 
         public ImageManager(IConfiguration configuration, IWebHostEnvironment environment)
         {
-            _domen = configuration["domen"];
+            _domen = configuration["DomenImages"];
             _serverImagesPath = GetServerImagesPath(environment.WebRootPath);
         }
 
