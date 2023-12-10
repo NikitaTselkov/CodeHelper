@@ -23,12 +23,12 @@
         </div>
     </div>
 
-    <ul class="list-group rounded-0 m-3">
+    <ul class="list-group rounded-0 m-3" itemscope="" itemtype="https://schema.org/Question">
         <li class="list-group-item border-0">
-            <h1>@Model?.Question?.Title</h1>
+            <h1 itemprop="name">@Model?.Question?.Title</h1>
             <div class="d-flex">
-                <div class="text-secondary me-2">Views <span>@CodeHelper.Core.Extensions.CalculateNumber(Model?.Question?.ViewsCount)</span></div>
-                <div class="text-secondary me-2">Asked <span>@Model?.PublishedDate</span></div>
+                <div itemprop="upvoteCount" class="text-secondary me-2">Views <span>@CodeHelper.Core.Extensions.CalculateNumber(Model?.Question?.ViewsCount)</span></div>
+                <div itemprop="dateCreated" class="text-secondary me-2">Asked <span>@Model?.PublishedDate</span></div>
                 <div>
                     @if (Model?.Question?.Tags != null)
                         @foreach (var tag in Model.Question.Tags)
@@ -40,7 +40,7 @@
         </li>
         <li class="list-group-item border-0">
             <div class="card hover-card p-3">
-                <textarea asp-for="Question.Content" class="mb-3 readOnlyEditor"></textarea>
+                <textarea asp-for="Question.Content" itemprop="text" class="mb-3 readOnlyEditor"></textarea>
                 @if (Model?.Question?.Author?.UserName == User?.Identity?.Name)
                 {
                     <span class="d-flex justify-content-end">
@@ -58,11 +58,11 @@
         <li class="list-group-item border-0">
             @if (Model?.Question?.Answers?.Count > 0)
             {
-                <h2 class="fs-4"><span>@Model.AnswersCount</span> Answers</h2>
+                <h2 class="fs-4" itemprop="answerCount"><span>@Model.AnswersCount</span> Answers</h2>
 
                 @for (int i = 0; i < Model.Question.Answers.Count; i++)
                 {
-                    <div id="answerCard" class="card p-3 pb-0 mt-2 hover-card">
+                    <div id="answerCard" class="card p-3 pb-0 mt-2 hover-card" itemprop=@(Model.Question.Answers[i].IsAcceptedAnswer ? "acceptedAnswer" : "suggestedAnswer") itemscope="" itemtype="https://schema.org/Answer">
                         <div class="justify-content-start mb-1 d-flex">
                             <span class="badge  @(Model.Question.Answers[i].IsAcceptedAnswer ? "" : "collapse") rounded-pill bg-success me-2 my-auto shadow-none" style="font-size: 13px;" id="accepted_badge+@Model.Question.Answers[i].Id">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
@@ -71,7 +71,7 @@
                                 Accepted
                             </span>
 
-                            <span class="badge rounded-pill bg-secondary me-2 p-2 my-auto"><span class="me-1 my-auto" id="likesCount+@Model.Question.Answers[i].Id">@Model.Question.Answers[i].LikesCount</span>Likes</span>
+                            <span class="badge rounded-pill bg-secondary me-2 p-2 my-auto"><span class="me-1 my-auto" itemprop="upvoteCount" id="likesCount+@Model.Question.Answers[i].Id">@Model.Question.Answers[i].LikesCount</span>Likes</span>
 
                             @if (signInManager.IsSignedIn(User))
                             {
@@ -116,7 +116,7 @@
                         </div>
 
                         <div id="readOnlyEditor+@Model.Question.Answers[i].Id" class="card-body">
-                            <textarea asp-for="@Model.Question.Answers[i].Content" class="readOnlyEditor"></textarea>
+                            <textarea asp-for="@Model.Question.Answers[i].Content" itemprop="text" class="readOnlyEditor"></textarea>
                         </div>
 
                         <input asp-for="@Model.AnswersContent[i].Id" class="d-none"></input>
@@ -126,8 +126,8 @@
 
                         <blockquote class="blockquote card-footer" style="height:25px; background-color: transparent !important;">
                             <footer class="blockquote-footer fs-6" style="margin-top: 0 !important;">
-                                <span>@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
-                                <cite class="ms-2">@Model.Question.Answers[i].User?.UserName</cite>
+                                <span itemprop="dateCreated">@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
+                                <cite itemprop="author" itemscope="" itemtype="https://schema.org/Person" class="ms-2"><span itemprop="name">@Model.Question.Answers[i].User?.UserName</span></cite>
                             </footer>
                         </blockquote>
 

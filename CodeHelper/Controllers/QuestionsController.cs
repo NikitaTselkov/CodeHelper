@@ -6,7 +6,6 @@ using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace CodeHelper.Controllers
 {
@@ -99,7 +98,7 @@ namespace CodeHelper.Controllers
 
                 TempData["QuestionsViewModel"] = model.ToJson();
 
-                model.Questions = questions.AsParallel().Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage).ToArray();
+                model.Questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage).AsParallel().ToArray();
                 model.Pagination = new Pagination(page, pagesCount);
 
                 var tags = new List<Tag>();
