@@ -29,25 +29,25 @@ namespace CodeHelper.Data.Repository
 
             foreach (var includeExpression in includeProperties)
             {
-                query = query.Include(includeExpression);
+                query = query.Include(includeExpression).AsSplitQuery();
             }
 
             if (filter != null)
                 query = query.Where(filter);
 
             if (rowsCount > 0)
-                return query.Skip(pageOffset).Take(rowsCount);
+                return query.OrderBy(o => o).Skip(pageOffset).Take(rowsCount);
             else
-                return query.Skip(pageOffset);
+                return query.OrderBy(o => o).Skip(pageOffset);
         }
 
-        public IQueryable<T> Get(Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includeProperties)
+        public async Task<IQueryable<T>> Get(Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
 
             foreach (var includeExpression in includeProperties)
             {
-                query = query.Include(includeExpression);
+                query = query.Include(includeExpression).AsSplitQuery();
             }
 
             if (filter != null)
@@ -56,37 +56,39 @@ namespace CodeHelper.Data.Repository
             return query;
         }
 
-        public IQueryable<T> Get(Expression<Func<T, bool>>? filter, int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
+        public async Task<IQueryable<T>> Get(Expression<Func<T, bool>>? filter, int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
 
             foreach (var includeExpression in includeProperties)
             {
-                query = query.Include(includeExpression);
+                query = query.Include(includeExpression).AsSplitQuery();
             }
 
             if (filter != null)
                 query = query.Where(filter);
 
             if (rowsCount > 0)
-                return query.Skip(pageOffset).Take(rowsCount);
+                return query.OrderBy(o => o).Skip(pageOffset).Take(rowsCount);
             else
-                return query.Skip(pageOffset);
+                return query.OrderBy(o => o).Skip(pageOffset);
         }
 
-        public IEnumerable<T> GetAll(int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
+        public async Task<IQueryable<T>> GetAll(int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
 
+            if (rowsCount > 0)
+                query = query.OrderBy(o => o).Skip(pageOffset).Take(rowsCount);
+            else
+                query = query.OrderBy(o => o).Skip(pageOffset);
+
             foreach (var includeExpression in includeProperties)
             {
-                query = query.Include(includeExpression);
+                query = query.Include(includeExpression).AsSplitQuery();
             }
 
-            if (rowsCount > 0)
-                return query.Skip(pageOffset).Take(rowsCount);
-            else
-                return query.Skip(pageOffset);
+            return query;
         }
 
         public void Remove(T entity)
@@ -94,15 +96,15 @@ namespace CodeHelper.Data.Repository
             dbSet.Remove(entity);
         }
 
-        public void Save()
+        public async Task Save()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
             _dbContext.Update(entity);
-            _dbContext.SaveChanges();
+            await Save();
         }
     }
 }

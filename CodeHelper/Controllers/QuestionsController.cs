@@ -6,6 +6,7 @@ using CodeHelper.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CodeHelper.Controllers
 {
@@ -41,8 +42,10 @@ namespace CodeHelper.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult All(int page = 1)
+        public async Task<IActionResult> All(int page = 1)
         {
+            var questionsViewModel = new QuestionsViewModel();
+
             var pagesCount = 0;
             var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
 
@@ -50,7 +53,6 @@ namespace CodeHelper.Controllers
             {
                 var model = value.FromJson<QuestionsViewModel>();
                 var filterPredicate = PredicateBuilder.True<Question>();
-                var sortPredicate = PredicateBuilder.True<Question>();
 
                 #region Filters
 
@@ -80,14 +82,14 @@ namespace CodeHelper.Controllers
                 #endregion
 
                 var questions = _questionsRepository.SearchByText(searchQuery, filterPredicate, 0, 0, g => g.Author, g => g.Tags);
-                pagesCount = (int)Math.Ceiling(questions.Count() / GlobalConstants.QuestionsCountIntPage);
+                pagesCount = (int)Math.Ceiling(_questionsRepository.SearchByText(searchQuery, filterPredicate, 0, 0).Count() / GlobalConstants.QuestionsCountIntPage);
 
                 #region Sorts
 
                 switch (model.Sort)
                 {
                     case SortFilters.Newest:
-                        questions.OrderByDescending(o => o.PublisedDate);
+                        questions = questions.OrderByDescending(o => o.PublisedDate);
                         break;
                     case SortFilters.MostFrequent:
                         questions = questions.OrderByDescending(o => o.ViewsCount);
@@ -98,7 +100,7 @@ namespace CodeHelper.Controllers
 
                 TempData["QuestionsViewModel"] = model.ToJson();
 
-                model.Questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage).AsParallel().ToArray();
+                model.Questions = await questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage).ToArrayAsync();
                 model.Pagination = new Pagination(page, pagesCount);
 
                 var tags = new List<Tag>();
@@ -106,7 +108,7 @@ namespace CodeHelper.Controllers
                 if (model.SelectedTags != null)
                     foreach (var tag in model.SelectedTags)
                     {
-                        var t = _tagRepository.Get(g => g.Id == tag).FirstOrDefault();
+                        var t = await (await _tagRepository.Get(g => g.Id == tag)).FirstOrDefaultAsync();
 
                         if (t != null)
                             tags.Add(t);
@@ -121,7 +123,7 @@ namespace CodeHelper.Controllers
             {
                 var questions = _questionsRepository.SearchByText(query.FromJson<string>(), null, 0, 0, g => g.Author, g => g.Tags);
 
-                pagesCount = (int)Math.Ceiling(questions.Count() / GlobalConstants.QuestionsCountIntPage);
+                pagesCount = (int)Math.Ceiling(_questionsRepository.SearchByText(query.FromJson<string>(), null, 0, 0).Count() / GlobalConstants.QuestionsCountIntPage);
                 questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage);
 
                 var model = new QuestionsViewModel
@@ -138,11 +140,11 @@ namespace CodeHelper.Controllers
                 return View(model);
             }
 
-            pagesCount = (int)Math.Ceiling(_questionsRepository.GetAll().Count() / GlobalConstants.QuestionsCountIntPage);
+            pagesCount = (int)Math.Ceiling(await (await _questionsRepository.GetAll()).CountAsync() / GlobalConstants.QuestionsCountIntPage);
 
-            var questionsViewModel = new QuestionsViewModel
+            questionsViewModel = new QuestionsViewModel
             {
-                Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).AsParallel().ToArray(),
+                Questions = await (await _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags)).ToArrayAsync(),
                 NoAcceptedAnswer = false,
                 NoAnswers = false,
                 Sort = SortFilters.Newest,
@@ -192,9 +194,9 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditAnswer(int answerId)
+        public async Task<IActionResult> EditAnswer(int answerId)
         {
-            var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User).FirstOrDefault();
+            var answer = await (await _answerRepository.Get(g => g.Id == answerId, g => g.User)).FirstOrDefaultAsync();
 
             TempData["EditAnswer"] = answer.ToJson();
 
@@ -202,9 +204,9 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditQuestion(int questionId)
+        public async Task<IActionResult> EditQuestion(int questionId)
         {
-            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
+            var question = await (await _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags)).FirstOrDefaultAsync();
 
             TempData["EditQuestion"] = question.ToJson();
 
@@ -234,7 +236,7 @@ namespace CodeHelper.Controllers
             if (TempData["EditQuestionId"] is string value)
             {
                 var editQuestionId = value.FromJson<int>();
-                var question = _questionsRepository.Get(g => g.Id == editQuestionId, g => g.Tags, g => g.Answers, g => g.Author).FirstOrDefault();
+                var question = await (await _questionsRepository.Get(g => g.Id == editQuestionId, g => g.Tags, g => g.Answers, g => g.Author)).FirstOrDefaultAsync();
 
                 if (question != null)
                 {
@@ -250,7 +252,7 @@ namespace CodeHelper.Controllers
                     if (model.SelectedTags == null)
                         question.Tags = new List<Tag>();
                     else
-                        question.Tags = _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id)).ToList();
+                        question.Tags = await (await _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id))).ToListAsync();
 
                     _questionsRepository.Update(question);
 
@@ -270,35 +272,35 @@ namespace CodeHelper.Controllers
             model.Question.Author = user;
 
             if (model.SelectedTags != null && model.SelectedTags.Count > 0)
-                model.Question.Tags = _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id)).ToList();
+                model.Question.Tags = await (await _tagRepository.Get(t => model.SelectedTags.Any(a => a == t.Id))).ToListAsync();
 
             _questionsRepository.Add(model.Question);
             _questionsRepository.Save();
 
-            var quest = _questionsRepository.Get(g => g == model.Question).FirstOrDefault();
+            var quest = await (await _questionsRepository.Get(g => g == model.Question)).FirstOrDefaultAsync();
 
             return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(quest.Title), questionId = quest.Id });
         }
 
         [HttpGet("questions/{title}/{questionId}")]
-        public IActionResult Question(string title, int questionId, int page = 1)
+        public async Task<IActionResult> Question(string title, int questionId, int page = 1)
         {
             var model = new QuestionViewModel();
             var userName = HttpContext.User.Identity?.Name;
-            var user = _usersRepository.Get(g => g.UserName == userName, g => g.LikedAnswers).FirstOrDefault();
-            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
+            var user = await (await _usersRepository.Get(g => g.UserName == userName, g => g.LikedAnswers)).FirstOrDefaultAsync();
+            var question = await (await _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags)).FirstOrDefaultAsync();
 
             if (question != null)
             {
                 var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
-                var answers = _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question, g => g.User)
+                var answers = await (await _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question, g => g.User))
                     .OrderByDescending(o => o.LikesCount)
                     .ThenByDescending(o => o.IsAcceptedAnswer)
                     .Skip(pageOffset)
                     .Take((int)GlobalConstants.AnswersCountIntPage)
-                    .ToList();
+                    .ToListAsync();
 
-                var answersCount = _answerRepository.Get(g => g.Question.Id == questionId, g => g.Question).Count();
+                var answersCount = await (await _answerRepository.Get(g => g.Question.Id == questionId, g => g.Question)).CountAsync();
                 var pagesCount = (int)Math.Ceiling(answersCount / GlobalConstants.AnswersCountIntPage);
 
                 question.Answers = answers;
@@ -331,7 +333,7 @@ namespace CodeHelper.Controllers
 
                 if (question.Tags.Count > 0)
                 {
-                    var links = _questionsRepository.Get(g => g.Tags.Contains(question.Tags.First()) && g.Title != question.Title)
+                    var links = await (await _questionsRepository.Get(g => g.Tags.Contains(question.Tags.First()) && g.Title != question.Title))
                         ?.Take(5)
                         ?.Select(s =>
                             new Link()
@@ -339,20 +341,19 @@ namespace CodeHelper.Controllers
                                 Title = s.Title,
                                 URl = $"{_configuration["Domen"]}questions/{Extensions.TitleToUrl(s.Title)}/{s.Id}",
                                 ViewsCount = s.ViewsCount
-                            }).ToList();
+                            })?.ToListAsync();
 
                     model.Links = links;
                 }
-
             }
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult SaveAnswer(int answerId, List<Item> answersContent)
+        public async Task<IActionResult> SaveAnswer(int answerId, List<Item> answersContent)
         {
-            var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User, g => g.Question).FirstOrDefault();
+            var answer = await (await _answerRepository.Get(g => g.Id == answerId, g => g.User, g => g.Question)).FirstOrDefaultAsync();
 
             if (answer != null && answersContent != null)
             {
@@ -381,7 +382,7 @@ namespace CodeHelper.Controllers
 
             var model = new QuestionViewModel();
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
+            var question = await (await _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers)).FirstOrDefaultAsync();
             var answer = new Answer()
             {
                 Content = answerContent,
@@ -406,9 +407,9 @@ namespace CodeHelper.Controllers
         }
 
         [HttpPost]
-        public ContentResult SetAcceptedAnswer(int answerId, int questionId)
+        public async Task<ContentResult> SetAcceptedAnswer(int answerId, int questionId)
         {
-            var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User).FirstOrDefault();
+            var answer = await (await _answerRepository.Get(g => g.Id == answerId, g => g.User)).FirstOrDefaultAsync();
 
             if (answer != null)
             {
@@ -417,7 +418,7 @@ namespace CodeHelper.Controllers
                 answer.IsAcceptedAnswer = !answer.IsAcceptedAnswer;
                 _answerRepository.Update(answer);
 
-                var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Answers).FirstOrDefault();
+                var question = await (await _questionsRepository.Get(g => g.Id == questionId, g => g.Answers)).FirstOrDefaultAsync();
 
                 if (question != null)
                 {
@@ -433,8 +434,8 @@ namespace CodeHelper.Controllers
         public async Task<ContentResult> SetLikeAnswer(int answerId, bool isLikedAnswer)
         {
             var userName = HttpContext.User.Identity?.Name;
-            var user = _usersRepository.Get(g => g.UserName == userName, g => g.LikedAnswers).FirstOrDefault();
-            var answer = _answerRepository.Get(g => g.Id == answerId).SingleOrDefault();
+            var user = await (await _usersRepository.Get(g => g.UserName == userName, g => g.LikedAnswers)).FirstOrDefaultAsync();
+            var answer = await (await _answerRepository.Get(g => g.Id == answerId)).SingleOrDefaultAsync();
 
             if (answer == null) return Content(string.Empty);
             if (user == null) return Content(answer.LikesCount.ToString());
