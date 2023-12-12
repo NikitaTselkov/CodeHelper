@@ -56,6 +56,12 @@
 
     <div class="container">
         <main role="main" class="pb-3">
+            <div id="cookie_note" class="bg-dark">
+                <p>
+                    We use cookies to improve your website experience. By remaining on our website, you agree to the terms and conditions use of cookies. Read our privacy and usage proposals cookies <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Cookie">here</a>.
+                </p>
+                <button class="button cookie_accept btn btn-warning btn-sm ms-1 my-auto">Accept</button>
+            </div>
             @RenderBody()
         </main>
     </div>
