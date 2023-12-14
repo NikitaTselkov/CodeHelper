@@ -2,9 +2,9 @@
 @inject SignInManager<User> signInManager;
 @{
     if (Model.Question?.Tags?.FirstOrDefault() != null)
-        ViewBag.Title = Model.Question?.Tags?.FirstOrDefault()?.Name + " - " + Model.Question?.Title + " | Code Helper";
+        ViewBag.Title = Model.Question?.Tags?.FirstOrDefault()?.Name + " - " + Model.Question?.Title + " | Rewrite Code";
     else
-        ViewBag.Title = Model.Question?.Title + " | Code Helper";
+        ViewBag.Title = Model.Question?.Title + " | Rewrite Code";
 }
 
 <form method="post">
