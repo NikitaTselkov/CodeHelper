@@ -9,13 +9,18 @@ namespace CodeHelper.Core
 
         public ImageManager(IConfiguration configuration, IWebHostEnvironment environment)
         {
+            Console.WriteLine("Init ImageManager");
             _domen = configuration["DomenImages"];
             _serverImagesPath = GetServerImagesPath(environment.WebRootPath);
+            Console.WriteLine("End init ImageManager");
         }
 
         private string GetServerImagesPath(string path)
         {
             var parent = Directory.GetParent(path)?.FullName;
+
+            if (string.IsNullOrWhiteSpace(parent))
+                return string.Empty;
 
             if (Directory.GetParent(parent)?.Name == "CodeHelper")
             {

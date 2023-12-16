@@ -6,9 +6,14 @@ namespace CodeHelper.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions options, IWebHostEnvironment webHostEnvironment) : base(options)
         {
-            //Database.EnsureCreated();
+            if (webHostEnvironment.IsProduction())
+            {
+                Console.WriteLine("Init Database");
+                Database.EnsureCreated();
+                Console.WriteLine("End init Database");
+            }
         }
 
         public override DbSet<User> Users { get; set; }

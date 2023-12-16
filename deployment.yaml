@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codehelper-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: codehelper-app
+  template:
+    metadata:
+      labels:
+        app: codehelper-app
+    spec:
+      containers:
+        - name: codehelper-app
+          image: nikitatcelkov/codehelper:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: codehelper-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: codehelper-app
+  ports:
+  - name: codehelper-app
+    protocol: TCP
+    port: 80
+    targetPort: 80

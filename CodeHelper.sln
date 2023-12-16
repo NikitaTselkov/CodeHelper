@@ -5,7 +5,16 @@ VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeHelper", "CodeHelper\CodeHelper.csproj", "{CBE98F49-1C1A-481F-AB13-F31D4943DE99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Images", "Images\Images.csproj", "{4C4CC80D-3A1C-407D-BC6D-41DD842B510B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Images", "Images\Images.csproj", "{4C4CC80D-3A1C-407D-BC6D-41DD842B510B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{92FB5056-A9DF-4CE7-AB89-DE65477EFEB8}"
+	ProjectSection(SolutionItems) = preProject
+		deployment.yaml = deployment.yaml
+		ingress-srv.yaml = ingress-srv.yaml
+		local-pvc.yaml = local-pvc.yaml
+		mssql-depl.yaml = mssql-depl.yaml
+		nodeport-srv.yaml = nodeport-srv.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
