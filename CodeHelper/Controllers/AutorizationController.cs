@@ -19,6 +19,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";
@@ -60,6 +61,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult SignUp(string? returnUrl = null)
         {
             ViewData["CurrentPage"] = "Autorization";

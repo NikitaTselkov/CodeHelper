@@ -15,6 +15,9 @@ spec:
       containers:
         - name: codehelper-app
           image: nikitatcelkov/codehelper:latest
+          env:
+            - name: BASE_PATH
+              value: "/"
 ---
 apiVersion: v1
 kind: Service

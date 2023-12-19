@@ -1,6 +1,2 @@
 User-agent: *
-Disallow: /Questions/AskQuestion
-Disallow: /Home/Index
-Disallow: /Home/Cookie
-Disallow: /Home/Privacy
-Disallow: /*returnUrl=*
+Disallow: *
