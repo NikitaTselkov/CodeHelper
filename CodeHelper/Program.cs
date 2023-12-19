@@ -3,6 +3,7 @@ using CodeHelper.Data;
 using CodeHelper.Models.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 public class Program
 {
@@ -58,6 +59,13 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
+        app.UseStaticFiles(new StaticFileOptions()
+        {
+            FileProvider = new PhysicalFileProvider(
+                           Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images")),
+            RequestPath = new PathString("/images")
+        });
 
         app.UseRouting();
 

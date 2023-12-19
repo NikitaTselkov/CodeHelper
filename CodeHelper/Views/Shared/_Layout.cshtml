@@ -6,13 +6,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <link rel="icon" href="~/images/codehelperlogo.svg">
+    <link rel="icon" href="~/Images/codehelperlogo.svg">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CodeHelper.styles.css" asp-append-version="true" />
 </head>
 <body>
-
     @if (ViewData["CurrentPage"] != "Autorization")
     {
         <header class="p-3 bg-dark text-white">
@@ -21,7 +20,7 @@
                     <ul class="nav col-lg-auto mb-2 me-lg-auto justify-content-center mb-md-0">
                         <li>
                             <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">
-                                <img src="~/images/codehelperlogo.svg" height="50px" width="50px" />
+                                <img src="~/images/codehelperlogo.svg" alt="logo" height="50px" width="50px" />
                                 RewriteCode
                             </a>
                         </li>
