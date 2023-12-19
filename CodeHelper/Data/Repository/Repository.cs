@@ -41,7 +41,7 @@ namespace CodeHelper.Data.Repository
                 return query.OrderBy(o => o).Skip(pageOffset);
         }
 
-        public async Task<IQueryable<T>> Get(Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includeProperties)
+        public IQueryable<T> Get(Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
 
@@ -56,7 +56,7 @@ namespace CodeHelper.Data.Repository
             return query;
         }
 
-        public async Task<IQueryable<T>> Get(Expression<Func<T, bool>>? filter, int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
+        public IQueryable<T> Get(Expression<Func<T, bool>>? filter, int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
 
@@ -74,7 +74,7 @@ namespace CodeHelper.Data.Repository
                 return query.OrderBy(o => o).Skip(pageOffset);
         }
 
-        public async Task<IQueryable<T>> GetAll(int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
+        public IQueryable<T> GetAll(int pageOffset = 0, int rowsCount = 0, params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = dbSet;
 
@@ -96,15 +96,15 @@ namespace CodeHelper.Data.Repository
             dbSet.Remove(entity);
         }
 
-        public async Task Save()
+        public void Save()
         {
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
-        public async Task Update(T entity)
+        public void Update(T entity)
         {
             _dbContext.Update(entity);
-            await Save();
+            Save();
         }
     }
 }

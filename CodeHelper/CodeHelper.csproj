@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\Images\codehelperlogo.svg">
+    <Content Update="wwwroot\Images\rewritecodelogo.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
