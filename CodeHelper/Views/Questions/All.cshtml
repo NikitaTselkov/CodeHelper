@@ -28,7 +28,7 @@
                     <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" id="validationTags"
                             data-allow-clear="true"
                             data-allow-new="false"
-                            data-server="Questions/Tags"
+                            data-server="Tags"
                             data-live-server="1"
                             multiple>
 
@@ -39,7 +39,6 @@
                             {
                                 <option value="@item.Id">@item.Name</option>
                             }
-
                     </select>
                     <div class="invalid-feedback">Please select a valid tag.</div>
                 </li>

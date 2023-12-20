@@ -21,6 +21,15 @@ body {
     margin-bottom: 60px;
 }
 
+.badge {
+    display: unset !important;
+}
+
+.tags-badge {
+    display: block !important;
+    font-size: .85em;
+}
+
 .editor {
     display: none !important;
 }

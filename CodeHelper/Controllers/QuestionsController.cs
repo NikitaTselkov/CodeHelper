@@ -196,19 +196,13 @@ namespace CodeHelper.Controllers
         [HttpPost]
         public IActionResult EditAnswer(int answerId)
         {
-            var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User).FirstOrDefault();
-
-            TempData["EditAnswer"] = answer.ToJson();
-
             return NoContent();
         }
 
         [HttpPost]
         public IActionResult EditQuestion(int questionId)
         {
-            var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags).FirstOrDefault();
-
-            TempData["EditQuestion"] = question.ToJson();
+            TempData["EditQuestionId"] = questionId.ToJson();
 
             return RedirectToAction(nameof(AskQuestion));
         }
@@ -218,13 +212,18 @@ namespace CodeHelper.Controllers
         {
             var model = new AskQuestionViewModel();
 
-            if (TempData["EditQuestion"] is string value)
+            if (TempData["EditQuestionId"] is string value)
             {
-                model.Question = value.FromJson<Question>();
-                model.SelectedTags = model.Question.Tags.Select(s => s.Id).ToList();
+                var editQuestionId = value.FromJson<int>();
+                var question = _questionsRepository.Get(g => g.Id == editQuestionId, g => g.Tags).FirstOrDefault();
 
-                TempData["EditQuestionId"] = model.Question.Id.ToJson();
-                TempData["EditQuestion"] = value;
+                if (question != null)
+                {
+                    model.Question = question;
+                    model.SelectedTags = question.Tags.Select(s => s.Id).ToList();
+
+                    TempData["EditQuestionId"] = model.Question.Id.ToJson();
+                }
             }
 
             return View(model);
@@ -257,7 +256,6 @@ namespace CodeHelper.Controllers
                     _questionsRepository.Update(question);
 
                     TempData.Remove("EditQuestionId");
-                    TempData.Remove("EditQuestion");
 
                     return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = question.Id });
                 }
