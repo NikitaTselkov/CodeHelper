@@ -11,8 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{92FB5056-A9D
 	ProjectSection(SolutionItems) = preProject
 		images-deploy.yaml = images-deploy.yaml
 		ingress-srv.yaml = ingress-srv.yaml
-		mssql-depl.yaml = mssql-depl.yaml
+		local-pvc.yaml = local-pvc.yaml
 		main-deploy.yaml = main-deploy.yaml
+		mssql-depl.yaml = mssql-depl.yaml
 		nodeport-srv.yaml = nodeport-srv.yaml
 	EndProjectSection
 EndProject

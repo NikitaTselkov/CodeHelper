@@ -12,11 +12,13 @@ spec:
       labels:
         app: mssql
     spec:
+      securityContext:
+        fsGroup: 10001
       containers:
         - name: mssql
-          image: mcr.microsoft.com/mssql/server:2022-latest
+          image: mcr.microsoft.com/mssql/server:2019-latest
           ports:
-          - containerPort: 1433
+            - containerPort: 1433
           env:
             - name: MSSQL_PID
               value: "Express"
@@ -27,6 +29,13 @@ spec:
                 secretKeyRef:
                   name: mssql
                   key: MSSQL_SA_PASSWORD
+          volumeMounts:
+            - mountPath: /var/opt/mssql
+              name: mssqldb
+      volumes:
+        - name: mssqldb
+          persistentVolumeClaim:
+            claimName: mssql-claim
 ---
 apiVersion: v1
 kind: Service
