@@ -380,7 +380,7 @@ namespace CodeHelper.Controllers
             if (string.IsNullOrEmpty(answerContent))
             {
                 ModelState.AddModelError("", "Answer is empty");
-                return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(model.Question.Title), questionId = questionId });
+                return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = questionId });
             }
 
             var answer = new Answer()
