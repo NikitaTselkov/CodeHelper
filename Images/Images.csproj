@@ -7,10 +7,16 @@
 		<InvariantGlobalization>true</InvariantGlobalization>
 		<IsAotCompatible>true</IsAotCompatible>
 		<PublishAot>true</PublishAot>
+		<UserSecretsId>623f7a85-0f27-4e3d-ae6a-0514d46f5cf6</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<Folder Include="Data\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
 	</ItemGroup>
 
 </Project>

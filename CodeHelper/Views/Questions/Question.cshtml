@@ -64,7 +64,7 @@
                 {
                     <div id="answerCard" class="card p-3 pb-0 mt-2 hover-card" itemprop=@(Model.Question.Answers[i].IsAcceptedAnswer ? "acceptedAnswer" : "suggestedAnswer") itemscope="" itemtype="https://schema.org/Answer">
                         <div class="justify-content-start mb-1 d-flex">
-                            <span class="badge  @(Model.Question.Answers[i].IsAcceptedAnswer ? "" : "collapse") rounded-pill bg-success me-2 my-auto shadow-none" style="font-size: 13px;" id="accepted_badge+@Model.Question.Answers[i].Id">
+                            <span class="badge @(Model.Question.Answers[i].IsAcceptedAnswer ? "" : "display-none") rounded-pill bg-success me-2 my-auto shadow-none" style="font-size: 13px;" id="accepted_badge+@Model.Question.Answers[i].Id">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
                                     <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
                                 </svg>
@@ -330,7 +330,7 @@
 
                     element.classList.add('btn-outline-success');
                     element.classList.remove('btn-outline-danger');
-                    document.getElementById(accepted_badge_id).classList.add('collapse');
+                    document.getElementById(accepted_badge_id).classList.add('display-none');
                 }
                 else {
                     template = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle pb-1" viewBox="0 0 16 16">
@@ -341,7 +341,7 @@
 
                     element.classList.add('btn-outline-danger');
                     element.classList.remove('btn-outline-success');
-                    document.getElementById(accepted_badge_id).classList.remove('collapse');
+                    document.getElementById(accepted_badge_id).classList.remove('display-none');
                 }
 
                 element.innerHTML = template;

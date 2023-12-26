@@ -353,11 +353,12 @@ namespace CodeHelper.Controllers
         {
             var answer = _answerRepository.Get(g => g.Id == answerId, g => g.User, g => g.Question).FirstOrDefault();
 
-            if (answer != null && answersContent != null)
+            if (answer != null)
             {
                 var answerContent = answersContent.FirstOrDefault(f => f.Id == answerId)?.Value;
 
-                _imageManager.RemoveImages(answer.Content, answerContent);
+                if (answerContent != null)
+                    _imageManager.RemoveImages(answer.Content, answerContent);
 
                 answer.Content = answerContent;
                 answer.PublisedDate = DateTime.UtcNow;
@@ -372,15 +373,16 @@ namespace CodeHelper.Controllers
         [HttpPost]
         public async Task<IActionResult> PushAnswer(int questionId, string answerContent)
         {
-            if (string.IsNullOrEmpty(answerContent))
-            {
-                ModelState.AddModelError("", "Answer is empty");
-                return RedirectToAction("Question", "Questions", new { questionId = questionId });
-            }
-
             var model = new QuestionViewModel();
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var question = _questionsRepository.Get(g => g.Id == questionId, g => g.Author, g => g.Tags, g => g.Answers).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(answerContent))
+            {
+                ModelState.AddModelError("", "Answer is empty");
+                return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(model.Question.Title), questionId = questionId });
+            }
+
             var answer = new Answer()
             {
                 Content = answerContent,

@@ -12,11 +12,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+var todosApi = app.MapGroup("/i");
 
-var todosApi = app.MapGroup("/images");
-
-todosApi.MapGet("/", () => GetImages());
+todosApi.MapGet("/All", GetImages);
+todosApi.MapPost("/Upload", PostUpload);
+todosApi.MapPost("/Delete", PostDelete);
 todosApi.MapGet("/{name}", (string name) => GetImageByName(name) is Image img
         ? Results.Bytes(File.ReadAllBytes(img.path))
         : Results.NotFound());
@@ -28,6 +28,9 @@ ConcurrentBag<Image> GetImages()
 {
     var path = Path.Combine(Environment.CurrentDirectory, "Data");
     var images = new ConcurrentBag<Image>();
+
+    if (!Directory.Exists(path))
+        Directory.CreateDirectory(path);
 
     var result = Parallel.ForEach(Directory.GetFiles(path), (image) =>
     {
@@ -43,6 +46,9 @@ Image GetImageByName(string name)
     var path = Path.Combine(Environment.CurrentDirectory, "Data");
     var results = new ConcurrentBag<Image>();
 
+    if (!Directory.Exists(path))
+        Directory.CreateDirectory(path);
+
     var result = Parallel.ForEach(Directory.GetFiles(path), (image, ParallelLoopState) =>
     {
         var img = new Image(image);
@@ -55,6 +61,53 @@ Image GetImageByName(string name)
     });
 
     return results.FirstOrDefault();
+}
+
+async Task PostUpload(HttpContext context)
+{
+    Console.WriteLine("--PostUpload--");
+
+    var form = context.Request.Form;
+
+    string? imagePath = form["imagePath"];
+    Console.WriteLine("imagePath: " + imagePath);
+    IFormFileCollection files = form.Files;
+
+    var path = Path.Combine(Environment.CurrentDirectory, "Data");
+
+    if (!Directory.Exists(path))
+        Directory.CreateDirectory(path);
+
+    foreach (var file in files)
+    {
+        string fullPath = $"{path}/{imagePath}";
+
+        Console.WriteLine("fullPath: " + fullPath);
+
+        using (var fileStream = new FileStream(fullPath, FileMode.Create))
+        {
+            await file.CopyToAsync(fileStream);
+        }
+    }
+}
+
+async Task PostDelete(HttpContext context)
+{
+    Console.WriteLine("--PostDelete--");
+
+    var form = context.Request.Form;
+    var path = Path.Combine(Environment.CurrentDirectory, "Data");
+
+    foreach (var item in form)
+    {
+        for (int i = 0; i < item.Value.Count; i++)
+        {
+            var serverImagesPath = Path.Combine(path, item.Value[i]);
+
+            Console.WriteLine(serverImagesPath);
+            File.Delete(serverImagesPath);
+        }
+    }
 }
 
 public record Image(string path);

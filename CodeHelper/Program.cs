@@ -4,6 +4,7 @@ using CodeHelper.Models.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using System.Net;
 
 public class Program
 {
@@ -57,7 +58,6 @@ public class Program
             app.UsePathBase(basePath);
         }
 
-        app.UseHttpsRedirection();
         app.UseStaticFiles();
 
         app.UseStaticFiles(new StaticFileOptions()

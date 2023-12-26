@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 
 namespace CodeHelper.Core
 {
@@ -10,51 +11,55 @@ namespace CodeHelper.Core
         public ImageManager(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Console.WriteLine("Init ImageManager");
-            _domen = configuration["DomenImages"];
-            _serverImagesPath = GetServerImagesPath(environment.WebRootPath);
+            _domen = configuration["Domen"];
+            _serverImagesPath = Path.Combine(configuration["DomenImages"], "i/");
+            Console.WriteLine(_serverImagesPath);
             Console.WriteLine("End init ImageManager");
-        }
-
-        private string GetServerImagesPath(string path)
-        {
-            var parent = Directory.GetParent(path)?.FullName;
-
-            if (string.IsNullOrWhiteSpace(parent))
-                return string.Empty;
-
-            if (Directory.GetParent(parent)?.Name == "CodeHelper")
-            {
-                var p = Directory.GetParent(parent);
-
-                return Path.Combine(p.FullName, "Images", "Data");
-            }
-
-            GetServerImagesPath(parent);
-
-            return string.Empty;
         }
 
         public string SaveImage(IFormFile image)
         {
             string filePath;
             var imageId = Guid.NewGuid().ToString().Replace("-", "_");
-            var serverImagesPath = Path.Combine(_serverImagesPath, imageId + image.FileName);
+            var imagePath = imageId + image.FileName;
 
-            using (var s = new FileStream(serverImagesPath, FileMode.Create))
+            using (var client = new HttpClient())
             {
-                image.CopyTo(s);
+                using var multipartFormDataContent = new MultipartFormDataContent();
+
+                var fileStreamContent = new StreamContent(image.OpenReadStream());
+                fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue(image.ContentType);
+
+                multipartFormDataContent.Add(fileStreamContent, name: "image", fileName: image.FileName);
+                multipartFormDataContent.Add(new StringContent(imagePath), "imagePath");
+
+                var response = client.PostAsync(Path.Combine(_serverImagesPath, "Upload"), multipartFormDataContent).Result;
+
+                Console.WriteLine(response.StatusCode);
+                Console.WriteLine(response.RequestMessage);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("---> Image uploaded");
+                }
+                else
+                {
+                    Console.WriteLine("---> Error");
+                }
             }
 
-            filePath = Path.Combine(_domen, "Images/", imageId + image.FileName);
+            filePath = Path.Combine(_domen, "i/", imageId + image.FileName);
             return filePath;
         }
 
         public void RemoveImages(string oldContent, string newContent)
         {
-            var regex = new Regex($"<img(.*?) src=\"{_domen + "Images/"}(.*?)\"");
+            var regex = new Regex($"<img(.*?) src=\"{_domen + "i/"}(.*?)\"");
 
             var images = regex.Matches(oldContent);
             var newImages = regex.Matches(newContent);
+
+            using var multipartFormDataContent = new MultipartFormDataContent();
 
             foreach (Match image in images)
             {
@@ -62,8 +67,28 @@ namespace CodeHelper.Core
 
                 if (!newImages.Any(a => a.Groups[2].Value == imageName))
                 {
-                    var serverImagesPath = _serverImagesPath + imageName;
-                    File.Delete(serverImagesPath);
+                    Console.WriteLine("ImageName: " + imageName);
+                    multipartFormDataContent.Add(new StringContent(imageName));
+                }
+            }
+
+            if (multipartFormDataContent.Count() > 0)
+            {
+                using (var client = new HttpClient())
+                {
+                    var response = client.PostAsync(Path.Combine(_serverImagesPath, "Delete"), multipartFormDataContent).Result;
+
+                    Console.WriteLine(response.StatusCode);
+                    Console.WriteLine(response.RequestMessage);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("---> Image deleted");
+                    }
+                    else
+                    {
+                        Console.WriteLine("---> Error");
+                    }
                 }
             }
         }

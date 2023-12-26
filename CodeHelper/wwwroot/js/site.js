@@ -112,7 +112,7 @@ class MyUploadAdapter {
     _initRequest() {
         const xhr = this.xhr = new XMLHttpRequest();
 
-        xhr.open('POST', 'https://localhost:7065/Questions/UploadImage', true);
+        xhr.open('POST', 'https://rewritecode.ru/Questions/UploadImage', true);
         xhr.responseType = 'json';
     }
 

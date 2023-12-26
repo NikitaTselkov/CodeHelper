@@ -25,6 +25,10 @@ body {
     display: unset !important;
 }
 
+.display-none {
+    display: none !important;
+}
+
 .tags-badge {
     display: block !important;
     font-size: .85em;
