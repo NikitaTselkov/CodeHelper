@@ -1,9 +1,7 @@
-﻿using CodeHelper.Models.Domain;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CodeHelper.Core
 {
@@ -61,6 +59,15 @@ namespace CodeHelper.Core
             title = title.ToLower();
 
             return title;
+        }
+
+        public static string GetDisplayName(this Enum enumValue)
+        {
+            return enumValue.GetType()
+                            .GetMember(enumValue.ToString())
+                            .First()
+                            .GetCustomAttribute<DisplayAttribute>()
+                            .GetName();
         }
 
         public static T[] QuickSort<T, P>(this T[] array, Expression<Func<T, P>> property, int leftIndex, int rightIndex) where P : IComparable<P>
@@ -199,19 +206,19 @@ namespace CodeHelper.Core
 
             if (years > 0)
             {
-                return $"{years} {(years == 1 ? "year" : "years")} ago";
+                return $"{years} {(years == 1 ? "год" : "лет")} назад";
             }
             else if (months > 0)
             {
-                return $"{months} {(months == 1 ? "month" : "months")} ago";
+                return $"{months} {(months == 1 ? "месяц" : "месяцев")} назад";
             }
             else if (days > 0)
             {
-                return $"{days} {(days == 1 ? "day" : "days")} ago";
+                return $"{days} {(days == 1 ? "день" : "дней")} назад";
             }
             else
             {
-                return "Today";
+                return "Сегодня";
             }
         }
     }

@@ -6,24 +6,24 @@
 
 <div class="card text-center m-3 ms-0 me-0">
     <div class="card-header d-flex justify-content-between">
-        <h1 class="fs-3">All Questions</h1>
+        <h1 class="fs-3">Все вопросы</h1>
         <span>
             @if (signInManager.IsSignedIn(User))
             {
-                <a rel="nofollow" asp-controller="Questions" asp-action="AskQuestion" class="btn btn-outline-dark shadow-none" type="button">Ask Question</a>
+                <a rel="nofollow" asp-controller="Questions" asp-action="AskQuestion" class="btn btn-outline-dark shadow-none" type="button">Задать вопрос</a>
             }
             else
             {
-                <a rel="nofollow" asp-controller="Autorization" asp-action="Login" class="btn btn-outline-dark shadow-none" type="button">Ask Question</a>
+                <a rel="nofollow" asp-controller="Autorization" asp-action="Login" class="btn btn-outline-dark shadow-none" type="button">Задать вопрос</a>
             }
-            <button class="btn btn-outline-dark shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">Filters</button>
+            <button class="btn btn-outline-dark shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">Фильтры</button>
         </span>
     </div>
 
     <form method="post" class="card collapse" id="collapseFilter">
         <div class="card-body d-flex justify-content-center">
             <ul class="list-group rounded-0 rounded-start">
-                <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Tags</li>
+                <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Теги</li>
                 <li class="list-group-item h-100" style="min-width: 200px;">
                     <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" id="validationTags"
                             data-allow-clear="true"
@@ -32,7 +32,7 @@
                             data-live-server="1"
                             multiple>
 
-                        <option disabled hidden value="">Choose a tag...</option>
+                        <option disabled hidden value="">Выберите теги...</option>
 
                         @if (Model?.Tags != null)
                             @foreach (var item in Model.Tags)
@@ -40,31 +40,31 @@
                                 <option value="@item.Id">@item.Name</option>
                             }
                     </select>
-                    <div class="invalid-feedback">Please select a valid tag.</div>
+                    <div class="invalid-feedback">Пожалуйста, выберите существующий тег.</div>
                 </li>
             </ul>
 
             <ul class="list-group rounded-0">
-                <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Filter By</li>
+                <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Фильтровать По</li>
                 <li class="list-group-item custom-checkbox">
                     <input asp-for="NoAnswers" class="form-check-input custom-control-input me-1" type="checkbox" id="firstCheckbox">
-                    <label class="form-check-label" for="firstCheckbox">No Answers</label>
+                    <label class="form-check-label" for="firstCheckbox">Нет Ответов</label>
                 </li>
                 <li class="list-group-item custom-checkbox">
                     <input asp-for="NoAcceptedAnswer" class="form-check-input custom-control-input me-1" type="checkbox" id="secondCheckbox">
-                    <label class="form-check-label" for="secondCheckbox">No Accepted Answer</label>
+                    <label class="form-check-label" for="secondCheckbox">Нет Принятых Ответов</label>
                 </li>
             </ul> 
 
             <ul class="list-group rounded-0 rounded-end">
-                <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Sorted By</li>
+                <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Сортировать По</li>
 
                 @foreach (var sortFilter in Enum.GetValues(typeof(SortFilters)))
                 {
                     <li class="list-group-item custom-checkbox">
                         <label class="form-check-label">
                             @(Html.RadioButtonFor<SortFilters>(s => s.Sort, (SortFilters)sortFilter, new { @class = "form-check-input custom-control-input me-1" }))
-                            @sortFilter
+                            @(((SortFilters)sortFilter).GetDisplayName())
                         </label>
                     </li>
                 } 
@@ -72,8 +72,8 @@
         </div>
 
         <div class="card-footer d-flex justify-content-end">
-            <button formmethod="post" type="submit" class="btn btn-dark shadow-none me-2">Apply</button>
-            <button type="button" class="btn btn-outline-dark shadow-none" data-bs-toggle="collapse" data-bs-target="#collapseFilter">Cancel</button>
+            <button formmethod="post" type="submit" class="btn btn-dark shadow-none me-2">Принять</button>
+            <button type="button" class="btn btn-outline-dark shadow-none" data-bs-toggle="collapse" data-bs-target="#collapseFilter">Отменить</button>
         </div>
     </form>
 </div>
@@ -86,12 +86,12 @@
             <div class="card-header d-flex justify-content-between flex-wrap">
                 <div class="me-2 mb-1">
                     <span>@CodeHelper.Core.Extensions.CalculateNumber(@question.ViewsCount)</span>
-                    <span class="me-1">views</span>
+                    <span class="me-1">просмотров</span>
                     <span class="badge  @(question.HasAcceptedAnswer ? "" : "display-none") rounded-pill bg-success me-2 my-auto shadow-none" style="font-size: 12px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
                             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
                         </svg>
-                        Has Accepted Answer
+                        Есть Принятый Ответ
                     </span>
                     <a class="link-dark fw-bold text-decoration-none" asp-controller="Questions" asp-action="Question" asp-route-title="@Extensions.TitleToUrl(question.Title)" asp-route-questionId="@question.Id">@question.Title</a>
                 </div>
@@ -121,7 +121,7 @@
     <nav aria-label="Page navigation example" class="mt-3">
         <ul class="pagination border-secondary">
             <li class="page-item @(Model.Pagination.CurrentPage - 1 <= 0 ? "disabled" : "")">
-                <a class="page-link" rel="prev" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage - 1)">Previous</a>
+                <a class="page-link" rel="prev" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage - 1)">Пред</a>
             </li>
             <li class="page-item @(Model.Pagination.CurrentPage == 1 ? "active" : "")">
                 <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="1">1</a>
@@ -148,7 +148,7 @@
                 <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="@Model.Pagination.PageCount">@Model.Pagination.PageCount</a>
             </li>
             <li class="page-item @(Model.Pagination.CurrentPage + 1 > Model.Pagination.PageCount ? "disabled" : "")">
-                <a class="page-link" rel="next" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage + 1)">Next</a>
+                <a class="page-link" rel="next" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage + 1)">След</a>
             </li>
         </ul>
     </nav>

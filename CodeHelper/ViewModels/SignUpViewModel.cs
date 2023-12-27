@@ -4,23 +4,23 @@ namespace CodeHelper.ViewModels
 {
     public class SignUpViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Имя не может быть пустым")]
         public string UserName { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email не может быть пустым")]
+        [EmailAddress(ErrorMessage = "Email имеет не допустимый формат")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Пароль не может быть пустым")]
         [DataType(DataType.Password)]
-        [Compare(nameof(RepeatPassword))]
-        [MinLength(5)]
+        [Compare(nameof(RepeatPassword), ErrorMessage = "Пароли не совпадают")]
+        [MinLength(5, ErrorMessage = "Минимальная длина пароля 5 символов")]
         public string Password { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Пароль не может быть пустым")]
         [DataType(DataType.Password)]
-        [Compare(nameof(Password))]
-        [MinLength(5)]
+        [Compare(nameof(Password), ErrorMessage = "Пароли не совпадают")]
+        [MinLength(5, ErrorMessage = "Минимальная длина пароля 5 символов")]
         public string RepeatPassword { get; set; }
     }
 }

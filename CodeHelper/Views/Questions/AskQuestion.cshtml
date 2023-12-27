@@ -7,19 +7,19 @@
     <ul class="list-group rounded-0 rounded-start">
         <li class="list-group-item border-0">
             <div class="card p-2 col-auto">
-                <h2 class="fs-3">Title</h2>
+                <h2 class="fs-3">Заголовок</h2>
                 <div class="mb-3 form-floating">
-                    <input type="text" class="form-control" id="floatingTitleInput" asp-for="Question.Title" placeholder="title">
-                    <label asp-for="Question.Title" for="floatingTitleInput" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="floatingTitleInput" asp-for="Question.Title" placeholder="Заголовок">
+                    <label asp-for="Question.Title" for="floatingTitleInput" class="form-label">Заголовок</label>
                     <span class="text-danger" asp-validation-for="Question.Title"></span>
                 </div>
 
-                <h2 class="fs-3">Content</h2>
+                <h2 class="fs-3">Содержание</h2>
                 <div class="card p-3 my-1 hover-card">
                     <textarea asp-for="Question.Content" class="mb-3 editor"></textarea>
                 </div>
 
-                <h2 class="fs-3">Tags</h2>
+                <h2 class="fs-3">Теги</h2>
                 <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" id="validationTags"
                         data-allow-clear="true"
                         data-allow-new="false"
@@ -27,7 +27,7 @@
                         data-live-server="1"
                         multiple>
 
-                    <option disabled hidden value="">Choose a tag...</option>
+                    <option disabled hidden value="">Выберите теги...</option>
 
                     @if (Model.Question?.Tags != null)
                         @foreach (var item in Model.Question.Tags)
@@ -38,7 +38,7 @@
             </div>
         </li>
         <li class="list-group-item h-100 my-3 border-0">
-            <button formmethod="post" type="submit" class="btn btn-outline-dark">Apply question</button>
+            <button formmethod="post" type="submit" class="btn btn-outline-dark">Опубликовать ответ</button>
         </li>
     </ul>
 </form>

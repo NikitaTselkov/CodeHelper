@@ -27,7 +27,7 @@
                     </ul>
 
                     <form method="post" asp-controller="Questions" asp-action="Search" class="me-lg-auto col-12 col-lg-5 mb-3 mb-lg-0">
-                        <input type="search" name="query" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" />
+                        <input type="search" name="query" class="form-control form-control-dark" placeholder="Поиск..." aria-label="Search" />
                     </form>
 
                     @if (signInManager.IsSignedIn(User))
@@ -37,15 +37,15 @@
                                 <label>@User.Identity?.Name</label>
                             </a>
                             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser" data-popper-placement="bottom-start">
-                                <li><a rel="nofollow" class="dropdown-item" asp-controller="Autorization" asp-action="SignOut">Sign out</a></li>
+                                <li><a rel="nofollow" class="dropdown-item" asp-controller="Autorization" asp-action="SignOut">Выйти</a></li>
                             </ul>
                         </div>
                     }
                     else
                     {
                         <form method="get" class="text-end">
-                            <button type="submit" asp-controller="Autorization" asp-action="Login" class="btn btn-outline-light me-2">Login</button>
-                            <button type="submit" asp-controller="Autorization" asp-action="SignUp" class="btn btn-warning">Sign-up</button>
+                            <button type="submit" asp-controller="Autorization" asp-action="Login" class="btn btn-outline-light me-2">Войти</button>
+                            <button type="submit" asp-controller="Autorization" asp-action="SignUp" class="btn btn-warning">Регистрация</button>
                         </form>
                     }
                 </div>
@@ -57,9 +57,9 @@
         <main role="main" class="pb-3">
             <div id="cookie_note" class="bg-dark">
                 <p>
-                    We use cookies to improve your website experience. By remaining on our website, you agree to the terms and conditions use of cookies. Read our <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Privacy">privacy</a> and usage proposals cookies <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Cookie">here</a>.
+                    Мы используем файлы cookie, чтобы улучшить работу с сайтом. Оставаясь на нашем сайте, вы соглашаетесь с условиями и правилами использования файлов cookie. Ознакомьтесь с нашей <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Privacy">политикой конфиденциальности</a> и использовании файлов cookie <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Cookie">здесь</a>.
                 </p>
-                <button class="button cookie_accept btn btn-warning btn-sm ms-1 my-auto">Accept</button>
+                <button class="button cookie_accept btn btn-warning btn-sm ms-1 my-auto">Принять</button>
             </div>
             @RenderBody()
         </main>
@@ -74,8 +74,8 @@
                 </a>
 
                 <ul class="nav col-md-4 justify-content-end">
-                    <li rel="nofollow" class="nav-item"><a asp-controller="Home" asp-action="Privacy" class="nav-link px-2 text-muted">Privacy Policy</a></li>
-                    <li rel="nofollow" class="nav-item"><a asp-controller="Home" asp-action="Cookie" class="nav-link px-2 text-muted">Cookie Policy</a></li>
+                    <li rel="nofollow" class="nav-item"><a asp-controller="Home" asp-action="Privacy" class="nav-link px-2 text-muted">Политика Конфиденциальности</a></li>
+                    <li rel="nofollow" class="nav-item"><a asp-controller="Home" asp-action="Cookie" class="nav-link px-2 text-muted">Политика Сookie</a></li>
                 </ul>
             </footer>
         }
