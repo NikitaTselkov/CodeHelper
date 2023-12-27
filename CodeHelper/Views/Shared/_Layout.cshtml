@@ -57,29 +57,29 @@
         <main role="main" class="pb-3">
             <div id="cookie_note" class="bg-dark">
                 <p>
-                    We use cookies to improve your website experience. By remaining on our website, you agree to the terms and conditions use of cookies. Read our <a rel="nofollow" class=" text-warning" asp-controller="Home" asp-action="Privacy">privacy</a> and usage proposals cookies <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Cookie">here</a>.
+                    We use cookies to improve your website experience. By remaining on our website, you agree to the terms and conditions use of cookies. Read our <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Privacy">privacy</a> and usage proposals cookies <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Cookie">here</a>.
                 </p>
                 <button class="button cookie_accept btn btn-warning btn-sm ms-1 my-auto">Accept</button>
             </div>
             @RenderBody()
         </main>
+
+        @if (ViewData["CurrentPage"] != "Autorization")
+        {
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                <p class="col-md-4 mb-0 text-muted">Rewrite Code</p>
+
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                    <img src="~/images/rewritecodelogo.svg" alt="logo" height="50px" width="50px" />
+                </a>
+
+                <ul class="nav col-md-4 justify-content-end">
+                    <li rel="nofollow" class="nav-item"><a asp-controller="Home" asp-action="Privacy" class="nav-link px-2 text-muted">Privacy Policy</a></li>
+                    <li rel="nofollow" class="nav-item"><a asp-controller="Home" asp-action="Cookie" class="nav-link px-2 text-muted">Cookie Policy</a></li>
+                </ul>
+            </footer>
+        }
     </div>
-
-    @if (ViewData["CurrentPage"] != "Autorization")
-    {
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top container">
-            <p class="col-md-4 mb-0 text-muted">Rewrite Code</p>
-
-            <a asp-area="" asp-controller="Home" asp-action="Index" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                <img src="~/images/rewritecodelogo.svg" alt="logo" height="50px" width="50px" />
-            </a>
-
-            <ul class="nav col-md-4 justify-content-end">
-                <li class="nav-item"><a asp-controller="Home" asp-action="Privacy" class="nav-link px-2 text-muted">Privacy Policy</a></li>
-                <li class="nav-item"><a asp-controller="Home" asp-action="Cookie" class="nav-link px-2 text-muted">Cookie Policy</a></li>
-            </ul>
-        </footer>
-    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -210,6 +210,8 @@ namespace CodeHelper.Controllers
         [HttpGet]
         public IActionResult AskQuestion()
         {
+            ViewData["CurrentPage"] = "Autorization";
+
             var model = new AskQuestionViewModel();
 
             if (TempData["EditQuestionId"] is string value)
