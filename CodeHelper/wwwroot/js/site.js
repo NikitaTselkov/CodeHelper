@@ -22,9 +22,17 @@ for (var i = 0; i < allreadOnlyNoFormatEditors.length; ++i) {
             editor.editing.view.change(writer => {
                 const viewEditableRoot = editor.editing.view.document.getRoot();
                 writer.removeClass('ck-editor__editable_inline', viewEditableRoot);
+                writer.removeClass('ck-editor__editable', viewEditableRoot);
                 writer.setStyle('max-height', '70px', viewEditableRoot);
                 writer.setStyle('overflow', 'hidden', viewEditableRoot);
                 writer.setStyle('word-wrap', 'normal', viewEditableRoot);
+
+                $('br').remove();
+                $("p").each(function () {
+                    if ($.trim($(this).text()) == "") {
+                        $(this).remove();
+                    }
+                });
             });
         })
         .catch(error => {
