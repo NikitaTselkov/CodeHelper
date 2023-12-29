@@ -15,6 +15,12 @@ spec:
       containers:
         - name: images-app
           image: nikitatcelkov/images:latest
+          volumeMounts:
+            - mountPath: /app/Data
+              name: images-volume
+      volumes:
+        - name: images-volume
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
