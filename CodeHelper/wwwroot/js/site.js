@@ -61,6 +61,13 @@ for (var i = 0; i < allReadOnlyEditors.length; ++i) {
             editor.editing.view.change(writer => {
                 const viewEditableRoot = editor.editing.view.document.getRoot();
                 writer.removeClass('ck-editor__editable_inline', viewEditableRoot);
+
+                $('p').find('br').remove();
+                $("p").each(function () {
+                    if ($.trim($(this).text()) == "") {
+                        $(this).remove();
+                    }
+                });
             });
         })
         .catch(error => {
