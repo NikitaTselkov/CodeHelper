@@ -21,6 +21,14 @@ body {
     margin-bottom: 60px;
 }
 
+a {
+    color: black;
+}
+
+    a:hover {
+        color: #757575;
+    }
+
 .badge {
     display: unset !important;
 }
