@@ -14,7 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{92FB5056-A9D
 		local-pvc.yaml = local-pvc.yaml
 		main-deploy.yaml = main-deploy.yaml
 		mssql-depl.yaml = mssql-depl.yaml
-		nodeport-srv.yaml = nodeport-srv.yaml
 	EndProjectSection
 EndProject
 Global
