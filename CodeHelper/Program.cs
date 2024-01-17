@@ -2,8 +2,10 @@ using CodeHelper.Core;
 using CodeHelper.Data;
 using CodeHelper.Models.Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using System.Drawing;
 using System.Net;
 
 public class Program
@@ -22,6 +24,7 @@ public class Program
         builder.Services.AddScoped<TagRepository, TagRepository>();
         builder.Services.AddScoped<LikesRepository, LikesRepository>();
         builder.Services.AddScoped<ImageManager, ImageManager>();
+        builder.Services.AddScoped<SitemapGenerator, SitemapGenerator>();
 
         builder.Services.AddIdentity<User, IdentityRole>(options =>
         {
@@ -73,8 +76,13 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}");
+          name: "default",
+          pattern: "{controller=Home}/{action=Index}");
+
+        app.MapControllerRoute(
+          name: "sitemap",
+          pattern: "/{sitemap.xml}",
+          defaults: new { controller = "Home", action = "Sitemap" });
 
         app.Run();
     }
