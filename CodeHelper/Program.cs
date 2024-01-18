@@ -2,11 +2,8 @@ using CodeHelper.Core;
 using CodeHelper.Data;
 using CodeHelper.Models.Domain;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
-using System.Drawing;
-using System.Net;
 
 public class Program
 {
