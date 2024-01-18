@@ -48,7 +48,7 @@ namespace CodeHelper.Controllers
             var pagesCount = 0;
             var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
 
-            ViewData["Description"] = "Rewrite Code is a community for developers where people share their knowledge and experience";
+            ViewData["Description"] = "Rewrite Code - это сообщество разработчиков, где люди делятся своими знаниями и опытом.";
 
             if (TempData["QuestionsViewModel"] is string value)
             {
