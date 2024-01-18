@@ -34,6 +34,11 @@ namespace CodeHelper.Controllers
             return View();
         }
 
+        public IActionResult ContentLicense()
+        {
+            return View();
+        }
+
         public IActionResult Sitemap()
         {
             var sitemapNodes = _sitemapGenerator.GetSitemapNodes();
