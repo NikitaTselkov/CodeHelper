@@ -1,8 +1,8 @@
 User-agent: *
 Disallow: /Questions/AskQuestion
-Disallow: /Questions/All?page=0
 Disallow: /Home/Cookie
 Disallow: /Home/Privacy
 Disallow: /Home/Sitemap
+Disallow: /*page=*
 Disallow: /*returnUrl=*
 Sitemap: https://rewritecode.ru/sitemap.xml

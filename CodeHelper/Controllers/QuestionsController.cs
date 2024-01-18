@@ -45,9 +45,10 @@ namespace CodeHelper.Controllers
         public IActionResult All(int page = 1)
         {
             var questionsViewModel = new QuestionsViewModel();
-
             var pagesCount = 0;
             var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
+
+            ViewData["Description"] = "Rewrite Code is a community for developers where people share their knowledge and experience";
 
             if (TempData["QuestionsViewModel"] is string value)
             {

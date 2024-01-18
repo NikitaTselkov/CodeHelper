@@ -18,6 +18,8 @@ namespace CodeHelper.Core
         {
             List<string> nodes = new List<string>();
 
+            nodes.Add($"{_configuration["Domen"]}Questions/All");
+
             foreach (var question in _questionsRepository.GetAll())
             {
                 nodes.Add($"{_configuration["Domen"]}questions/{Extensions.TitleToUrl(question.Title)}/{question.Id}");

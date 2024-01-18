@@ -1,5 +1,4 @@
 ﻿using CodeHelper.Core;
-using CodeHelper.Data;
 using CodeHelper.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -35,7 +34,7 @@ namespace CodeHelper.Controllers
             return View();
         }
 
-        public ActionResult Sitemap()
+        public IActionResult Sitemap()
         {
             var sitemapNodes = _sitemapGenerator.GetSitemapNodes();
             string xml = _sitemapGenerator.GetSitemapDocument(sitemapNodes);
