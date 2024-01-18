@@ -2,6 +2,7 @@ User-agent: *
 Disallow: /Questions/AskQuestion
 Disallow: /Home/Cookie
 Disallow: /Home/Privacy
+Disallow: /Home/ContentLicense
 Disallow: /Home/Sitemap
 Disallow: /*page=*
 Disallow: /*returnUrl=*
