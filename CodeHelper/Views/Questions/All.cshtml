@@ -4,7 +4,7 @@
     ViewData["Title"] = "All Questions | Rewrite Code";
 }
 
-<div class="card text-center m-3 ms-0 me-0">
+<div class="card shadow text-center m-3 ms-0 me-0">
     <div class="card-header d-flex justify-content-between">
         <h1 class="fs-3">All Questions</h1>
         <span>
@@ -82,7 +82,7 @@
 @if (Model?.Questions != null)
     @foreach (var question in Model.Questions)
     {
-        <div class="card mt-2">
+        <div class="card shadow mt-2">
             <div class="card-header d-flex justify-content-between flex-wrap">
                 <div class="me-2 mb-1">
                     <span>@CodeHelper.Core.Extensions.CalculateNumber(@question.ViewsCount)</span>
@@ -120,34 +120,34 @@
 {
     <nav aria-label="Page navigation example" class="mt-3">
         <ul class="pagination border-secondary">
-            <li class="page-item @(Model.Pagination.CurrentPage - 1 <= 0 ? "disabled" : "")">
+            <li class="page-item shadow @(Model.Pagination.CurrentPage - 1 <= 0 ? "disabled" : "")">
                 <a class="page-link" rel="prev" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage - 1)">Previous</a>
             </li>
-            <li class="page-item @(Model.Pagination.CurrentPage == 1 ? "active" : "")">
+            <li class="page-item shadow @(Model.Pagination.CurrentPage == 1 ? "active" : "")">
                 <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="1">1</a>
             </li>
 
             @if (Model.Pagination.CurrentPage > 4)
             {
-                <li class="page-item text-secondary m-2 mx-3 mb-0">...</li>
+                <li class="page-item shadow text-secondary m-2 mx-3 mb-0">...</li>
             }
 
             @for (int i = Model.Pagination.StartPage; i < Model.Pagination.EndPage; i++)
             {
-                <li class="page-item @(Model.Pagination.CurrentPage == i ? "active" : "")">
+                <li class="page-item shadow @(Model.Pagination.CurrentPage == i ? "active" : "")">
                     <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="@i">@i</a>
                 </li>
             }
 
             @if (Model.Pagination.EndPage < Model.Pagination.PageCount)
             {
-                <li class="page-item text-secondary m-2 mx-3 mb-0">...</li>
+                <li class="page-item shadow text-secondary m-2 mx-3 mb-0">...</li>
             }
 
-            <li class="page-item @(Model.Pagination.CurrentPage == Model.Pagination.PageCount ? "active" : "")">
+            <li class="page-item shadow @(Model.Pagination.CurrentPage == Model.Pagination.PageCount ? "active" : "")">
                 <a class="page-link" asp-controller="Questions" asp-action="All" asp-route-page="@Model.Pagination.PageCount">@Model.Pagination.PageCount</a>
             </li>
-            <li class="page-item @(Model.Pagination.CurrentPage + 1 > Model.Pagination.PageCount ? "disabled" : "")">
+            <li class="page-item shadow @(Model.Pagination.CurrentPage + 1 > Model.Pagination.PageCount ? "disabled" : "")">
                 <a class="page-link" rel="next" asp-controller="Questions" asp-action="All" asp-route-page="@(Model.Pagination.CurrentPage + 1)">Next</a>
             </li>
         </ul>
