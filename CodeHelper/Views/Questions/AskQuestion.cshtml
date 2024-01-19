@@ -6,10 +6,10 @@
 <form class="vh-100 row justify-content-center align-items-center m-3">
     <ul class="list-group rounded-0 rounded-start">
         <li class="list-group-item border-0">
-            <div class="card p-2 col-auto">
+            <div class="card shadow p-2 col-auto">
                 <h2 class="fs-3">Заголовок</h2>
                 <div class="mb-3 form-floating">
-                    <input type="text" class="form-control" id="floatingTitleInput" asp-for="Question.Title" placeholder="Заголовок">
+                    <input type="text" class="form-control secondary-focus" id="floatingTitleInput" asp-for="Question.Title" placeholder="Заголовок">
                     <label asp-for="Question.Title" for="floatingTitleInput" class="form-label">Заголовок</label>
                     <span class="text-danger" asp-validation-for="Question.Title"></span>
                 </div>
