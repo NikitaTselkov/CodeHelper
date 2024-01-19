@@ -8,6 +8,8 @@ namespace CodeHelper.Controllers
 {
     public class HomeController : Controller
     {
+        private const int SITEMAP_OFFSET = 40000;
+
         private readonly ILogger<HomeController> _logger;
         private readonly SitemapGenerator _sitemapGenerator;
 
@@ -39,9 +41,15 @@ namespace CodeHelper.Controllers
             return View();
         }
 
-        public IActionResult Sitemap()
+        public IActionResult SitemapIndex()
         {
-            var sitemapNodes = _sitemapGenerator.GetSitemapNodes();
+            string xml = _sitemapGenerator.GetSitemapIndexDocument(SITEMAP_OFFSET);
+            return Content(xml, "text/xml", Encoding.UTF8);
+        }
+
+        public IActionResult Sitemap(int offset)
+        {
+            var sitemapNodes = _sitemapGenerator.GetSitemapNodes(offset, SITEMAP_OFFSET);
             string xml = _sitemapGenerator.GetSitemapDocument(sitemapNodes);
             return Content(xml, "text/xml", Encoding.UTF8);
         }

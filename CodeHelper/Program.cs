@@ -78,8 +78,13 @@ public class Program
 
         app.MapControllerRoute(
           name: "sitemap",
-          pattern: "/{sitemap.xml}",
-          defaults: new { controller = "Home", action = "Sitemap" });
+          pattern: "/sitemap.xml",
+          defaults: new { controller = "Home", action = "SitemapIndex" });
+
+        app.MapControllerRoute(
+        name: "sitemap",
+        pattern: "{offset}/sitemap.xml",
+        defaults: new { controller = "Home", action = "Sitemap", offset = "offset" });
 
         app.Run();
     }
