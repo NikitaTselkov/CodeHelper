@@ -178,7 +178,7 @@
 
                             @if (Model.Pagination.CurrentPage > 4)
                             {
-                                <li class="page-item shadow text-secondary m-2 mx-3 mb-0">...</li>
+                                <li class="page-item text-secondary m-2 mx-3 mb-0">...</li>
                             }
 
                             @for (int i = Model.Pagination.StartPage; i < Model.Pagination.EndPage; i++)
@@ -190,7 +190,7 @@
 
                             @if (Model.Pagination.EndPage < Model.Pagination.PageCount)
                             {
-                                <li class="page-item shadow text-secondary m-2 mx-3 mb-0">...</li>
+                                <li class="page-item text-secondary m-2 mx-3 mb-0">...</li>
                             }
 
                             <li class="page-item shadow @(Model.Pagination.CurrentPage == Model.Pagination.PageCount ? "active" : "")">
