@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace CodeHelper.Controllers
 {
@@ -293,6 +295,12 @@ namespace CodeHelper.Controllers
 
             if (question != null)
             {
+                var description = question.Content.Length >= 120 ? string.Join("", question.Content.Take(120)) : question.Content;
+                description = Regex.Replace(description, @"<[^>]*>", "");
+                description += " ...";
+
+                ViewData["Description"] = HttpUtility.HtmlDecode(description);
+
                 var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
                 var answers = _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question, g => g.User)
                     .OrderByDescending(o => o.LikesCount)
