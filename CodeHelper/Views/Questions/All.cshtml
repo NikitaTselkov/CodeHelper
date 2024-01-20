@@ -20,7 +20,7 @@
         </span>
     </div>
 
-    <form method="post" class="card collapse" id="collapseFilter">
+    <form method="post" class="card collapse overflow-hidden" id="collapseFilter">
         <div class="card-body d-flex justify-content-center">
             <ul class="list-group rounded-0 rounded-start">
                 <li class="list-group-item active bg-dark text-white border-0" aria-current="true">Теги</li>
@@ -87,7 +87,7 @@
                 <div class="me-2 mb-1">
                     <span>@CodeHelper.Core.Extensions.CalculateNumber(@question.ViewsCount)</span>
                     <span class="me-1">просмотров</span>
-                    <span class="badge  @(question.HasAcceptedAnswer ? "" : "display-none") rounded-pill bg-success me-2 my-auto shadow-none" style="font-size: 12px;">
+                    <span class="badge  @(question.HasAcceptedAnswer ? "" : "display-none") rounded-pill bg-success me-2 my-auto shadow-none">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
                             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
                         </svg>
