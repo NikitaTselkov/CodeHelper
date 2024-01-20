@@ -27,8 +27,8 @@
         <li class="list-group-item border-0">
             <h1 itemprop="name">@Model?.Question?.Title</h1>
             <div class="d-flex">
-                <div itemprop="upvoteCount" class="text-secondary me-2">Просмотров: <span>@CodeHelper.Core.Extensions.CalculateNumber(Model?.Question?.ViewsCount)</span></div>
-                <div itemprop="dateCreated" class="text-secondary me-2">Опубликован: <span>@Model?.PublishedDate</span></div>
+                <div itemprop="upvoteCount" class="text-secondary me-2 mobile-hidden">Просмотров: <span>@CodeHelper.Core.Extensions.CalculateNumber(Model?.Question?.ViewsCount)</span></div>
+                <div itemprop="dateCreated" class="text-secondary me-2 mobile-hidden">Опубликован: <span>@Model?.PublishedDate</span></div>
                 <div>
                     @if (Model?.Question?.Tags != null)
                         @foreach (var tag in Model.Question.Tags)
@@ -64,7 +64,7 @@
                 {
                     <div id="answerCard" class="card shadow p-3 pb-0 mt-2 hover-card" itemprop=@(Model.Question.Answers[i].IsAcceptedAnswer ? "acceptedAnswer" : "suggestedAnswer") itemscope="" itemtype="https://schema.org/Answer">
                         <div class="justify-content-start mb-1 d-flex">
-                            <span class="badge @(Model.Question.Answers[i].IsAcceptedAnswer ? "" : "display-none") rounded-pill bg-success me-2 my-auto shadow-none" style="font-size: 13px;" id="accepted_badge+@Model.Question.Answers[i].Id">
+                            <span class="badge @(Model.Question.Answers[i].IsAcceptedAnswer ? "" : "display-none") rounded-pill bg-success me-2 my-auto shadow-none" id="accepted_badge+@Model.Question.Answers[i].Id">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
                                     <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
                                 </svg>
