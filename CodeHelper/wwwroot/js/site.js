@@ -32,6 +32,8 @@ for (var i = 0; i < allreadOnlyNoFormatEditors.length; ++i) {
                     if ($.trim($(this).text()) == "") {
                         $(this).remove();
                     }
+
+                    $(this).css('margin', 'unset');
                 });
             });
         })
