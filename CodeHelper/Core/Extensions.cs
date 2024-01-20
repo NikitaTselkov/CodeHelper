@@ -234,5 +234,16 @@ namespace CodeHelper.Core
 
             return result;
         }
+
+        public static string ProccessAnswerStringFormat(int num)
+        {
+            if (num == 1)
+                return "Ответ";
+
+            if (num >= 2 && num <= 4)
+                return "Ответа";
+
+            return "Ответов";
+        }
     }
 }
