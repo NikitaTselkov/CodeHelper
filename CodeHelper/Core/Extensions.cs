@@ -204,22 +204,35 @@ namespace CodeHelper.Core
                 months--;
             }
 
+            string result;
+
             if (years > 0)
             {
-                return $"{years} {(years == 1 ? "год" : "лет")} назад";
+                result = $"{years} {(years == 1 ? "год" : "лет")} назад";
+
+                if (years >= 2 && years <= 4)
+                    result = $"{years} года назад";
             }
             else if (months > 0)
             {
-                return $"{months} {(months == 1 ? "месяц" : "месяцев")} назад";
+                result = $"{months} {(months == 1 ? "месяц" : "месяцев")} назад";
+
+                if (months >= 2 && months <= 4)
+                    result = $"{months} месяца назад";
             }
             else if (days > 0)
             {
-                return $"{days} {(days == 1 ? "день" : "дней")} назад";
+                result = $"{days} {(days == 1 ? "день" : "дней")} назад";
+
+                if (days >= 2 && days <= 4)
+                    result = $"{days} дня назад";
             }
             else
             {
-                return "Сегодня";
+                result = "Сегодня";
             }
+
+            return result;
         }
     }
 }
