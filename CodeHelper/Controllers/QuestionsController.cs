@@ -44,13 +44,18 @@ namespace CodeHelper.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult All(int page = 1)
+        public IActionResult All(int page = 0)
         {
             var questionsViewModel = new QuestionsViewModel();
             var pagesCount = 0;
-            var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
+
+            if (page == 0) page = 1;
+            else
+                ViewData["Canonical"] = _configuration["Domen"] + $"Questions/All";
 
             ViewData["Description"] = "Rewrite Code is a community for developers where people share their knowledge and experience";
+
+            var pageOffset = (int)((page - 1) * GlobalConstants.QuestionsCountIntPage);
 
             if (TempData["QuestionsViewModel"] is string value)
             {
@@ -300,12 +305,11 @@ namespace CodeHelper.Controllers
                 description += " ...";
 
                 ViewData["Description"] = HttpUtility.HtmlDecode(description);
-                ViewData["Is"] = HttpUtility.HtmlDecode(description);
+                ViewData["CurrentPage"] = "Question";
 
                 if (page == 0) page = 1;
                 else
-                    ViewData["Canonical"] = "https://rewritecode.ru/Questions/All";
-
+                    ViewData["Canonical"] = _configuration["Domen"] + $"questions/{title}/{questionId}";
 
                 var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
                 var answers = _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question, g => g.User)

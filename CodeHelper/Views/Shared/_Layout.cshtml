@@ -1,7 +1,7 @@
 ﻿@inject SignInManager<User> signInManager;
 
 <!DOCTYPE html>
-<html lang="en" itemscope="" itemtype="https://schema.org/QAPage">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -78,15 +78,25 @@
     }
 
     <div class="container">
-        <main role="main" class="pb-3" itemscope="" itemtype="https://schema.org/QAPage">
+        <main role="main" class="pb-3">
             <div id="cookie_note" class="bg-dark">
                 <p>
                     We use cookies to improve your website experience. By remaining on our website, you agree to the terms and conditions use of cookies. Read our <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Privacy">privacy</a> and usage proposals cookies <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Cookie">here</a>.
                 </p>
                 <button class="button cookie_accept btn btn-warning btn-sm ms-1 my-auto">Accept</button>
             </div>
-            @RenderBody()
-        </main>
+
+            @if (ViewData["CurrentPage"] == "Question")
+            {
+                <div itemscope="" itemtype="https://schema.org/QAPage">
+                    @RenderBody()
+                </div>
+            }
+            else
+            {
+                @RenderBody()
+            }
+        </div>
 
         @if (ViewData["CurrentPage"] != "Autorization")
         {
