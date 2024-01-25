@@ -10,6 +10,10 @@
     {
         <meta name="description" content="@ViewData["Description"]">
     }
+    @if (ViewData["Canonical"] != null)
+    {
+        <link rel="canonical" href="@ViewData["Canonical"]" />
+    }
     <link rel="icon" href="~/favicon.svg" type="image/svg">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -74,7 +78,7 @@
     }
 
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3" itemscope="" itemtype="https://schema.org/QAPage">
             <div id="cookie_note" class="bg-dark">
                 <p>
                     We use cookies to improve your website experience. By remaining on our website, you agree to the terms and conditions use of cookies. Read our <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Privacy">privacy</a> and usage proposals cookies <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Cookie">here</a>.

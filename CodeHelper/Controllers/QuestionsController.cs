@@ -286,7 +286,7 @@ namespace CodeHelper.Controllers
         }
 
         [HttpGet("questions/{title}/{questionId}")]
-        public IActionResult Question(string title, int questionId, int page = 1)
+        public IActionResult Question(string title, int questionId, int page = 0)
         {
             var model = new QuestionViewModel();
             var userName = HttpContext.User.Identity?.Name;
@@ -300,6 +300,12 @@ namespace CodeHelper.Controllers
                 description += " ...";
 
                 ViewData["Description"] = HttpUtility.HtmlDecode(description);
+                ViewData["Is"] = HttpUtility.HtmlDecode(description);
+
+                if (page == 0) page = 1;
+                else
+                    ViewData["Canonical"] = "https://rewritecode.ru/Questions/All";
+
 
                 var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
                 var answers = _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question, g => g.User)
