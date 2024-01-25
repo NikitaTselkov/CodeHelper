@@ -1,7 +1,7 @@
 ﻿@inject SignInManager<User> signInManager;
 
 <!DOCTYPE html>
-<html lang="ru" itemscope="" itemtype="https://schema.org/QAPage">
+<html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,6 +10,10 @@
     @if (ViewData["Description"] != null)
     {
         <meta name="description" content="@ViewData["Description"]">
+    }
+    @if (ViewData["Canonical"] != null)
+    {
+        <link rel="canonical" href="@ViewData["Canonical"]" />
     }
     <link rel="icon" href="~/favicon.svg" type="image/svg">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -82,8 +86,18 @@
                 </p>
                 <button class="button cookie_accept btn btn-warning btn-sm ms-1 my-auto">Принять</button>
             </div>
-            @RenderBody()
-        </main>
+
+            @if (ViewData["CurrentPage"] == "Question")
+            {
+                <div itemscope="" itemtype="https://schema.org/QAPage">
+                    @RenderBody()
+                </div>
+            }
+            else
+            {
+                @RenderBody()
+            }
+        </div>
 
         @if (ViewData["CurrentPage"] != "Autorization")
         {
