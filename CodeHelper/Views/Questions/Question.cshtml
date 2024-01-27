@@ -27,8 +27,15 @@
         <li class="list-group-item border-0">
             <h1 itemprop="name">@Model?.Question?.Title</h1>
             <div class="d-flex">
-                <div itemprop="upvoteCount" class="text-secondary me-2 mobile-hidden">Просмотров: <span>@CodeHelper.Core.Extensions.CalculateNumber(Model?.Question?.ViewsCount)</span></div>
-                <div itemprop="dateCreated" class="text-secondary me-2 mobile-hidden">Опубликован: <span>@Model?.PublishedDate</span></div>
+                <div class="text-secondary me-2 mobile-hidden">Просмотров: 
+                    <span>@CodeHelper.Core.Extensions.CalculateNumber(Model?.Question?.ViewsCount)</span>
+                    <span itemprop="upvoteCount" class="d-none">@Model?.Question?.ViewsCount</span>
+                    <span itemprop="author" class="d-none">@Model?.Question?.Author.UserName</span>
+                </div>
+                <div class="text-secondary me-2 mobile-hidden">Опубликован: 
+                    <span>@Model?.PublishedDate</span>
+                    <span itemprop="dateCreated" class="d-none">@Model?.Question?.PublisedDate</span>
+                </div>
                 <div>
                     @if (Model?.Question?.Tags != null)
                         @foreach (var tag in Model.Question.Tags)
@@ -58,7 +65,7 @@
         <li class="list-group-item border-0 mt-3">
             @if (Model?.Question?.Answers?.Count > 0)
             {
-                <h2 class="fs-4" itemprop="answerCount"><span>@Model.AnswersCount</span> @Extensions.ProccessAnswerStringFormat(Model.AnswersCount)</h2>
+                <h2 class="fs-4"><span itemprop="answerCount">@Model.AnswersCount</span> @Extensions.ProccessAnswerStringFormat(Model.AnswersCount)</h2>
 
                 @for (int i = 0; i < Model.Question.Answers.Count; i++)
                 {
@@ -126,8 +133,9 @@
 
                         <blockquote class="blockquote card-footer" style="height:25px; background-color: transparent !important;">
                             <footer class="blockquote-footer fs-6" style="margin-top: 0 !important;">
-                                <span itemprop="dateCreated">@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
-                                <cite itemprop="author" itemscope="" itemtype="https://schema.org/Person" class="ms-2"><span itemprop="name">@Model.Question.Answers[i].User?.UserName</span></cite>
+                                <span>@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
+                                <span itemprop="dateCreated" class="d-none">@Model.Question.Answers[i].PublisedDate</span>
+                                <cite itemprop="author" itemscope itemtype="https://schema.org/Person" class="ms-2"><span itemprop="name">@Model.Question.Answers[i].User?.UserName</span></cite>
                             </footer>
                         </blockquote>
 
