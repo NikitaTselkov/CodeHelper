@@ -6,21 +6,21 @@
 <form class="vh-100 row justify-content-center align-items-center m-3">
     <ul class="list-group rounded-0 rounded-start">
         <li class="list-group-item border-0">
-            <div class="card shadow p-2 col-auto">
-                <h2 class="fs-3">Title</h2>
+            <div class="card second-bg-color shadow p-2 col-auto">
+                <h2 class="fs-3 front-color">Title</h2>
                 <div class="mb-3 form-floating">
-                    <input type="text" class="form-control secondary-focus" id="floatingTitleInput" asp-for="Question.Title" placeholder="title">
-                    <label asp-for="Question.Title" for="floatingTitleInput" class="form-label">Title</label>
+                    <input type="text" class="form-control second-bg-color front-color shadow border-0" id="floatingTitleInput" asp-for="Question.Title" placeholder="title">
+                    <label asp-for="Question.Title" for="floatingTitleInput" class="form-label front-color">Title</label>
                     <span class="text-danger" asp-validation-for="Question.Title"></span>
                 </div>
 
-                <h2 class="fs-3">Content</h2>
-                <div class="card p-3 my-1 hover-card">
+                <h2 class="fs-3 front-color">Content</h2>
+                <div class="card second-bg-color p-3 my-1 hover-card shadow border-0">
                     <textarea asp-for="Question.Content" class="mb-3 editor"></textarea>
                 </div>
 
-                <h2 class="fs-3">Tags</h2>
-                <select asp-for="SelectedTags" class="form-select w-100" data-badge-style="secondary" id="validationTags"
+                <h2 class="fs-3 front-color">Tags</h2>
+                <select asp-for="SelectedTags" class="form-select w-100 shadow front-color" id="validationTags"
                         data-allow-clear="true"
                         data-allow-new="false"
                         data-server="Tags"
@@ -38,7 +38,7 @@
             </div>
         </li>
         <li class="list-group-item h-100 my-3 border-0">
-            <button formmethod="post" type="submit" class="btn btn-outline-dark">Apply question</button>
+            <button formmethod="post" type="submit" class="btn btn-outline-light">Apply question</button>
         </li>
     </ul>
 </form>

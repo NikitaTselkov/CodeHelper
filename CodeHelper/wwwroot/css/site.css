@@ -1,5 +1,17 @@
-html {
-    font-size: 14px;
+:root {
+    --ck-color-base-background: transperent !important;
+    --ck-color-button-default-background: rgb(44,44,44) !important;
+    --ck-color-base-text: rgb(255,255,255,0.8) !important;
+    --ck-color-button-on-color: rgb(255,255,255,0.8) !important;
+    --ck-color-button-default-hover-background: rgb(19,19,19,0.8) !important;
+    --ck-color-button-on-hover-background: rgb(19,19,19,0.8) !important;
+    --ck-color-button-on-background: rgb(19,19,19,0.8) !important;
+    --ck-color-button-on-active-background: rgb(19,19,19,0.8) !important;
+    --ck-color-button-default-active-background: rgb(19,19,19,0.8) !important;
+    --ck-color-focus-outer-shadow: rgb(19,19,19,0.8) !important;
+    --ck-color-tooltip-background: rgb(19,19,19,0.8) !important;
+    --ck-color-list-button-on-background: rgb(19,19,19) !important;
+    --ck-color-list-button-on-background-focus: rgb(19,19,19) !important;
 }
 
 @media (min-width: 768px) {
@@ -20,6 +32,106 @@ html {
     }
 }
 
+html {
+    background-color: #191919 !important;
+}
+
+header {
+    background-color: transparent !important;
+    border-bottom: 1px solid white;
+}
+
+body {
+    color: rgb(255,255,255,0.8) !important;
+    margin: 0px !important;
+}
+
+canvas {
+    width: 100vw;
+    max-width: 100%;
+    height: 100vh;
+    top: 0px;
+    position: fixed;
+}
+
+a {
+    color: rgb(255,255,255,0.8) !important;
+}
+
+    a:hover {
+        color: #757575;
+    }
+
+input::placeholder {
+    color: rgb(255,255,255,0.8);
+}
+
+.form-control {
+    background-color: transparent !important;
+    border: 0px !important;
+    color: rgb(255,255,255,0.8) !important;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+
+.dark-border {
+    border: 1px solid !important;
+    border-color: rgb(19,19,19,0.2) !important;
+}
+
+.list-group-item {
+    background-color: transparent !important;
+    color: rgb(255,255,255,0.8) !important;
+}
+
+.btn-dark {
+    background-color: #191919 !important;
+    color: rgb(255,255,255,0.8) !important;
+}
+
+.btn-light {
+    border-color: rgb(255,255,255,0.8) !important;
+    background-color: rgb(255,255,255,0.8) !important;
+    color: rgb(19,19,19,0.8) !important;
+}
+
+.btn-outline-light {
+    border-color: rgb(255,255,255,0.8) !important;
+    color: rgb(255,255,255,0.8) !important;
+}
+    .btn-outline-light:hover {
+        background-color: rgb(255,255,255,0.8) !important;
+        color: rgb(19,19,19,0.8) !important;
+    }
+
+.btn-outline-dark {
+    border-color: #191919 !important;
+    color: rgb(255,255,255,0.8) !important;
+}
+
+    .btn-outline-dark:hover {
+        background-color: #191919 !important;
+    }
+
+.main-bg-color {
+    background: #191919 !important;
+}
+
+.second-bg-color {
+    background: #444444 !important;
+}
+
+.light-bg-color {
+    background-color: rgb(255,255,255,0.8) !important;
+}
+
+.front-color {
+    color: rgb(255,255,255,0.8) !important;
+}
+
+.dark-front-color {
+    color: rgb(19,19,19,0.8) !important;
+}
+
 .overflow-wrap {
     overflow-wrap: anywhere !important;
 }
@@ -32,23 +144,6 @@ html {
     border: 1px solid #757575 !important;
     box-shadow: none !important;
 }
-
-html {
-    position: relative;
-    min-height: 100%;
-}
-
-body {
-    margin-bottom: 60px;
-}
-
-a {
-    color: black;
-}
-
-    a:hover {
-        color: #757575;
-    }
 
 .secondary-item:focus {
     background-color: #6c757d !important;
@@ -63,9 +158,25 @@ a {
     display: none !important;
 }
 
+.tags-menu {
+    background: rgb(19,19,19,0.8) !important;
+}
+
 .tags-badge {
     display: block !important;
+    background: rgb(19,19,19,0.8) !important;
+    color: rgb(255,255,255,0.8) !important;
     font-size: .85em;
+}
+
+.tags-menu li a:hover {
+    background-color: rgb(19,19,19) !important;
+}
+.tags-menu li a:focus {
+    background-color: rgb(19,19,19) !important;
+}
+.tags-menu li:focus {
+    background-color: rgb(19,19,19) !important;
 }
 
 .editor {
@@ -81,21 +192,21 @@ a {
 }
 
 .pagination .page-item .page-link {
-    background-color: #6c757d !important;
-    color: #fff !important;
-    border-color: #6c757d !important;
+    background-color: #444444;
+    color: rgb(255,255,255,0.8) !important;
+    border-color: #444444;
 }
 
     .pagination .page-item .page-link:focus {
         z-index: 3;
-        border-color: #6c757d !important;
+        border-color: #444444;
         outline: 0;
-        box-shadow: 0 0 0 0.25rem rgba(108,117,125, 0.8);
+        box-shadow: 0 0 0 0.25rem rgba(44,44,44, 0.8);
     }
 
 .pagination .page-item.active .page-link {
     z-index: 3;
-    background-color: #6c757d !important;
+    background-color: #444444;
     border: none !important;
 }
 
@@ -111,24 +222,29 @@ a {
     transition: opacity 0.6s, visibility 0.6s;
 }
 
+.custom-checkbox .custom-control-input {
+    background-color: rgb(255,255,255,0.8);
+    color: rgb(255,255,255,0.8);
+}
+
 .custom-checkbox .custom-control-input:checked {
-    background-color: #6c757d !important;
-    border-color: #6c757d !important;
+    background-color: rgb(19,19,19,0.8);
+    border-color: rgb(19,19,19,0.8);
 }
 
     .custom-checkbox .custom-control-input:checked:focus {
-        box-shadow: 0 0 0 1px #6c757d;
-        border-color: #6c757d !important;
+        box-shadow: 0 0 0 1px rgb(19,19,19,0.8);
+        border-color: rgb(19,19,19,0.8);
     }
 
 .custom-checkbox .custom-control-input:focus {
-    box-shadow: 0 0 0 1px #6c757d;
-    border-color: #6c757d !important;
+    box-shadow: 0 0 0 1px rgb(19,19,19,0.8);
+    border-color: rgb(19,19,19,0.8);
 }
 
 .custom-checkbox .custom-control-input:active {
-    background-color: #6c757d;
-    border-color: #6c757d !important;
+    background-color: rgb(19,19,19,0.8);
+    border-color: rgb(19,19,19,0.8);
 }
 
 .ck-source-editing-area,
@@ -155,7 +271,8 @@ a {
 }
 
 .ck-content code {
-    color: black !important;
+    color: rgb(255,255,255,0.8) !important;
+    background-color: rgb(44,44,44,0.8) !important;
     padding-left: 4px !important;
     padding-right: 4px !important;
 }
@@ -163,8 +280,8 @@ a {
 .ck-content pre {
     padding: 1em;
     padding-bottom: 0px !important;
-    color: black;
-    background-color: hsla(0, 0%, 78%, 0.3);
+    color: rgb(19,19,19,0.8) !important;
+    background-color: rgb(44,44,44,0.8) !important;
     border: 0 !important;
     border-radius: 2px;
     text-align: left;

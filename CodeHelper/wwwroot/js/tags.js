@@ -181,7 +181,7 @@ const DEFAULTS = {
   fuzzy: false,
   startsWith: false,
   singleBadge: false,
-  activeClasses: ["bg-secondary", "text-white"],
+  activeClasses: ["main-bg-color", "text-white"],
   labelField: "label",
   valueField: "value",
   searchFields: ["label"],
