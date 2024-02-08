@@ -45,6 +45,7 @@
 
 html {
     background-color: #191919 !important;
+    scrollbar-color: rgb(44,44,44,0.8) #444444;
 }
 
 header {
