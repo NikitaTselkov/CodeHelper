@@ -23,8 +23,8 @@
     <form method="post" class="card collapse overflow-wrap second-bg-color" id="collapseFilter">
         <div class="card-body d-flex justify-content-center">
             <ul class="list-group rounded-0 rounded-start">
-                <li class="list-group-item active main-bg-color front-color border-0" aria-current="true">Tags</li>
-                <li class="list-group-item h-100" style="min-width: 200px;">
+                <li class="list-group-item custom-list-group-item active main-bg-color front-color border-0" aria-current="true">Tags</li>
+                <li class="list-group-item custom-list-group-item h-100" style="min-width: 200px;">
                     <select asp-for="SelectedTags" class="form-select shadow w-100" id="validationTags"
                             data-allow-clear="true"
                             data-allow-new="false"
@@ -45,23 +45,23 @@
             </ul>
 
             <ul class="list-group rounded-0">
-                <li class="list-group-item active main-bg-color front-color border-0" aria-current="true">Filter By</li>
-                <li class="list-group-item custom-checkbox">
+                <li class="list-group-item custom-list-group-item active main-bg-color front-color border-0" aria-current="true">Filter By</li>
+                <li class="list-group-item custom-list-group-item custom-checkbox">
                     <input asp-for="NoAnswers" class="form-check-input custom-control-input me-1" type="checkbox" id="firstCheckbox">
                     <label class="form-check-label" for="firstCheckbox">No Answers</label>
                 </li>
-                <li class="list-group-item custom-checkbox">
+                <li class="list-group-item custom-list-group-item custom-checkbox">
                     <input asp-for="NoAcceptedAnswer" class="form-check-input custom-control-input me-1" type="checkbox" id="secondCheckbox">
                     <label class="form-check-label" for="secondCheckbox">No Accepted Answer</label>
                 </li>
             </ul> 
 
             <ul class="list-group rounded-0 rounded-end">
-                <li class="list-group-item active main-bg-color front-color border-0" aria-current="true">Sorted By</li>
+                <li class="list-group-item custom-list-group-item active main-bg-color front-color border-0" aria-current="true">Sorted By</li>
 
                 @foreach (var sortFilter in Enum.GetValues(typeof(SortFilters)))
                 {
-                    <li class="list-group-item custom-checkbox">
+                    <li class="list-group-item custom-list-group-item custom-checkbox">
                         <label class="form-check-label">
                             @(Html.RadioButtonFor<SortFilters>(s => s.Sort, (SortFilters)sortFilter, new { @class = "form-check-input custom-control-input me-1" }))
                             @sortFilter

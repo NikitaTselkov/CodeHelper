@@ -16,25 +16,25 @@
                             <div class="validation text-danger" asp-validation-summary="ModelOnly"></div>
 
                             <div class="mb-3 form-floating">
-                                <input asp-for="UserName" type="text" class="form-control second-bg-color secondary-focus" id="floatingUserNameInput" placeholder="Name">
+                                <input asp-for="UserName" type="text" class="form-control second-bg-color secondary-focus" id="floatingUserNameInput" placeholder="">
                                 <label asp-for="UserName" class="form-label front-color" for="floatingUserNameInput">Name</label>
                                 <span class="text-danger" asp-validation-for="UserName"></span>
                             </div>
 
                             <div class="mb-3 form-floating">
-                                <input type="email" class="form-control second-bg-color secondary-focus" id="floatingEmailInput" asp-for="Email" placeholder="name@example.com">
+                                <input type="email" class="form-control second-bg-color secondary-focus" id="floatingEmailInput" asp-for="Email" placeholder="">
                                 <label asp-for="Email" for="floatingEmailInput" class="form-label front-color">Email address</label>
                                 <span class="text-danger" asp-validation-for="Email"></span>
                             </div>
 
                             <div class="mb-3 form-floating">
-                                <input asp-for="Password" type="password" id="floatingPasswordInput" class="form-control second-bg-color secondary-focus" placeholder="*******">
+                                <input asp-for="Password" type="password" id="floatingPasswordInput" class="form-control second-bg-color secondary-focus" placeholder="">
                                 <label asp-for="Password" for="floatingPasswordInput" class="form-label front-color">Password</label>
                                 <span class="text-danger" asp-validation-for="Password"></span>
                             </div>
 
                             <div class="mb-3 form-floating">
-                                <input asp-for="RepeatPassword" type="password" id="floatingRepeatPasswordInput" class="form-control second-bg-color secondary-focus" placeholder="*******">
+                                <input asp-for="RepeatPassword" type="password" id="floatingRepeatPasswordInput" class="form-control second-bg-color secondary-focus" placeholder="">
                                 <label asp-for="RepeatPassword" for="floatingRepeatPasswordInput" class="form-label front-color">Repeat Password</label>
                                 <span class="text-danger" asp-validation-for="RepeatPassword"></span>
                             </div>

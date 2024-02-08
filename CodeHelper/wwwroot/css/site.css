@@ -1,17 +1,26 @@
 :root {
-    --ck-color-base-background: transperent !important;
-    --ck-color-button-default-background: rgb(44,44,44) !important;
-    --ck-color-base-text: rgb(255,255,255,0.8) !important;
-    --ck-color-button-on-color: rgb(255,255,255,0.8) !important;
-    --ck-color-button-default-hover-background: rgb(19,19,19,0.8) !important;
-    --ck-color-button-on-hover-background: rgb(19,19,19,0.8) !important;
-    --ck-color-button-on-background: rgb(19,19,19,0.8) !important;
-    --ck-color-button-on-active-background: rgb(19,19,19,0.8) !important;
-    --ck-color-button-default-active-background: rgb(19,19,19,0.8) !important;
-    --ck-color-focus-outer-shadow: rgb(19,19,19,0.8) !important;
-    --ck-color-tooltip-background: rgb(19,19,19,0.8) !important;
-    --ck-color-list-button-on-background: rgb(19,19,19) !important;
-    --ck-color-list-button-on-background-focus: rgb(19,19,19) !important;
+    --color-light: rgb(255,255,255,0.8);
+    --color-gray: rgb(44,44,44);
+    --color-dark-gray: rgb(19,19,19,0.8);
+    --ck-color-base-background: transparent !important;
+    --ck-color-base-text: var(--color-light) !important;
+    --ck-color-button-on-color: var(--color-light) !important;
+    --ck-color-list-button-on-text: var(--color-light) !important;
+    --ck-color-button-default-hover-background: var(--color-dark-gray) !important;
+    --ck-color-button-on-hover-background: var(--color-dark-gray) !important;
+    --ck-color-button-on-background: var(--color-dark-gray) !important;
+    --ck-color-button-on-active-background: var(--color-dark-gray) !important;
+    --ck-color-button-default-active-background: var(--color-dark-gray) !important;
+    --ck-color-focus-outer-shadow: var(--color-dark-gray) !important;
+    --ck-color-tooltip-background: var(--color-dark-gray) !important;
+    --ck-color-list-button-on-background: var(--color-dark-gray) !important;
+    --ck-color-list-button-on-background-focus: var(--color-dark-gray) !important;
+    --ck-color-list-button-hover-background: var(--color-dark-gray) !important;
+    --ck-color-button-default-background: var(--color-gray) !important;
+    --ck-color-panel-background: var(--color-gray) !important;
+    --ck-color-dropdown-panel-background: var(--color-gray) !important;
+    --ck-color-dropdown-panel-border: var(--color-gray) !important;
+    --ck-color-switch-button-inner-background: var(--color-gray) !important;
 }
 
 @media (min-width: 768px) {
@@ -32,6 +41,8 @@
     }
 }
 
+/*======Tags======*/
+
 html {
     background-color: #191919 !important;
 }
@@ -42,7 +53,7 @@ header {
 }
 
 body {
-    color: rgb(255,255,255,0.8) !important;
+    color: var(--color-light) !important;
     margin: 0px !important;
 }
 
@@ -55,62 +66,31 @@ canvas {
 }
 
 a {
-    color: rgb(255,255,255,0.8) !important;
+    color: var(--color-light) !important;
 }
 
     a:hover {
         color: #757575;
     }
 
+input::-ms-reveal {
+    filter: invert(100%);
+}
+
 input::placeholder {
-    color: rgb(255,255,255,0.8);
+    color: var(--color-light) !important;
 }
 
-.form-control {
-    background-color: transparent !important;
-    border: 0px !important;
-    color: rgb(255,255,255,0.8) !important;
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: all 5000s ease-in-out 0s;
 }
 
-.dark-border {
-    border: 1px solid !important;
-    border-color: rgb(19,19,19,0.2) !important;
-}
+/*======Tags======*/
 
-.list-group-item {
-    background-color: transparent !important;
-    color: rgb(255,255,255,0.8) !important;
-}
-
-.btn-dark {
-    background-color: #191919 !important;
-    color: rgb(255,255,255,0.8) !important;
-}
-
-.btn-light {
-    border-color: rgb(255,255,255,0.8) !important;
-    background-color: rgb(255,255,255,0.8) !important;
-    color: rgb(19,19,19,0.8) !important;
-}
-
-.btn-outline-light {
-    border-color: rgb(255,255,255,0.8) !important;
-    color: rgb(255,255,255,0.8) !important;
-}
-    .btn-outline-light:hover {
-        background-color: rgb(255,255,255,0.8) !important;
-        color: rgb(19,19,19,0.8) !important;
-    }
-
-.btn-outline-dark {
-    border-color: #191919 !important;
-    color: rgb(255,255,255,0.8) !important;
-}
-
-    .btn-outline-dark:hover {
-        background-color: #191919 !important;
-    }
+/*======Colors======*/
 
 .main-bg-color {
     background: #191919 !important;
@@ -121,28 +101,78 @@ input::placeholder {
 }
 
 .light-bg-color {
-    background-color: rgb(255,255,255,0.8) !important;
+    background-color: var(--color-light) !important;
 }
 
 .front-color {
-    color: rgb(255,255,255,0.8) !important;
+    color: var(--color-light) !important;
 }
 
 .dark-front-color {
-    color: rgb(19,19,19,0.8) !important;
+    color: var(--color-dark-gray) !important;
 }
 
-.overflow-wrap {
-    overflow-wrap: anywhere !important;
+/*======Colors======*/
+
+/*======Buttons======*/
+
+.btn-colider {
+    position: relative;
 }
+
+.btn-dark {
+    background-color: #191919 !important;
+    color: var(--color-light) !important;
+}
+
+.btn-light {
+    border-color: var(--color-light) !important;
+    background-color: var(--color-light) !important;
+    color: var(--color-dark-gray) !important;
+}
+
+.btn-outline-light {
+    border-color: var(--color-light) !important;
+    color: var(--color-light) !important;
+}
+
+    .btn-outline-light:hover {
+        background-color: var(--color-light) !important;
+        color: var(--color-dark-gray) !important;
+    }
+
+.btn-outline-dark {
+    border-color: #191919 !important;
+    color: var(--color-light) !important;
+}
+
+    .btn-outline-dark:hover {
+        background-color: #191919 !important;
+    }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-.secondary-focus:focus {
-    border: 1px solid #757575 !important;
-    box-shadow: none !important;
+.btn-visibility {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+/*======Buttons======*/
+
+/*======Lists======*/
+
+.list-group-item {
+    background-color: rgb(19,19,19,0.8);
+    color: var(--color-light) !important;
+    display: contents
+}
+
+.custom-list-group-item {
+    background-color: rgb(44,44,44,0.8);
+    display: block;
 }
 
 .secondary-item:focus {
@@ -150,50 +180,49 @@ input::placeholder {
     border-color: #6c757d !important;
 }
 
+.table {
+    color: var(--color-light) !important;
+}
+
+/*======Lists======*/
+
+/*======Tags-menu======*/
+
 .badge {
     display: unset !important;
 }
 
-.display-none {
-    display: none !important;
-}
-
 .tags-menu {
-    background: rgb(19,19,19,0.8) !important;
+    background: var(--color-dark-gray) !important;
 }
 
 .tags-badge {
     display: block !important;
-    background: rgb(19,19,19,0.8) !important;
-    color: rgb(255,255,255,0.8) !important;
+    background: var(--color-dark-gray) !important;
+    color: var(--color-light) !important;
     font-size: .85em;
 }
 
 .tags-menu li a:hover {
     background-color: rgb(19,19,19) !important;
 }
+
 .tags-menu li a:focus {
     background-color: rgb(19,19,19) !important;
 }
+
 .tags-menu li:focus {
     background-color: rgb(19,19,19) !important;
 }
 
-.editor {
-    display: none !important;
-}
 
-.readOnlyNoFormatEditor {
-    display: none !important;
-}
+/*======Tags-menu======*/
 
-.readOnlyEditor {
-    display: none !important;
-}
+/*======Pagination======*/
 
 .pagination .page-item .page-link {
     background-color: #444444;
-    color: rgb(255,255,255,0.8) !important;
+    color: var(--color-light) !important;
     border-color: #444444;
 }
 
@@ -210,11 +239,9 @@ input::placeholder {
     border: none !important;
 }
 
-.btn-visibility {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s, visibility 0.3s;
-}
+/*======Pagination======*/
+
+/*======Card======*/
 
 .hover-card:hover .btn-visibility {
     visibility: visible;
@@ -222,9 +249,13 @@ input::placeholder {
     transition: opacity 0.6s, visibility 0.6s;
 }
 
+/*======Card======*/
+
+/*======Checkboxes======*/
+
 .custom-checkbox .custom-control-input {
-    background-color: rgb(255,255,255,0.8);
-    color: rgb(255,255,255,0.8);
+    background-color: var(--color-light);
+    color: var(--color-light);
 }
 
 .custom-checkbox .custom-control-input:checked {
@@ -246,6 +277,52 @@ input::placeholder {
     background-color: rgb(19,19,19,0.8);
     border-color: rgb(19,19,19,0.8);
 }
+
+/*======Checkboxes======*/
+
+/*======Others======*/
+
+.form-control {
+    background-color: transparent;
+    border: 0px !important;
+    color: var(--color-light) !important;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+
+.dark-border {
+    border: 1px solid !important;
+    border-color: rgb(19,19,19,0.2) !important;
+}
+
+.overflow-wrap {
+    overflow-wrap: anywhere !important;
+}
+
+.secondary-focus:focus {
+    border: 1px solid #757575 !important;
+    box-shadow: none !important;
+}
+
+.display-none {
+    display: none !important;
+}
+
+/*======Others======*/
+
+/*======Ck-editor======*/
+
+.editor {
+    display: none !important;
+}
+
+.readOnlyNoFormatEditor {
+    display: none !important;
+}
+
+.readOnlyEditor {
+    display: none !important;
+}
+
 
 .ck-source-editing-area,
 .ck-editor__editable {
@@ -271,7 +348,7 @@ input::placeholder {
 }
 
 .ck-content code {
-    color: rgb(255,255,255,0.8) !important;
+    color: var(--color-light) !important;
     background-color: rgb(44,44,44,0.8) !important;
     padding-left: 4px !important;
     padding-right: 4px !important;
@@ -280,7 +357,7 @@ input::placeholder {
 .ck-content pre {
     padding: 1em;
     padding-bottom: 0px !important;
-    color: rgb(19,19,19,0.8) !important;
+    color:var(--color-dark-gray) !important;
     background-color: rgb(44,44,44,0.8) !important;
     border: 0 !important;
     border-radius: 2px;
@@ -306,6 +383,9 @@ input::placeholder {
         color: transparent !important;
     }
 
+/*======Ck-editor======*/
+
+/*======Cookies======*/
 
 #cookie_note {
     display: none;
@@ -348,3 +428,5 @@ input::placeholder {
         width: 40%;
     }
 }
+
+/*======Cookies======*/

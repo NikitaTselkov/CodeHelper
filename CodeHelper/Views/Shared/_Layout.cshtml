@@ -52,7 +52,7 @@
                     </ul>
 
                     <form method="post" asp-controller="Questions" asp-action="Search" class="me-lg-auto col-12 col-lg-5 mb-3 mb-lg-0">
-                        <input type="search" name="query" class="form-control form-control-dark light-bg-color dark-front-color shadow-none border-0" placeholder="Search..." aria-label="Search" />
+                        <input type="search" name="query" class="form-control form-control-dark second-bg-color front-color shadow border-0" placeholder="Search..." aria-label="Search" />
                     </form>
 
                     @if (signInManager.IsSignedIn(User))
@@ -61,7 +61,7 @@
                             <a href="#" class="d-block link-secondary front-color text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <label>@User.Identity?.Name</label>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-dark main-bg-color text-small" aria-labelledby="dropdownUser" data-popper-placement="bottom-start">
+                            <ul class="dropdown-menu dropdown-menu-dark second-bg-color text-small" aria-labelledby="dropdownUser" data-popper-placement="bottom-start">
                                 <li><a rel="nofollow" class="dropdown-item secondary-item" asp-controller="Autorization" asp-action="SignOut">Sign out</a></li>
                             </ul>
                         </div>

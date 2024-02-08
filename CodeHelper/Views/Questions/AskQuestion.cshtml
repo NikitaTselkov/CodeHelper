@@ -9,7 +9,7 @@
             <div class="card second-bg-color shadow p-2 col-auto">
                 <h2 class="fs-3 front-color">Title</h2>
                 <div class="mb-3 form-floating">
-                    <input type="text" class="form-control second-bg-color front-color shadow border-0" id="floatingTitleInput" asp-for="Question.Title" placeholder="title">
+                    <input type="text" class="form-control second-bg-color front-color shadow border-0" id="floatingTitleInput" asp-for="Question.Title" placeholder="">
                     <label asp-for="Question.Title" for="floatingTitleInput" class="form-label front-color">Title</label>
                     <span class="text-danger" asp-validation-for="Question.Title"></span>
                 </div>
@@ -37,8 +37,8 @@
                 </select>
             </div>
         </li>
-        <li class="list-group-item h-100 my-3 border-0">
-            <button formmethod="post" type="submit" class="btn btn-outline-light">Apply question</button>
+        <li class="list-group-item h-100 my-3 border-0 d-flex">
+            <button formmethod="post" type="submit" class="btn btn-colider btn-outline-light">Apply question</button>
         </li>
     </ul>
 </form>
