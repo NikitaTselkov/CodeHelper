@@ -10,14 +10,14 @@
 <form method="post">
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-lg modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark">
+            <div class="modal-content main-bg-color">
                 <div class="modal-header">
-                    <h4 class="modal-title text-white" id="staticBackdropLabel">Чтобы ответить на вопрос, вы должны зарегистрировать учетную запись</h4>
+                    <h4 class="modal-title front-color" id="staticBackdropLabel">Чтобы ответить на вопрос, вы должны зарегистрировать учетную запись</h4>
                     <button type="button" class="btn-close btn-light btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-footer">
-                    <a type="button" rel="nofollow" asp-controller="Autorization" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-secondary shadow-none">Войти</a>
-                    <a type="button" rel="nofollow" asp-controller="Autorization" asp-action="SignUp" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-secondary shadow-none">Зарегистрировать</a>
+                    <a type="button" rel="nofollow" asp-controller="Autorization" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-dark shadow-none">Войти</a>
+                    <a type="button" rel="nofollow" asp-controller="Autorization" asp-action="SignUp" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-light shadow-none">Зарегистрировать</a>
                 </div>
             </div>
         </div>
@@ -25,14 +25,14 @@
 
     <ul class="list-group rounded-0 m-3" itemprop="mainEntity" itemscope="" itemtype="https://schema.org/Question">
         <li class="list-group-item border-0">
-            <h1 itemprop="name">@Model?.Question?.Title</h1>
+            <h1 class="front-color" itemprop="name">@Model?.Question?.Title</h1>
             <div class="d-flex">
-                <div class="text-secondary me-2 mobile-hidden">Просмотров: 
+                <div class="front-color me-2 mobile-hidden">Просмотров:  
                     <span>@CodeHelper.Core.Extensions.CalculateNumber(Model?.Question?.ViewsCount)</span>
                     <span itemprop="upvoteCount" class="d-none">@Model?.Question?.ViewsCount</span>
                     <span itemprop="author" class="d-none">@Model?.Question?.Author.UserName</span>
                 </div>
-                <div class="text-secondary me-2 mobile-hidden">Опубликован: 
+                <div class="front-color me-2 mobile-hidden">Опубликован:  
                     <span>@Model?.PublishedDate</span>
                     <span itemprop="dateCreated" class="d-none">@Model?.Question?.PublisedDate</span>
                 </div>
@@ -40,18 +40,18 @@
                     @if (Model?.Question?.Tags != null)
                         @foreach (var tag in Model.Question.Tags)
                         {
-                            <span class="m-1 mb-0 bg-secondary text-white badge">@tag.Name</span>
+                            <span class="m-1 mb-0 second-bg-color front-color badge">@tag.Name</span>
                         }
                 </div>
             </div>
         </li>
         <li class="list-group-item border-0">
-            <div class="card shadow hover-card p-3">
+            <div class="card shadow second-bg-color hover-card p-3 my-3">
                 <textarea asp-for="Question.Content" itemprop="text" class="mb-3 readOnlyEditor"></textarea>
                 @if (Model?.Question?.Author?.UserName == User?.Identity?.Name)
                 {
                     <span class="d-flex justify-content-end">
-                        <button asp-controller="Questions" asp-action="EditQuestion" asp-route-questionId="@Model?.Question?.Id" class="btn btn-outline-secondary btn-visibility p-0 pb-1 px-1 me-2 my-auto shadow-none" type="submit">
+                        <button asp-controller="Questions" asp-action="EditQuestion" asp-route-questionId="@Model?.Question?.Id" class="btn btn-outline-light btn-visibility p-0 pb-1 px-1 me-2 my-auto shadow-none" type="submit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code" viewBox="0 0 16 16">
                                 <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
                                 <path d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708zm-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z" />
@@ -65,24 +65,24 @@
         <li class="list-group-item border-0 mt-3">
             @if (Model?.Question?.Answers?.Count > 0)
             {
-                <h2 class="fs-4"><span itemprop="answerCount">@Model.AnswersCount</span> @Extensions.ProccessAnswerStringFormat(Model.AnswersCount)</h2>
+                <h2 class="fs-4 front-color"><span itemprop="answerCount">@Model.AnswersCount</span> @Extensions.ProccessAnswerStringFormat(Model.AnswersCount)</h2>
 
                 @for (int i = 0; i < Model.Question.Answers.Count; i++)
                 {
-                    <div id="answerCard" class="card shadow p-3 pb-0 mt-2 hover-card" itemprop=@(Model.Question.Answers[i].IsAcceptedAnswer ? "acceptedAnswer" : "suggestedAnswer") itemscope="" itemtype="https://schema.org/Answer">
+                    <div id="answerCard" class="card shadow second-bg-color p-3 my-2 pb-0 mt-3 hover-card" itemprop=@(Model.Question.Answers[i].IsAcceptedAnswer ? "acceptedAnswer" : "suggestedAnswer") itemscope="" itemtype="https://schema.org/Answer">
                         <div class="justify-content-start mb-1 d-flex">
-                            <span class="badge @(Model.Question.Answers[i].IsAcceptedAnswer ? "" : "display-none") rounded-pill bg-success me-2 my-auto shadow-none" id="accepted_badge+@Model.Question.Answers[i].Id">
+                            <span class="badge @(Model.Question.Answers[i].IsAcceptedAnswer ? "" : "display-none") rounded-pill bg-success me-2 my-auto shadow" id="accepted_badge+@Model.Question.Answers[i].Id">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
                                     <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
                                 </svg>
                                 Принят
                             </span>
 
-                            <span class="badge rounded-pill bg-secondary me-2 p-2 my-auto"><span class="me-1 my-auto" itemprop="upvoteCount" id="likesCount+@Model.Question.Answers[i].Id">@Model.Question.Answers[i].LikesCount</span>Likes</span>
+                            <span class="badge front-color rounded-pill second-bg-color shadow me-2 p-2 my-auto"><span class="me-1 my-auto" itemprop="upvoteCount" id="likesCount+@Model.Question.Answers[i].Id">@Model.Question.Answers[i].LikesCount</span>Likes</span>
 
                             @if (signInManager.IsSignedIn(User))
                             {
-                                <button class="btn btn-outline-secondary p-0 px-1 my-auto me-2 btn-visibility shadow-none" type="button" id="btn_like_dislike+@Model.Question.Answers[i].Id" onclick="SetLikeAnswer(@Model.Question.Answers[i].Id)">
+                                <button class="btn btn-outline-light p-0 px-1 my-auto me-2 btn-visibility shadow-none" type="button" id="btn_like_dislike+@Model.Question.Answers[i].Id" onclick="SetLikeAnswer(@Model.Question.Answers[i].Id)">
                                     @if (!Model.Question.Answers[i].IsLikedAnswer)
                                     {
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
@@ -133,9 +133,9 @@
 
                         <blockquote class="blockquote card-footer" style="height:25px; background-color: transparent !important;">
                             <footer class="blockquote-footer fs-6" style="margin-top: 0 !important;">
-                                <span>@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
+                                <span class="front-color">@Model.Question.Answers[i].PublisedDate.ToShortDateString()</span>
                                 <span itemprop="dateCreated" class="d-none">@Model.Question.Answers[i].PublisedDate</span>
-                                <cite itemprop="author" itemscope itemtype="https://schema.org/Person" class="ms-2"><span itemprop="name">@Model.Question.Answers[i].User?.UserName</span></cite>
+                                <cite itemprop="author" itemscope itemtype="https://schema.org/Person" class="ms-2 front-color"><span itemprop="name">@Model.Question.Answers[i].User?.UserName</span></cite>
                             </footer>
                         </blockquote>
 
@@ -144,7 +144,7 @@
                             @if (Model.Question.Answers[i].User?.UserName == User?.Identity?.Name)
                             {
                                 <span id="editAnswerButton+@Model.Question.Answers[i].Id" class="d-flex justify-content-end pb-3">
-                                    <button class="btn btn-outline-secondary btn-visibility p-0 pb-1 px-1 me-2 my-auto shadow-none" type="button" onclick="EditAnswer(@Model.Question.Answers[i].Id)">
+                                    <button class="btn btn-outline-light btn-visibility p-0 pb-1 px-1 me-2 my-auto shadow-none" type="button" onclick="EditAnswer(@Model.Question.Answers[i].Id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code" viewBox="0 0 16 16">
                                             <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
                                             <path d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708zm-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z" />
@@ -154,13 +154,13 @@
                                 </span>
 
                                 <span id="editAnswerButtons+@Model.Question.Answers[i].Id" class="d-flex justify-content-end d-none pb-3">
-                                    <button asp-controller="Questions" asp-action="SaveAnswer" asp-route-answerId="@Model.Question.Answers[i].Id" class="btn btn-outline-secondary p-0 pb-1 px-1 me-2 my-auto shadow-none" type="submit">
+                                    <button asp-controller="Questions" asp-action="SaveAnswer" asp-route-answerId="@Model.Question.Answers[i].Id" class="btn btn-outline-light p-0 pb-1 px-1 me-2 my-auto shadow-none" type="submit">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
                                             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
                                         </svg>
                                         <span>Сохранить Изменения</span>
                                     </button>
-                                    <button class="btn btn-outline-secondary p-0 pb-1 px-1 me-2 my-auto shadow-none" type="button" onclick="EditAnswer(@Model.Question.Answers[i].Id)">
+                                    <button class="btn btn-outline-light p-0 pb-1 px-1 me-2 my-auto shadow-none" type="button" onclick="EditAnswer(@Model.Question.Answers[i].Id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
@@ -175,7 +175,7 @@
 
                 @if (Model.Pagination.PageCount > 1)
                 {
-                    <nav aria-label="Page navigation example" class="mt-3">
+                    <nav aria-label="Page navigation example" class="my-3">
                         <ul class="pagination border-secondary">
                             <li class="page-item shadow @(Model.Pagination.CurrentPage - 1 <= 0 ? "disabled" : "")">
                                 <a class="page-link" rel="prev" asp-controller="Questions" asp-action="Question" asp-route-questionId="@Model.Question.Id" asp-route-page="@(Model.Pagination.CurrentPage - 1)">Пред</a>
@@ -213,31 +213,33 @@
             }
         </li>
         <li class="list-group-item border-0 mt-3">
-            <h2 class="fs-4">Добавьте ваш ответ здесь</h2>
+            <h2 class="fs-4 front-color">Добавьте ваш ответ здесь</h2>
 
-            <div class="card p-3 mt-1 shadow hover-card">
+            <div class="card second-bg-color p-3 my-3 shadow hover-card">
                 <textarea asp-for="AnswerContent" class="mb-3 editor"></textarea>
             </div>
 
-            @if (signInManager.IsSignedIn(User))
-            {
-                <button type="submit" asp-controller="Questions" asp-action="PushAnswer" asp-route-answerContent="@Model?.AnswerContent" asp-route-questionId="@Model?.Question?.Id" class="btn btn-outline-dark my-3 shadow-none">Опубликовать Ответ</button>
-            }
-            else
-            {
-                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-outline-dark my-3 shadow-none">Опубликовать Ответ</button>
-            }
+            <div class="d-flex">
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <button type="submit" asp-controller="Questions" asp-action="PushAnswer" asp-route-answerContent="@Model?.AnswerContent" asp-route-questionId="@Model?.Question?.Id" class="btn btn-colider btn-outline-light my-3 shadow">Опубликовать Ответ</button>
+                }
+                else
+                {
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-colider btn-outline-light my-3 shadow">Опубликовать Ответ</button>
+                }
+            </div>
         </li>
         <li class="list-group-item border-0">
-            <h2 class="fs-4">Другие Вопросы</h2>
+            <h2 class="fs-4 front-color">Другие Вопросы</h2>
 
             <ul class="list-group shadow">
                 @if (Model?.Links != null)
                     @foreach (var link in Model.Links)
                     {
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="@link.URl">@link.Title</a>
-                            <span class="badge bg-secondary rounded-pill">Views: @CodeHelper.Core.Extensions.CalculateNumber(link.ViewsCount)</span>
+                        <li class="list-group-item second-bg-color d-flex justify-content-between align-items-center">
+                            <a class="front-color" href="@link.URl">@link.Title</a>
+                            <span class="badge second-bg-color front-color rounded-pill shadow">Views: @CodeHelper.Core.Extensions.CalculateNumber(link.ViewsCount)</span>
                         </li>
                     }
             </ul>

@@ -17,8 +17,9 @@
     }
     <link rel="icon" href="~/favicon.svg" type="image/svg">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CodeHelper.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="~/js/fluid.js"></script>
     <script type="text/javascript">
         (function (m, e, t, r, i, k, a) {
             m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
@@ -36,15 +37,15 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/96019224" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 </head>
-<body>
+<body class="main-bg-color">
     @if (ViewData["CurrentPage"] != "Autorization")
     {
-        <header class="p-3 bg-dark text-white">
+        <header id="header" class="p-3 front-color">
             <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <ul class="nav col-lg-auto mb-2 me-lg-auto justify-content-center mb-md-0">
                         <li>
-                            <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">
+                            <a class="navbar-brand front-color" asp-area="" asp-controller="Home" asp-action="Index">
                                 <img src="~/images/rewritecodelogo.svg" alt="logo" height="50px" width="50px" />
                                 RewriteCode
                             </a>
@@ -52,17 +53,17 @@
                     </ul>
 
                     <form method="post" asp-controller="Questions" asp-action="Search" class="me-lg-auto col-12 col-lg-5 mb-3 mb-lg-0">
-                        <input type="search" name="query" class="form-control form-control-dark" placeholder="Поиск..." aria-label="Search" />
+                        <input type="search" name="query" class="form-control form-control-dark second-bg-color front-color shadow border-0" placeholder="Поиск..." aria-label="Search" />
                     </form>
 
                     @if (signInManager.IsSignedIn(User))
                     {
                         <div class="dropdown text-end">
-                            <a href="#" class="d-block link-secondary text-light text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a href="#" class="d-block link-secondary front-color text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <label>@User.Identity?.Name</label>
                             </a>
-                            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser" data-popper-placement="bottom-start">
-                                <li><a rel="nofollow" class="dropdown-item" asp-controller="Autorization" asp-action="SignOut">Выйти</a></li>
+                            <ul class="dropdown-menu dropdown-menu-dark second-bg-color text-small" aria-labelledby="dropdownUser" data-popper-placement="bottom-start">
+                                <li><a rel="nofollow" class="dropdown-item secondary-item" asp-controller="Autorization" asp-action="SignOut">Выйти</a></li>
                             </ul>
                         </div>
                     }
@@ -77,10 +78,11 @@
             </div>
         </header>
     }
-
-    <div class="container">
-        <main role="main" class="pb-3">
-            <div id="cookie_note" class="bg-dark">
+    
+    <canvas id="renderSurface"></canvas>
+    <div class="container main-bg-color">
+        <main role="main">
+            <div id="cookie_note" class="main-bg-color">
                 <p>
                     Мы используем файлы cookie, чтобы улучшить работу с сайтом. Оставаясь на нашем сайте, вы соглашаетесь с условиями и правилами использования файлов cookie. Ознакомьтесь с нашей <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Privacy">политикой конфиденциальности</a> и использовании файлов cookie <a rel="nofollow" class="text-warning" asp-controller="Home" asp-action="Cookie">здесь</a>.
                 </p>
@@ -102,17 +104,17 @@
         @if (ViewData["CurrentPage"] != "Autorization")
         {
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-                <p class="col-md-4 mb-0 text-muted">Rewrite Code</p>
+                <p class="col-md-4 mb-0 text-muted front-color">Rewrite Code</p>
 
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                     <img src="~/images/rewritecodelogo.svg" alt="logo" height="50px" width="50px" />
                 </a>
 
                 <div class="dropup-center dropup nav col-md-4 justify-content-end">
-                    <button class="btn btn-outline-secondary dropdown-toggle shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-dark dropdown-toggle shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Политика
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-dark">
+                    <ul class="dropdown-menu dropdown-menu-dark main-bg-color">
                         <li rel="nofollow"><a asp-controller="Home" asp-action="Privacy" class="dropdown-item secondary-item">Конфиденциальности</a></li>
                         <li rel="nofollow"><a asp-controller="Home" asp-action="Cookie" class="dropdown-item secondary-item">Cookie</a></li>
                         <li rel="nofollow"><a asp-controller="Home" asp-action="ContentLicense" class="dropdown-item secondary-item">CC BY-SA</a></li>
@@ -126,6 +128,71 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/ckeditor.js"></script>
+    <script>
+        const canvas = document.getElementById('renderSurface');
+
+        const fluid = new Fluid(canvas);
+
+        fluid.mapBehaviors({
+            sim_resolution: 128,
+            dye_resolution: 512,
+
+            paused: false,
+            embedded_dither: false,
+
+            dissipation: .97,
+            velocity: .98,
+            pressure: .2,
+            pressure_iteration: 10,
+            curl: .4,
+            emitter_size: 0.1,
+
+            render_shaders: true,
+            multi_color: true,
+
+            render_bloom: true,
+            bloom_iterations: 15,
+            bloom_resolution: 256,
+            intensity: 0.2,
+            threshold: 0.6,
+            soft_knee: 0.7,
+
+            transparent: true
+        });
+        fluid.activate();
+
+        var element = document.querySelector('header');
+
+        var Visible = function (target) {
+            var targetPosition = {
+                top: window.pageYOffset + target.getBoundingClientRect().top,
+                bottom: window.pageYOffset + target.getBoundingClientRect().bottom
+            },
+            windowPosition = {
+                top: window.pageYOffset,
+                bottom: window.pageYOffset + document.documentElement.clientHeight
+            };
+
+            if (targetPosition.bottom > windowPosition.top &&
+                targetPosition.top < windowPosition.bottom) {
+                document.getElementById('renderSurface').style.setProperty('top', targetPosition.bottom - windowPosition.top + 'px');
+                document.getElementById('renderSurface').style.setProperty('height', windowPosition.bottom - targetPosition.bottom  + 'px');
+            } else {
+                document.getElementById('renderSurface').style.setProperty('top', '0px');
+                document.getElementById('renderSurface').style.setProperty('height', '100vh');
+            };
+        };
+
+        window.addEventListener('scroll', function () {
+            Visible(element);
+        });
+
+        window.addEventListener('resize', function () {
+            Visible(element);
+        });
+
+        Visible(element);
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

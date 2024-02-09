@@ -1,5 +1,6 @@
 ﻿// Write your JavaScript code.
 import Tags from "./tags.js";
+
 Tags.init();
 
 var allreadOnlyNoFormatEditors = document.querySelectorAll('.readOnlyNoFormatEditor');
