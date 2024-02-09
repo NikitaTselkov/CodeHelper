@@ -313,8 +313,8 @@ namespace CodeHelper.Controllers
 
                 var pageOffset = (int)((page - 1) * GlobalConstants.AnswersCountIntPage);
                 var answers = _answerRepository.Get(g => g.Question.Id == questionId, 0, 0, g => g.Question, g => g.User)
-                    .OrderByDescending(o => o.LikesCount)
-                    .ThenByDescending(o => o.IsAcceptedAnswer)
+                    .OrderByDescending(o => o.IsAcceptedAnswer)
+                    .ThenByDescending(o => o.LikesCount)
                     .Skip(pageOffset)
                     .Take((int)GlobalConstants.AnswersCountIntPage)
                     .ToList();

@@ -21,6 +21,7 @@
     --ck-color-dropdown-panel-background: var(--color-gray) !important;
     --ck-color-dropdown-panel-border: var(--color-gray) !important;
     --ck-color-switch-button-inner-background: var(--color-gray) !important;
+    --ck-color-tooltip-text: var(--color-light) !important;
 }
 
 @media (min-width: 768px) {
@@ -80,6 +81,7 @@ input::-ms-reveal {
 
 input::placeholder {
     color: var(--color-light) !important;
+    opacity:unset;
 }
 
 input:-webkit-autofill,
