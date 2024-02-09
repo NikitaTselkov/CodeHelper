@@ -19,7 +19,10 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/CodeHelper.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    <script src="~/js/fluid.min.js"></script>
+    @if (!Extensions.IsMobile(Context.Request.Headers["user-agent"].ToString()))
+    {
+        <script src="~/js/fluid.min.js"></script>
+    }
     <script type="text/javascript">
         (function (m, e, t, r, i, k, a) {
             m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
@@ -79,7 +82,11 @@
         </header>
     }
     
-    <canvas id="renderSurface"></canvas>
+    @if (!Extensions.IsMobile(Context.Request.Headers["user-agent"].ToString()))
+    {
+        <canvas id="renderSurface"></canvas>
+    }
+
     <div class="container main-bg-color">
         <main role="main">
             <div id="cookie_note" class="main-bg-color">
@@ -128,71 +135,75 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="~/js/site.min.js" asp-append-version="true"></script>
     <script src="~/js/ckeditor.js"></script>
-    <script>
-        const canvas = document.getElementById('renderSurface');
 
-        const fluid = new Fluid(canvas);
+    @if (!Extensions.IsMobile(Context.Request.Headers["user-agent"].ToString()))
+    {
+        <script>
+            const canvas = document.getElementById('renderSurface');
 
-        fluid.mapBehaviors({
-            sim_resolution: 128,
-            dye_resolution: 512,
+            const fluid = new Fluid(canvas);
 
-            paused: false,
-            embedded_dither: false,
+            fluid.mapBehaviors({
+                sim_resolution: 128,
+                dye_resolution: 512,
 
-            dissipation: .97,
-            velocity: .98,
-            pressure: .2,
-            pressure_iteration: 10,
-            curl: .4,
-            emitter_size: 0.1,
+                paused: false,
+                embedded_dither: false,
 
-            render_shaders: true,
-            multi_color: true,
+                dissipation: .97,
+                velocity: .98,
+                pressure: .2,
+                pressure_iteration: 10,
+                curl: .4,
+                emitter_size: 0.1,
 
-            render_bloom: true,
-            bloom_iterations: 15,
-            bloom_resolution: 256,
-            intensity: 0.2,
-            threshold: 0.6,
-            soft_knee: 0.7,
+                render_shaders: true,
+                multi_color: true,
 
-            transparent: true
-        });
-        fluid.activate();
+                render_bloom: true,
+                bloom_iterations: 15,
+                bloom_resolution: 256,
+                intensity: 0.2,
+                threshold: 0.6,
+                soft_knee: 0.7,
 
-        var element = document.querySelector('header');
+                transparent: true
+            });
+            fluid.activate();
 
-        var Visible = function (target) {
-            var targetPosition = {
-                top: window.pageYOffset + target.getBoundingClientRect().top,
-                bottom: window.pageYOffset + target.getBoundingClientRect().bottom
-            },
-            windowPosition = {
-                top: window.pageYOffset,
-                bottom: window.pageYOffset + document.documentElement.clientHeight
+            var element = document.querySelector('header');
+
+            var Visible = function (target) {
+                var targetPosition = {
+                    top: window.pageYOffset + target.getBoundingClientRect().top,
+                    bottom: window.pageYOffset + target.getBoundingClientRect().bottom
+                },
+                windowPosition = {
+                    top: window.pageYOffset,
+                    bottom: window.pageYOffset + document.documentElement.clientHeight
+                };
+
+                if (targetPosition.bottom > windowPosition.top &&
+                    targetPosition.top < windowPosition.bottom) {
+                    document.getElementById('renderSurface').style.setProperty('top', targetPosition.bottom - windowPosition.top + 'px');
+                    document.getElementById('renderSurface').style.setProperty('height', windowPosition.bottom - targetPosition.bottom  + 'px');
+                } else {
+                    document.getElementById('renderSurface').style.setProperty('top', '0px');
+                    document.getElementById('renderSurface').style.setProperty('height', '100vh');
+                };
             };
 
-            if (targetPosition.bottom > windowPosition.top &&
-                targetPosition.top < windowPosition.bottom) {
-                document.getElementById('renderSurface').style.setProperty('top', targetPosition.bottom - windowPosition.top + 'px');
-                document.getElementById('renderSurface').style.setProperty('height', windowPosition.bottom - targetPosition.bottom  + 'px');
-            } else {
-                document.getElementById('renderSurface').style.setProperty('top', '0px');
-                document.getElementById('renderSurface').style.setProperty('height', '100vh');
-            };
-        };
+            window.addEventListener('scroll', function () {
+                Visible(element);
+            });
 
-        window.addEventListener('scroll', function () {
+            window.addEventListener('resize', function () {
+                Visible(element);
+            });
+
             Visible(element);
-        });
-
-        window.addEventListener('resize', function () {
-            Visible(element);
-        });
-
-        Visible(element);
-    </script>
+        </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
