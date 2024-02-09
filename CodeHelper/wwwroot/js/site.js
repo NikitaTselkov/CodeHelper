@@ -1,5 +1,5 @@
 ﻿// Write your JavaScript code.
-import Tags from "./tags.js";
+import Tags from "./tags.min.js";
 
 Tags.init();
 
