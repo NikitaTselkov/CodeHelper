@@ -16,8 +16,8 @@
     }
     <link rel="icon" href="~/favicon.svg" type="image/svg">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CodeHelper.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script src="~/js/fluid.js"></script>
     <script type="text/javascript">
         (function (m, e, t, r, i, k, a) {
@@ -79,7 +79,7 @@
     }
     
     <canvas id="renderSurface"></canvas>
-    <div class="container">
+    <div class="container main-bg-color">
         <main role="main">
             <div id="cookie_note" class="main-bg-color">
                 <p>
@@ -131,6 +131,7 @@
         const canvas = document.getElementById('renderSurface');
 
         const fluid = new Fluid(canvas);
+
         fluid.mapBehaviors({
             sim_resolution: 128,
             dye_resolution: 512,
@@ -155,7 +156,6 @@
             threshold: 0.6,
             soft_knee: 0.7,
 
-            background_color: { r: 15, g: 15, b: 15 },
             transparent: true
         });
         fluid.activate();

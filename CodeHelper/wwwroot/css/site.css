@@ -44,7 +44,7 @@
 /*======Tags======*/
 
 html {
-    background-color: #191919 !important;
+    background-color: #191919;
     scrollbar-color: rgb(44,44,44,0.8) #444444;
 }
 
@@ -216,7 +216,6 @@ input:-webkit-autofill:active {
     background-color: rgb(19,19,19) !important;
 }
 
-
 /*======Tags-menu======*/
 
 /*======Pagination======*/
@@ -284,7 +283,7 @@ input:-webkit-autofill:active {
 /*======Others======*/
 
 .form-control {
-    background-color: transparent;
+    background-color: #444444;
     border: 0px !important;
     color: var(--color-light) !important;
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;

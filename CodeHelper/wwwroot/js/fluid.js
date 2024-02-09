@@ -798,7 +798,7 @@ function activator(canvas, webGL, colorFormat, PROGRAMS, pointers) {
   /* Initialize Fluid */
 
   init();
-  multipleSplats(parseInt(Math.random() * 20) + 5);
+  //multipleSplats(parseInt(Math.random() * 20) + 5);
   /* Game Loop */
 
   var lastColorChangeTime = Date.now();
