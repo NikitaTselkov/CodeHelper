@@ -143,37 +143,42 @@
     {
         <script>
             const canvas = document.getElementById('renderSurface');
-            var element = document.querySelector('header');
 
-            var Visible = function (target) {
-                var targetPosition = {
-                    top: window.pageYOffset + target.getBoundingClientRect().top,
-                    bottom: window.pageYOffset + target.getBoundingClientRect().bottom
-                },
-                    windowPosition = {
-                        top: window.pageYOffset,
-                        bottom: window.pageYOffset + document.documentElement.clientHeight
+            @if (ViewData["CurrentPage"] != "Autorization")
+            {
+                <text>
+                    var element = document.querySelector('header');
+
+                    var Visible = function (target) {
+                        var targetPosition = {
+                            top: window.pageYOffset + target.getBoundingClientRect().top,
+                            bottom: window.pageYOffset + target.getBoundingClientRect().bottom
+                        },
+                            windowPosition = {
+                                top: window.pageYOffset,
+                                bottom: window.pageYOffset + document.documentElement.clientHeight
+                            };
+
+                    if (targetPosition.bottom > windowPosition.top && targetPosition.top @Html.Raw("<") windowPosition.bottom) {
+                            document.getElementById('renderSurface').style.setProperty('top', targetPosition.bottom - windowPosition.top + 'px');
+                            document.getElementById('renderSurface').style.setProperty('height', windowPosition.bottom - targetPosition.bottom + 'px');
+                        } else {
+                            document.getElementById('renderSurface').style.setProperty('top', '0px');
+                            document.getElementById('renderSurface').style.setProperty('height', '100vh');
+                        };
                     };
 
-                if (targetPosition.bottom > windowPosition.top &&
-                    targetPosition.top < windowPosition.bottom) {
-                    document.getElementById('renderSurface').style.setProperty('top', targetPosition.bottom - windowPosition.top + 'px');
-                    document.getElementById('renderSurface').style.setProperty('height', windowPosition.bottom - targetPosition.bottom + 'px');
-                } else {
-                    document.getElementById('renderSurface').style.setProperty('top', '0px');
-                    document.getElementById('renderSurface').style.setProperty('height', '100vh');
-                };
-            };
+                    window.addEventListener('scroll', function () {
+                        Visible(element);
+                    });
 
-            window.addEventListener('scroll', function () {
-                Visible(element);
-            });
+                    window.addEventListener('resize', function () {
+                        Visible(element);
+                    });
 
-            window.addEventListener('resize', function () {
-                Visible(element);
-            });
-
-            Visible(element);
+                    Visible(element);
+                </text>
+            }
 
             const fluid = new Fluid(canvas);
 
