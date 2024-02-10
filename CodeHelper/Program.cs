@@ -2,6 +2,7 @@ using CodeHelper.Core;
 using CodeHelper.Data;
 using CodeHelper.Models.Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
@@ -43,6 +44,19 @@ public class Program
             options.Cookie.Name = GlobalConstants.AuthCookieName;
         });
 
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.Providers.Add<GzipCompressionProvider>();
+            options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+            {
+                "text/plain",
+                "text/css",
+                "application/javascript",
+                "text/html"
+            });
+            options.EnableForHttps = true;
+        });
+
         var app = builder.Build();
 
         if (!app.Environment.IsDevelopment())
@@ -60,14 +74,8 @@ public class Program
 
         app.UseStaticFiles();
 
-        app.UseStaticFiles(new StaticFileOptions()
-        {
-            FileProvider = new PhysicalFileProvider(
-                           Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images")),
-            RequestPath = new PathString("/images")
-        });
-
         app.UseRouting();
+        app.UseResponseCompression();
 
         app.UseAuthentication();
         app.UseAuthorization();

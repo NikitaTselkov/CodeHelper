@@ -49,6 +49,8 @@ namespace CodeHelper.Controllers
             var questionsViewModel = new QuestionsViewModel();
             var pagesCount = 0;
 
+            ViewData["CurrentPage"] = nameof(All);
+
             if (page == 0) page = 1;
             else
                 ViewData["Canonical"] = _configuration["Domen"] + $"Questions/All";
@@ -108,7 +110,8 @@ namespace CodeHelper.Controllers
 
                 TempData["QuestionsViewModel"] = model.ToJson();
 
-                model.Questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage).ToArray();
+                model.Questions = questions.Skip(pageOffset).Take((int)GlobalConstants.QuestionsCountIntPage)
+                    .TrimQuestionContent(GlobalConstants.QuestionContentLength).ToArray();
                 model.Pagination = new Pagination(page, pagesCount);
 
                 var tags = new List<Tag>();
@@ -136,7 +139,7 @@ namespace CodeHelper.Controllers
 
                 var model = new QuestionsViewModel
                 {
-                    Questions = questions.ToArray(),
+                    Questions = questions.TrimQuestionContent(GlobalConstants.QuestionContentLength).ToArray(),
                     NoAcceptedAnswer = false,
                     NoAnswers = false,
                     Sort = SortFilters.Newest,
@@ -152,7 +155,8 @@ namespace CodeHelper.Controllers
 
             questionsViewModel = new QuestionsViewModel
             {
-                Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags).ToArray(),
+                Questions = _questionsRepository.GetAll(pageOffset, (int)GlobalConstants.QuestionsCountIntPage, g => g.Author, g => g.Tags)
+                    .TrimQuestionContent(GlobalConstants.QuestionContentLength).ToArray(),
                 NoAcceptedAnswer = false,
                 NoAnswers = false,
                 Sort = SortFilters.Newest,
@@ -218,7 +222,7 @@ namespace CodeHelper.Controllers
         [HttpGet]
         public IActionResult AskQuestion()
         {
-            ViewData["CurrentPage"] = "Autorization";
+            ViewData["CurrentPage"] = nameof(AskQuestion);
 
             var model = new AskQuestionViewModel();
 
@@ -250,7 +254,7 @@ namespace CodeHelper.Controllers
                 if (question != null)
                 {
                     if (question.Author.Id != _userManager.GetUserId(HttpContext.User))
-                        return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = question.Id });
+                        return RedirectToAction(nameof(Question), "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = question.Id });
 
                     _imageManager.RemoveImages(question.Content, model.Question.Content);
 
@@ -267,13 +271,17 @@ namespace CodeHelper.Controllers
 
                     TempData.Remove("EditQuestionId");
 
-                    return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = question.Id });
+                    return RedirectToAction(nameof(Question), "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = question.Id });
                 }
             }
 
             var user = _userManager.GetUserAsync(HttpContext.User).Result;
 
-            if (user == null || model.Question.Content == null) return View(model);
+            if (user == null || model.Question.Content == null)
+            {
+                ViewData["CurrentPage"] = nameof(AskQuestion);
+                return View(model);
+            }
 
             model.Question.PublisedDate = DateTime.UtcNow;
             model.Question.Tags = new List<Tag>();
@@ -287,7 +295,7 @@ namespace CodeHelper.Controllers
 
             var quest = _questionsRepository.Get(g => g == model.Question).FirstOrDefault();
 
-            return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(quest.Title), questionId = quest.Id });
+            return RedirectToAction(nameof(Question), "Questions", new { title = Extensions.TitleToUrl(quest.Title), questionId = quest.Id });
         }
 
         [HttpGet("questions/{title}/{questionId}")]
@@ -305,7 +313,7 @@ namespace CodeHelper.Controllers
                 description += " ...";
 
                 ViewData["Description"] = HttpUtility.HtmlDecode(description);
-                ViewData["CurrentPage"] = "Question";
+                ViewData["CurrentPage"] = nameof(Question);
 
                 if (page == 0) page = 1;
                 else
@@ -385,7 +393,7 @@ namespace CodeHelper.Controllers
                 answer.PublisedDate = DateTime.UtcNow;
                 _answerRepository.Update(answer);
 
-                return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(answer.Question.Title), questionId = answer.Question.Id });
+                return RedirectToAction(nameof(Question), "Questions", new { title = Extensions.TitleToUrl(answer.Question.Title), questionId = answer.Question.Id });
             }
 
             return NoContent();
@@ -401,7 +409,7 @@ namespace CodeHelper.Controllers
             if (string.IsNullOrEmpty(answerContent))
             {
                 ModelState.AddModelError("", "Answer is empty");
-                return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = questionId });
+                return RedirectToAction(nameof(Question), "Questions", new { title = Extensions.TitleToUrl(question.Title), questionId = questionId });
             }
 
             var answer = new Answer()
@@ -424,7 +432,7 @@ namespace CodeHelper.Controllers
 
             _questionsRepository.Update(model.Question);
 
-            return RedirectToAction("Question", "Questions", new { title = Extensions.TitleToUrl(model.Question.Title), questionId = model.Question.Id });
+            return RedirectToAction(nameof(Question), "Questions", new { title = Extensions.TitleToUrl(model.Question.Title), questionId = model.Question.Id });
         }
 
         [HttpPost]

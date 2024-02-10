@@ -44,9 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\Images\rewritecodelogo.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\favicon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

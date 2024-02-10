@@ -9,6 +9,6 @@ namespace CodeHelper.Data
         public QuestionsRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
-        }
+        }  
     }
 }
