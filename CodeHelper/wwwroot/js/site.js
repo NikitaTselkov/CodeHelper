@@ -198,16 +198,18 @@ function checkCookies() {
     let cookieNote = document.getElementById('cookie_note');
     let cookieBtnAccept = cookieNote.querySelector('.cookie_accept');
 
-    // Если куки cookies_policy нет или она просрочена, то показываем уведомление
     if (!getCookie('cookies_policy')) {
         cookieNote.classList.add('show');
     }
 
-    // При клике на кнопку устанавливаем куку cookies_policy на один год
     cookieBtnAccept.addEventListener('click', function () {
         setCookie('cookies_policy', 'true', 30);
         cookieNote.classList.remove('show');
     });
 }
 
-checkCookies();
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(function () {
+        checkCookies();
+    }, 3500);
+});
