@@ -211,5 +211,5 @@ function checkCookies() {
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(function () {
         checkCookies();
-    }, 3500);
+    }, 5000);
 });
