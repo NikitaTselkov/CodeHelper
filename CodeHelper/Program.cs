@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using System.IO.Compression;
 
 public class Program
 {
@@ -46,15 +47,29 @@ public class Program
 
         builder.Services.AddResponseCompression(options =>
         {
+            options.EnableForHttps = true;
+            options.Providers.Add<BrotliCompressionProvider>();
             options.Providers.Add<GzipCompressionProvider>();
             options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
             {
                 "text/plain",
+                "text/html",
                 "text/css",
-                "application/javascript",
-                "text/html"
+                "text/javascript",
+                "font/woff",
+                "font/woff2",
+                "application/javascript"
             });
-            options.EnableForHttps = true;
+        });
+
+        builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Fastest;
+        });
+
+        builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.SmallestSize;
         });
 
         var app = builder.Build();
