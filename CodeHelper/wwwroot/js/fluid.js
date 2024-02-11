@@ -794,7 +794,7 @@ function activator(canvas, webGL, colorFormat, PROGRAMS, pointers) {
    */
 
 
-  var ditheringTexture = PARAMS.embedded_dither ? createTextureAsync(dither["default"]) : createTextureAsync(ditherURL);
+    var ditheringTexture = PARAMS.embedded_dither ? createTextureAsync(dither["default"]) : createTextureAsync(ditherURL);
   /* Initialize Fluid */
 
   init();
@@ -959,15 +959,15 @@ function activator(canvas, webGL, colorFormat, PROGRAMS, pointers) {
         return id;
       }
     };
-    var image = new Image();
-    image.src = url;
+    //var image = new Image();
+    //image.src = url;
 
-    image.onload = function () {
-      obj.width = image.width;
-      obj.height = image.height;
-      webGL.bindTexture(webGL.TEXTURE_2D, texture);
-      webGL.texImage2D(webGL.TEXTURE_2D, 0, webGL.RGB, webGL.RGB, webGL.UNSIGNED_BYTE, image);
-    };
+    //image.onload = function () {
+    //  obj.width = image.width;
+    //  obj.height = image.height;
+    //  webGL.bindTexture(webGL.TEXTURE_2D, texture);
+    //  webGL.texImage2D(webGL.TEXTURE_2D, 0, webGL.RGB, webGL.RGB, webGL.UNSIGNED_BYTE, image);
+    //};
 
     return obj;
   }
